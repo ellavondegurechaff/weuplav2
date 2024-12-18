@@ -5,6 +5,10 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --mantine-color-white: #ffffff;
+  --mantine-color-black: #000000;
+  --mantine-primary-color-filled: var(--mantine-color-white);
+  --mantine-primary-color-filled-hover: var(--mantine-color-gray-0);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -18,4 +22,47 @@ body {
   color: var(--foreground);
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.1; }
+  50% { opacity: 0.3; }
+}
+
+@keyframes glitch-1 {
+  0% { clip-path: inset(40% 0 61% 0); transform: translate(-2px); }
+  20% { clip-path: inset(92% 0 1% 0); transform: translate(2px); }
+  40% { clip-path: inset(43% 0 1% 0); transform: translate(3px); }
+  60% { clip-path: inset(25% 0 58% 0); transform: translate(-3px); }
+  80% { clip-path: inset(54% 0 7% 0); transform: translate(3px); }
+  100% { clip-path: inset(58% 0 43% 0); transform: translate(-2px); }
+}
+
+@keyframes glitch-2 {
+  0% { clip-path: inset(25% 0 58% 0); transform: translate(2px); }
+  20% { clip-path: inset(54% 0 7% 0); transform: translate(-2px); }
+  40% { clip-path: inset(58% 0 43% 0); transform: translate(2px); }
+  60% { clip-path: inset(40% 0 61% 0); transform: translate(-3px); }
+  80% { clip-path: inset(92% 0 1% 0); transform: translate(2px); }
+  100% { clip-path: inset(43% 0 1% 0); transform: translate(-2px); }
+}
+
+.clip-path-glitch {
+  text-shadow: 2px 0 0 rgba(255, 0, 0, 0.5), -2px 0 0 rgba(0, 255, 255, 0.5);
+}
+
+.animate-glitch-1 {
+  animation: glitch-1 2s infinite linear alternate-reverse;
+}
+
+.animate-glitch-2 {
+  animation: glitch-2 4s infinite linear alternate-reverse;
+}
+
+.hover-scale {
+  transition: transform 300ms ease;
+}
+
+.hover-scale:hover {
+  transform: scale(1.05);
 }
