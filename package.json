@@ -16,14 +16,15 @@
     "@mantine/notifications": "^7.15.1",
     "formidable": "^3.5.2",
     "framer-motion": "^11.15.0",
-    "lucide-react": "^0.468.0",
+    "lucide-react": "^0.469.0",
     "mysql2": "^3.11.5",
     "next": "15.1.0",
     "next-auth": "^4.24.11",
     "pg": "^8.13.1",
     "prisma": "^6.0.1",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "zustand": "^5.0.2"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",

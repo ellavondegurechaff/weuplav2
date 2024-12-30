@@ -2132,10 +2132,10 @@ lru.min@^1.0.0:
   resolved "https://registry.yarnpkg.com/lru.min/-/lru.min-1.1.1.tgz#146e01e3a183fa7ba51049175de04667d5701f0e"
   integrity sha512-FbAj6lXil6t8z4z3j0E5mfRlPzxkySotzUHwRXjlpRh10vc6AI6WN62ehZj82VG7M20rqogJ0GLwar2Xa05a8Q==
 
-lucide-react@^0.468.0:
-  version "0.468.0"
-  resolved "https://registry.yarnpkg.com/lucide-react/-/lucide-react-0.468.0.tgz#830c1bfd905575ddd23b832baa420c87db166910"
-  integrity sha512-6koYRhnM2N0GGZIdXzSeiNwguv1gt/FAjZOiPl76roBi3xKEXa4WmfpxgQwTTL4KipXjefrnf3oV4IsYhi4JFA==
+lucide-react@^0.469.0:
+  version "0.469.0"
+  resolved "https://registry.yarnpkg.com/lucide-react/-/lucide-react-0.469.0.tgz#f16936ca6521482fef754a7eabb310e6c68e1482"
+  integrity sha512-28vvUnnKQ/dBwiCQtwJw7QauYnE7yd2Cyp4tTTJpvglX4EMpbflcdBgrgToX2j71B3YvugK/NH3BGUk+E/p/Fw==
 
 math-intrinsics@^1.0.0:
   version "1.0.0"
@@ -3486,3 +3486,8 @@ yocto-queue@^0.1.0:
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/yocto-queue/-/yocto-queue-0.1.0.tgz#0294eb3dee05028d31ee1a5fa2c556a6aaf10a1b"
   integrity sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==
+
+zustand@^5.0.2:
+  version "5.0.2"
+  resolved "https://registry.yarnpkg.com/zustand/-/zustand-5.0.2.tgz#f7595ada55a565f1fd6464f002a91e701ee0cfca"
+  integrity sha512-8qNdnJVJlHlrKXi50LDqqUNmUbuBjoKLrYQBnoChIbVph7vni+sY+YpvdjXG9YLd/Bxr6scMcR+rm5H3aSqPaw==

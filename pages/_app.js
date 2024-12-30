@@ -1,31 +1,17 @@
 import '@mantine/core/styles.css'
-import { MantineProvider, createTheme } from '@mantine/core'
 import '@/styles/globals.css'
-import { SessionProvider } from 'next-auth/react'
+import { MantineProvider, createTheme } from '@mantine/core'
 import { Notifications } from '@mantine/notifications'
-import DashboardLayout from '@/components/dashboard/layout/DashboardLayout'
 
 const theme = createTheme({
   primaryColor: 'gray',
-  colors: {
-    dark: [
-      '#C1C2C5',
-      '#A6A7AB',
-      '#909296',
-      '#5C5F66',
-      '#373A40',
-      '#2C2E33',
-      '#25262B',
-      '#1A1B1E',
-      '#141517',
-      '#101113',
-    ],
-  },
+  fontFamily: 'Helvetica',
   components: {
     Button: {
       styles: {
         root: {
           transition: 'all 0.2s ease',
+          fontFamily: 'Helvetica'
         }
       }
     },
@@ -39,28 +25,47 @@ const theme = createTheme({
           }
         }
       }
+    },
+    AppShell: {
+      styles: {
+        main: {
+          background: 'transparent'
+        },
+        header: {
+          backgroundColor: '#ffffff',
+          borderBottom: 'none',
+          boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+          'button': {
+            color: '#f97316'
+          },
+          '.mantine-Text-root': {
+            color: '#f97316'
+          }
+        }
+      }
     }
   }
 })
 
-export default function App({ Component, pageProps: { session, ...pageProps } }) {
-  // Check if the page should use the dashboard layout
-  const isDashboardPage = Component.layoutType === 'dashboard'
-
-  if (isDashboardPage) {
-    return (
-      <DashboardLayout>
-        <Component {...pageProps} />
-      </DashboardLayout>
-    )
-  }
-
+export default function App({ Component, pageProps }) {
   return (
-    <SessionProvider session={session}>
-      <MantineProvider theme={theme} defaultColorScheme="dark">
-        <Notifications />
-        <Component {...pageProps} />
-      </MantineProvider>
-    </SessionProvider>
+    <MantineProvider theme={theme}>
+      <div 
+        style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          background: `url('/desktop_bg.png')`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
+          zIndex: -1
+        }}
+      />
+      <Notifications />
+      <Component {...pageProps} />
+    </MantineProvider>
   )
 }
