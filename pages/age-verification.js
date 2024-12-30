@@ -49,7 +49,11 @@ export default function AgeVerification() {
               alt="WeUp LA Logo"
               width={192}
               height={192}
-              style={{ maxWidth: '100%', height: 'auto' }}
+              style={{ 
+                maxWidth: '100%', 
+                height: 'auto',
+                objectFit: 'contain'
+              }}
             />
           </div>
 
