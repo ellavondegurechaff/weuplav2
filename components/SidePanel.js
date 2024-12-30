@@ -179,7 +179,17 @@ export default function SidePanel({ opened, onClose }) {
             <button
               className="w-full py-3 px-4 bg-[#FF4500] text-white font-semibold rounded-md hover:bg-[#FF4500]/90 transition-colors"
               onClick={() => {
-                // Add to homescreen logic
+                if (navigator.standalone) {
+                  alert('App is already installed on your homescreen!')
+                  return
+                }
+                
+                // Show installation instructions for iOS
+                if (/iPhone|iPad|iPod/.test(navigator.userAgent)) {
+                  alert('To install this app on your iPhone:\n\n1. Tap the Share button\n2. Scroll down and tap "Add to Home Screen"\n3. Tap "Add" in the top right')
+                } else {
+                  alert('To install, use the browser\'s "Add to Home Screen" or "Install" feature.')
+                }
               }}
             >
               Add to Homescreen

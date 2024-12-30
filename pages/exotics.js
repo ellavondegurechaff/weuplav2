@@ -1,6 +1,7 @@
 import { AppShell, Container, Grid, Card, Text, Image, Group, Badge, Burger, Button, TextInput } from '@mantine/core'
 import { useDisclosure } from '@mantine/hooks'
 import { ShoppingCart } from 'lucide-react'
+import Head from 'next/head'
 import SidePanel from '@/components/SidePanel'
 import { useState, useEffect } from 'react'
 import { LetterPlaceholder } from '@/components/LetterPlaceholder'
@@ -48,132 +49,137 @@ export default function ExoticsPage() {
   )
 
   return (
-    <AppShell
-      header={{ height: 60 }}
-      padding="0"
-      style={{ backgroundColor: 'transparent' }}
-    >
-      <AppShell.Header>
-        <Group h="100%" px="md">
-          <Burger opened={opened} onClick={toggleNav} size="sm" color="#f97316" />
-          <button onClick={() => setIsCartOpen(true)} style={{ marginLeft: 'auto' }}>
-            <ShoppingCart size={24} color="#f97316" />
-          </button>
-        </Group>
-      </AppShell.Header>
+    <>
+      <Head>
+        <title>GOODSHOP</title>
+      </Head>
+      <AppShell
+        header={{ height: 60 }}
+        padding="0"
+        style={{ backgroundColor: 'transparent' }}
+      >
+        <AppShell.Header>
+          <Group h="100%" px="md">
+            <Burger opened={opened} onClick={toggleNav} size="sm" color="#f97316" />
+            <button onClick={() => setIsCartOpen(true)} style={{ marginLeft: 'auto' }}>
+              <ShoppingCart size={24} color="#f97316" />
+            </button>
+          </Group>
+        </AppShell.Header>
 
-      <SidePanel opened={opened} onClose={closeNav} />
-      <CartSidebar 
-        isCartOpen={isCartOpen} 
-        setIsCartOpen={setIsCartOpen} 
-        activePage="exotics" 
-      />
-      
-      <AppShell.Main>
-        <Container size="xl" py="xl">
-          <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
-            <Text 
-              size="2.5rem"
-              fw={700}
-              c="white"
-              style={{
-                textShadow: '2px 2px 4px rgba(0,0,0,0.3)',
-                letterSpacing: '0.5px'
-              }}
-            >
-              Exotics
-            </Text>
-          </div>
-          
-          {/* Add search input */}
-          <Container size="md" mb="xl">
-            <TextInput
-              placeholder="Search products..."
-              value={searchQuery}
-              onChange={(event) => setSearchQuery(event.currentTarget.value)}
-              size="lg"
-              radius="md"
-              styles={{
-                input: {
-                  backgroundColor: 'rgba(255, 255, 255, 0.95)',
-                  '&:focus': {
-                    borderColor: 'var(--mantine-color-orange-6)',
-                  },
-                },
-              }}
-            />
-          </Container>
-
-          <Grid>
-            {filteredProducts.map((product) => (
-              <Grid.Col key={product.id} span={{ base: 12, sm: 6, md: 4, lg: 3 }}>
-                <Card 
-                  shadow="sm" 
-                  padding="lg" 
-                  radius="md" 
-                  withBorder 
-                  bg="white"
-                  style={{
-                    backdropFilter: 'blur(10px)',
+        <SidePanel opened={opened} onClose={closeNav} />
+        <CartSidebar 
+          isCartOpen={isCartOpen} 
+          setIsCartOpen={setIsCartOpen} 
+          activePage="exotics" 
+        />
+        
+        <AppShell.Main>
+          <Container size="xl" py="xl">
+            <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
+              <Text 
+                size="2.5rem"
+                fw={700}
+                c="white"
+                style={{
+                  textShadow: '2px 2px 4px rgba(0,0,0,0.3)',
+                  letterSpacing: '0.5px'
+                }}
+              >
+                Exotics
+              </Text>
+            </div>
+            
+            {/* Add search input */}
+            <Container size="md" mb="xl">
+              <TextInput
+                placeholder="Search products..."
+                value={searchQuery}
+                onChange={(event) => setSearchQuery(event.currentTarget.value)}
+                size="lg"
+                radius="md"
+                styles={{
+                  input: {
                     backgroundColor: 'rgba(255, 255, 255, 0.95)',
-                    height: '100%',
-                    display: 'flex',
-                    flexDirection: 'column'
-                  }}
-                >
-                  <Card.Section>
-                    {product.image_url && product.image_url.trim() ? (
-                      <Image
-                        src={product.image_url}
-                        height={200}
-                        alt={product.name}
-                      />
-                    ) : (
-                      <div style={{ height: 200 }}>
-                        <LetterPlaceholder name={product.name} />
-                      </div>
-                    )}
-                  </Card.Section>
+                    '&:focus': {
+                      borderColor: 'var(--mantine-color-orange-6)',
+                    },
+                  },
+                }}
+              />
+            </Container>
 
-                  <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
-                    <Group justify="space-between" mt="md" mb="xs">
-                      <Text fw={700} c="black">{product.name}</Text>
-                    </Group>
+            <Grid>
+              {filteredProducts.map((product) => (
+                <Grid.Col key={product.id} span={{ base: 12, sm: 6, md: 4, lg: 3 }}>
+                  <Card 
+                    shadow="sm" 
+                    padding="lg" 
+                    radius="md" 
+                    withBorder 
+                    bg="white"
+                    style={{
+                      backdropFilter: 'blur(10px)',
+                      backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                      height: '100%',
+                      display: 'flex',
+                      flexDirection: 'column'
+                    }}
+                  >
+                    <Card.Section>
+                      {product.image_url && product.image_url.trim() ? (
+                        <Image
+                          src={product.image_url}
+                          height={200}
+                          alt={product.name}
+                        />
+                      ) : (
+                        <div style={{ height: 200 }}>
+                          <LetterPlaceholder name={product.name} />
+                        </div>
+                      )}
+                    </Card.Section>
 
-                    <Group gap="lg" mb="md">
-                      <div>
-                        <Text size="sm" fw={700} c="dark">In-town</Text>
-                        <Text size="xl" fw={700} c="green.6">
-                          ${product.intown_price}
-                        </Text>
-                      </div>
-                      <div>
-                        <Text size="sm" fw={700} c="dark">Shipped</Text>
-                        <Text size="xl" fw={700} c="orange.6">
-                          ${product.shipped_price}
-                        </Text>
-                      </div>
-                    </Group>
+                    <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+                      <Group justify="space-between" mt="md" mb="xs">
+                        <Text fw={700} c="black">{product.name}</Text>
+                      </Group>
 
-                    <Text size="sm" c="dimmed" lineClamp={2} mb="md" style={{ flex: 1 }}>
-                      {product.description}
-                    </Text>
+                      <Group gap="lg" mb="md">
+                        <div>
+                          <Text size="sm" fw={700} c="dark">In-town</Text>
+                          <Text size="xl" fw={700} c="green.6">
+                            ${product.intown_price}
+                          </Text>
+                        </div>
+                        <div>
+                          <Text size="sm" fw={700} c="dark">Shipped</Text>
+                          <Text size="xl" fw={700} c="orange.6">
+                            ${product.shipped_price}
+                          </Text>
+                        </div>
+                      </Group>
 
-                    <Button 
-                      variant="filled" 
-                      color="orange" 
-                      fullWidth 
-                      onClick={() => handleAddToCart(product)}
-                    >
-                      Add to Cart
-                    </Button>
-                  </div>
-                </Card>
-              </Grid.Col>
-            ))}
-          </Grid>
-        </Container>
-      </AppShell.Main>
-    </AppShell>
+                      <Text size="sm" c="dimmed" lineClamp={2} mb="md" style={{ flex: 1 }}>
+                        {product.description}
+                      </Text>
+
+                      <Button 
+                        variant="filled" 
+                        color="orange" 
+                        fullWidth 
+                        onClick={() => handleAddToCart(product)}
+                      >
+                        Add to Cart
+                      </Button>
+                    </div>
+                  </Card>
+                </Grid.Col>
+              ))}
+            </Grid>
+          </Container>
+        </AppShell.Main>
+      </AppShell>
+    </>
   )
 } 

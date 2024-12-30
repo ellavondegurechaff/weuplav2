@@ -44,12 +44,12 @@ export default function AgeVerification() {
       <Container size="xs">
         <Stack spacing="xl" align="center">
           <div className="w-48 h-48 relative mb-4">
-            <Image
+            <img
               src="/logo.png"
               alt="WeUp LA Logo"
               width={192}
               height={192}
-              priority
+              style={{ maxWidth: '100%', height: 'auto' }}
             />
           </div>
 
