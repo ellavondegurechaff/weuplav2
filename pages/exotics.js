@@ -115,7 +115,10 @@ export default function ExoticsPage() {
                   bg="white"
                   style={{
                     backdropFilter: 'blur(10px)',
-                    backgroundColor: 'rgba(255, 255, 255, 0.95)'
+                    backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                    height: '100%',
+                    display: 'flex',
+                    flexDirection: 'column'
                   }}
                 >
                   <Card.Section>
@@ -132,37 +135,39 @@ export default function ExoticsPage() {
                     )}
                   </Card.Section>
 
-                  <Group justify="space-between" mt="md" mb="xs">
-                    <Text fw={700} c="black">{product.name}</Text>
-                  </Group>
+                  <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+                    <Group justify="space-between" mt="md" mb="xs">
+                      <Text fw={700} c="black">{product.name}</Text>
+                    </Group>
 
-                  <Group gap="lg" mb="md">
-                    <div>
-                      <Text size="sm" fw={700} c="dark">In-town</Text>
-                      <Text size="xl" fw={700} c="green.6">
-                        ${product.intown_price}
-                      </Text>
-                    </div>
-                    <div>
-                      <Text size="sm" fw={700} c="dark">Shipped</Text>
-                      <Text size="xl" fw={700} c="orange.6">
-                        ${product.shipped_price}
-                      </Text>
-                    </div>
-                  </Group>
+                    <Group gap="lg" mb="md">
+                      <div>
+                        <Text size="sm" fw={700} c="dark">In-town</Text>
+                        <Text size="xl" fw={700} c="green.6">
+                          ${product.intown_price}
+                        </Text>
+                      </div>
+                      <div>
+                        <Text size="sm" fw={700} c="dark">Shipped</Text>
+                        <Text size="xl" fw={700} c="orange.6">
+                          ${product.shipped_price}
+                        </Text>
+                      </div>
+                    </Group>
 
-                  <Text size="sm" c="dimmed" lineClamp={2} mb="md">
-                    {product.description}
-                  </Text>
+                    <Text size="sm" c="dimmed" lineClamp={2} mb="md" style={{ flex: 1 }}>
+                      {product.description}
+                    </Text>
 
-                  <Button 
-                    variant="filled" 
-                    color="orange" 
-                    fullWidth 
-                    onClick={() => handleAddToCart(product)}
-                  >
-                    Add to Cart
-                  </Button>
+                    <Button 
+                      variant="filled" 
+                      color="orange" 
+                      fullWidth 
+                      onClick={() => handleAddToCart(product)}
+                    >
+                      Add to Cart
+                    </Button>
+                  </div>
                 </Card>
               </Grid.Col>
             ))}

@@ -4,6 +4,7 @@ import { useRouter } from 'next/router'
 import Image from 'next/image'
 import useAgeVerification from '@/lib/useAgeVerification'
 import { setCookie } from 'cookies-next'
+import { SiSignal } from 'react-icons/si'
 
 export default function AgeVerification() {
   const [password, setPassword] = useState('')
@@ -34,7 +35,7 @@ export default function AgeVerification() {
     <div 
       className="min-h-screen flex items-center justify-center"
       style={{
-        backgroundImage: 'url("/bg-orange.jpg")',
+        backgroundImage: 'url("/desktop_bg.png")',
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat'
@@ -118,6 +119,29 @@ export default function AgeVerification() {
                 }
               }}
             />
+
+            <Button
+              fullWidth
+              size="lg"
+              variant="filled"
+              styles={{
+                root: {
+                  backgroundColor: '#3A76F0', // Signal blue color
+                  color: 'white',
+                  '&:hover': {
+                    backgroundColor: '#2861d4'
+                  }
+                },
+                inner: {
+                  justifyContent: 'center', // Center the content
+                  gap: '12px' // Equal spacing between icon and text
+                }
+              }}
+              onClick={() => window.open('https://signal.me/#p/+18189225587', '_blank')}
+              leftSection={<SiSignal size={20} />} // Slightly smaller icon for better balance
+            >
+              Verify on Signal for password
+            </Button>
 
             {error && (
               <Text c="red.3" size="sm" ta="center">
