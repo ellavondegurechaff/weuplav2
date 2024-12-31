@@ -33,7 +33,7 @@ export default function SidePanel({ opened, onClose }) {
         variant="subtle"
         color="dark"
         fullWidth
-        leftSection={<SiTelegram size={20} />}
+        leftSection={<Send size={20} />}
         justify="start"
         styles={{
           root: {
@@ -271,7 +271,7 @@ export default function SidePanel({ opened, onClose }) {
             </button>
             
             <button
-              className="w-full py-3 px-4 bg-[#0088CC] text-white font-semibold rounded-md hover:bg-[#0088CC]/90 transition-colors flex items-center justify-center gap-2 outline outline-3 outline-black"
+              className="w-full py-3 px-4 bg-transparent hover:bg-white/10 text-[#0088CC] font-semibold rounded-md transition-colors flex items-center justify-center gap-2 outline outline-3 outline-[#0088CC]"
               onClick={() => {
                 window.location.href = 'https://t.me/WeUpLA_DM'
               }}

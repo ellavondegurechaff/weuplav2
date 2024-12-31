@@ -37,7 +37,7 @@ export default function AgeVerification() {
     >
       <Container size="xs" className="relative">
         <Stack spacing={0} align="center">
-          <div className="w-80 h-80 relative -mb-20">
+          <div className="w-80 h-80 relative">
             <img
               src="/logo.png"
               alt="WeUp LA Logo"
@@ -51,16 +51,11 @@ export default function AgeVerification() {
             />
           </div>
 
-          <Stack spacing={2} w="100%" className="relative">
-            <Text 
-              size="md"
-              fw={600} 
-              c="white" 
-              ta="center"
-            >
-              You must be 21 or older to access this application.
-            </Text>
-
+          <Stack 
+            spacing={2} 
+            w="100%" 
+            className="relative -mt-32 px-4"
+          >
             <Text fw={600} c="white" size="sm" ta="center">
               PASSWORD:
             </Text>
