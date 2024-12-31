@@ -203,14 +203,49 @@ export default function AnnouncementsPage() {
                         style={{ 
                           flex: 1,
                           whiteSpace: 'pre-wrap',
-                          maxHeight: '4.5em',
-                          overflow: 'hidden',
-                          display: '-webkit-box',
-                          WebkitLineClamp: 3,
-                          WebkitBoxOrient: 'vertical'
+                          position: 'relative'
                         }}
                       >
-                        {announcement.content}
+                        {announcement.content.length > 150 ? (
+                          <>
+                            <div style={{
+                              maxHeight: '4.5em',
+                              overflow: 'hidden',
+                              display: announcement.isExpanded ? 'none' : 'block'
+                            }}>
+                              {announcement.content.slice(0, 150)}...
+                            </div>
+                            <div style={{
+                              display: announcement.isExpanded ? 'block' : 'none'
+                            }}>
+                              {announcement.content}
+                            </div>
+                            <Text 
+                              size="sm" 
+                              c="orange" 
+                              style={{ 
+                                cursor: 'pointer',
+                                position: 'absolute',
+                                bottom: 0,
+                                right: 0,
+                                background: 'white',
+                                paddingLeft: '4px'
+                              }}
+                              onClick={(e) => {
+                                e.stopPropagation()
+                                setAnnouncements(prev => prev.map(a => 
+                                  a.id === announcement.id 
+                                    ? { ...a, isExpanded: !a.isExpanded }
+                                    : a
+                                ))
+                              }}
+                            >
+                              {announcement.isExpanded ? 'Show less' : 'Read more'}
+                            </Text>
+                          </>
+                        ) : (
+                          announcement.content
+                        )}
                       </Text>
                     </div>
                   </Card>
