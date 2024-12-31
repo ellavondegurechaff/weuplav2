@@ -81,13 +81,6 @@ export default function FAQPage() {
             >
               Frequently Asked Questions
             </Text>
-            <Text
-              c="white"
-              size="xl"
-              mt="md"
-            >
-              Contact Us:
-            </Text>
           </div>
 
           <div className="flex flex-col items-center gap-4 mb-12">
