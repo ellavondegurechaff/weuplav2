@@ -105,7 +105,7 @@ export default function FAQPage() {
             
             <a 
               href="/allproducts" 
-              className="inline-block bg-orange-500 text-white font-semibold px-8 py-2 rounded-lg hover:bg-orange-600 transition-colors"
+              className="inline-block bg-orange-400 text-white font-semibold px-8 py-2 rounded-lg hover:bg-orange-500 transition-colors"
             >
               VIEW MENU
             </a>
@@ -140,7 +140,7 @@ export default function FAQPage() {
           <div className="flex flex-col items-center gap-4 mt-12">
             <a 
               href="/allproducts" 
-              className="inline-block bg-orange-500 text-white font-semibold px-8 py-2 rounded-lg hover:bg-orange-600 transition-colors"
+              className="inline-block bg-orange-400 text-white font-semibold px-8 py-2 rounded-lg hover:bg-orange-500 transition-colors"
             >
               VIEW MENU
             </a>
