@@ -1,0 +1,214 @@
+import { useState, useEffect } from 'react'
+import { 
+  AppShell, 
+  Container, 
+  Text, 
+  Card, 
+  Image, 
+  Group,
+  TextInput,
+  Grid,
+  Modal,
+  Burger,
+  Badge
+} from '@mantine/core'
+import { useDisclosure } from '@mantine/hooks'
+import Head from 'next/head'
+import SidePanel from '@/components/SidePanel'
+import { MediaCarousel } from '@/components/MediaCarousel'
+import { LetterPlaceholder } from '@/components/LetterPlaceholder'
+
+export default function AnnouncementsPage() {
+  const [opened, { toggle: toggleNav, close: closeNav }] = useDisclosure()
+  const [announcements, setAnnouncements] = useState([])
+  const [searchQuery, setSearchQuery] = useState('')
+  const [selectedMedia, setSelectedMedia] = useState({ url: null, isVideo: false })
+
+  useEffect(() => {
+    async function fetchAnnouncements() {
+      try {
+        const response = await fetch('/api/announcements/all')
+        const data = await response.json()
+        setAnnouncements(data)
+      } catch (error) {
+        console.error('Error fetching announcements:', error)
+      }
+    }
+    fetchAnnouncements()
+  }, [])
+
+  const handleImageClick = (url, isVideo = false) => {
+    setSelectedMedia({ url, isVideo })
+  }
+
+  const getPriorityColor = (priority) => {
+    switch (priority) {
+      case 'urgent': return 'red'
+      case 'important': return 'orange'
+      default: return null
+    }
+  }
+
+  const filteredAnnouncements = announcements.filter(announcement => 
+    announcement.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    announcement.content.toLowerCase().includes(searchQuery.toLowerCase())
+  )
+
+  return (
+    <>
+      <Head>
+        <title>GOODSHOP - Announcements</title>
+      </Head>
+      <AppShell
+        header={{ height: 60 }}
+        padding="0"
+        style={{ backgroundColor: 'transparent' }}
+      >
+        <AppShell.Header>
+          <Group h="100%" px="md" style={{ justifyContent: 'space-between' }}>
+            <Burger opened={opened} onClick={toggleNav} size="sm" color="#f97316" />
+            <Text size="xl" fw={700} c="black">Announcements</Text>
+            <div style={{ width: 24 }} /> {/* Placeholder for symmetry */}
+          </Group>
+        </AppShell.Header>
+
+        <SidePanel opened={opened} onClose={closeNav} />
+        
+        <AppShell.Main>
+          <Container size="xl" py="xl">
+            <Container size="md" mb="xl">
+              <TextInput
+                placeholder="Search announcements..."
+                value={searchQuery}
+                onChange={(event) => setSearchQuery(event.currentTarget.value)}
+                size="lg"
+                radius="md"
+                styles={{
+                  input: {
+                    backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                    '&:focus': {
+                      borderColor: 'var(--mantine-color-orange-6)',
+                    },
+                  },
+                }}
+              />
+            </Container>
+
+            <Grid>
+              {filteredAnnouncements.map((announcement) => (
+                <Grid.Col key={announcement.id} span={{ base: 12, sm: 6, md: 4, lg: 3 }}>
+                  <Card 
+                    shadow="sm" 
+                    padding="lg" 
+                    radius="md" 
+                    withBorder 
+                    bg="white"
+                    style={{
+                      backdropFilter: 'blur(10px)',
+                      backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                      height: '100%',
+                      display: 'flex',
+                      flexDirection: 'column'
+                    }}
+                  >
+                    <Card.Section 
+                      style={{ 
+                        cursor: 'pointer',
+                        height: '300px',
+                        position: 'relative',
+                        overflow: 'hidden'
+                      }}
+                    >
+                      {announcement.media?.length > 0 ? (
+                        <MediaCarousel 
+                          media={announcement.media} 
+                          onImageClick={handleImageClick}
+                        />
+                      ) : (
+                        <div style={{ height: '100%' }}>
+                          <LetterPlaceholder name={announcement.title} />
+                        </div>
+                      )}
+                    </Card.Section>
+
+                    <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+                      <Group justify="space-between" mt="md" mb="xs">
+                        <Text fw={700} c="black">{announcement.title}</Text>
+                        <Group spacing="xs">
+                          {announcement.priority !== 'normal' && (
+                            <Badge color={getPriorityColor(announcement.priority)}>
+                              {announcement.priority.charAt(0).toUpperCase() + announcement.priority.slice(1)}
+                            </Badge>
+                          )}
+                          <Text size="sm" c="dimmed">
+                            {new Date(announcement.created_at).toLocaleDateString()}
+                          </Text>
+                        </Group>
+                      </Group>
+
+                      <Text 
+                        size="sm" 
+                        c="dimmed" 
+                        style={{ 
+                          flex: 1,
+                          whiteSpace: 'pre-wrap',
+                          maxHeight: '4.5em',
+                          overflow: 'hidden',
+                          display: '-webkit-box',
+                          WebkitLineClamp: 3,
+                          WebkitBoxOrient: 'vertical'
+                        }}
+                      >
+                        {announcement.content}
+                      </Text>
+                    </div>
+                  </Card>
+                </Grid.Col>
+              ))}
+            </Grid>
+          </Container>
+        </AppShell.Main>
+
+        <Modal
+          opened={!!selectedMedia.url}
+          onClose={() => setSelectedMedia({ url: null, isVideo: false })}
+          size="xl"
+          padding={0}
+          styles={{
+            modal: {
+              backgroundColor: 'transparent',
+              boxShadow: 'none',
+            },
+            header: {
+              position: 'absolute',
+              right: 0,
+              top: 0,
+              zIndex: 1000,
+            }
+          }}
+        >
+          {selectedMedia.isVideo ? (
+            <video
+              src={selectedMedia.url}
+              controls
+              autoPlay
+              style={{
+                width: '100%',
+                height: '90vh',
+                objectFit: 'contain',
+                backgroundColor: 'rgba(0, 0, 0, 0.8)'
+              }}
+            />
+          ) : (
+            <Image
+              src={selectedMedia.url}
+              alt="Full size preview"
+              fit="contain"
+              height="90vh"
+            />
+          )}
+        </Modal>
+      </AppShell>
+    </>
+  )
+} 

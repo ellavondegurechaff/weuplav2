@@ -242,7 +242,7 @@ export default function SidePanel({ opened, onClose }) {
 
           <div className="p-4 space-y-3">
             <button
-              className="w-full py-3 px-4 bg-[#FF4500] text-white font-semibold rounded-md hover:bg-[#FF4500]/90 transition-colors outline outline-3 outline-black"
+              className="w-full py-3 px-4 bg-transparent text-[#FF4500] font-semibold rounded-md hover:bg-white/10 transition-colors flex items-center justify-center gap-2 outline outline-3 outline-[#FF4500]"
               onClick={() => {
                 if (navigator.standalone) {
                   alert('App is already installed on your homescreen!')
@@ -264,7 +264,7 @@ export default function SidePanel({ opened, onClose }) {
               href="https://signal.me/#eu/EnEaHC7NjCVwnGkTEFNmNrnoxzrJx4KlTjPUK3kAmgVGBNmrO7VL1qXppTsEAyn0"
               target="_blank"
               rel="noopener noreferrer"
-              className="w-full py-3 px-4 bg-[#3A76F0] text-white font-semibold rounded-md hover:bg-[#3A76F0]/90 transition-colors flex items-center justify-center gap-2 outline outline-3 outline-black"
+              className="w-full py-3 px-4 bg-transparent text-[#3A76F0] font-semibold rounded-md hover:bg-white/10 transition-colors flex items-center justify-center gap-2 outline outline-3 outline-[#3A76F0]"
             >
               <SiSignal size={24} />
               <span className="font-bold">Signal</span>

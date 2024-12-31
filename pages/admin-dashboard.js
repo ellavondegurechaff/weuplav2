@@ -482,20 +482,17 @@ export default function AdminDashboard() {
   return (
     <AppShell padding="md">
       <Container size="xl" py="xl">
-        {isAuthenticated && (
-          <Button 
-            onClick={handleLogout}
-            color="red"
-            mb="xl"
-          >
-            Logout
-          </Button>
-        )}
         <Text size="xl" weight={700} mb="xl">Admin Dashboard</Text>
 
         <Group position="apart" mb="xl">
           <Text size="xl" weight={700}>Product Management</Text>
           <Group>
+            <Button 
+              onClick={() => router.push('/admin-announcements')} 
+              color="blue"
+            >
+              Manage Announcements
+            </Button>
             <Button 
               onClick={() => router.push('/admin-touchdown')} 
               color="blue"

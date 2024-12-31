@@ -5,7 +5,7 @@ import { SiTelegram, SiSignal, SiCashapp, SiBitcoin, SiZelle } from '@icons-pack
 
 export default function MainContent() {
   return (
-    <Container size="xl" className="px-4 py-6 text-black">
+    <Container size="xl" className="px-4 py-6 text-white">
       {/* Contact Us Image */}
       <div className="text-center mb-8">
         <img 
@@ -16,13 +16,13 @@ export default function MainContent() {
       </div>
 
       {/* Social Media Buttons and Top Menu Button */}
-      <div className="flex flex-col items-center gap-4 mb-12">
-        <div className="flex justify-center gap-4 mb-6">
+      <div className="flex flex-col items-center gap-2 mb-8">
+        <div className="flex justify-center gap-4 mb-2">
           <a 
             href="https://signal.me/#eu/EnEaHC7NjCVwnGkTEFNmNrnoxzrJx4KlTjPUK3kAmgVGBNmrO7VL1qXppTsEAyn0"
             target="_blank"
             rel="noopener noreferrer"
-            className="bg-[#3A76F0] text-white px-6 py-3 rounded-md hover:bg-[#3A76F0]/90 transition-colors flex items-center gap-2 outline outline-3 outline-black font-semibold"
+            className="bg-transparent text-white px-6 py-3 rounded-md hover:bg-white/10 transition-colors flex items-center gap-2 outline outline-3 outline-white font-semibold"
             style={{ minWidth: '140px' }}
           >
             <SiSignal size={24} />
@@ -30,7 +30,7 @@ export default function MainContent() {
           </a>
           <a 
             href="https://t.me/WeUpLA_DM"
-            className="bg-[#0088CC] text-white px-6 py-3 rounded-md hover:bg-[#0088CC]/90 transition-colors flex items-center gap-2 outline outline-3 outline-black font-semibold"
+            className="bg-transparent text-white px-6 py-3 rounded-md hover:bg-white/10 transition-colors flex items-center gap-2 outline outline-3 outline-white font-semibold"
             style={{ minWidth: '140px' }}
           >
             <SiTelegram size={24} />
@@ -40,38 +40,38 @@ export default function MainContent() {
         
         <a 
           href="/allproducts" 
-          className="inline-block bg-orange-400 text-white px-8 py-3 rounded-md hover:bg-orange-500/90 transition-colors outline outline-3 outline-black font-semibold"
+          className="inline-block bg-transparent text-white px-8 py-3 rounded-md hover:bg-white/10 transition-colors outline outline-3 outline-white font-semibold"
         >
           VIEW MENU
         </a>
       </div>
 
       {/* Main Content - Centered */}
-      <div className="max-w-2xl mx-auto text-center text-black">
+      <div className="max-w-2xl mx-auto text-center text-white">
         {/* Shipping and Hours Section */}
         <div className="flex justify-center items-center gap-8 mb-6">
           <div>
-            <h2 className="font-bold mb-1 text-black"><u>SHIPPING</u></h2>
-            <p className="font-bold text-black">100% Insured</p>
-            <p className="font-bold text-black">Available 24/7</p>
+            <h2 className="font-bold mb-1 text-white"><u>SHIPPING</u></h2>
+            <p className="font-bold text-white">100% Insured</p>
+            <p className="font-bold text-white">Available 24/7</p>
           </div>
           <div className="h-12 w-px bg-gray-300" />
           <div>
-            <h2 className="font-bold mb-1 text-black"><u>INTOWN</u></h2>
-            <p className="font-bold text-black">Monday - Sunday</p>
-            <p className="font-bold text-black">1pm - 6pm</p>
+            <h2 className="font-bold mb-1 text-white"><u>INTOWN</u></h2>
+            <p className="font-bold text-white">Monday - Sunday</p>
+            <p className="font-bold text-white">1pm - 6pm</p>
           </div>
         </div>
 
-        <p className="mb-8 font-bold text-black">
+        <p className="mb-8 font-bold text-white">
           Menu Updated Daily. Over 100+ Flavors available at all times. Best Prices 
           guaranteed. All Touchdowns are insured with fast and discreet shipping 
           methods. Contact us now to place your orders.
         </p>
 
         <div className="mb-8">
-          <h3 className="font-bold mb-4 text-black"><u>PAYMENTS ACCEPTED</u></h3>
-          <div className="grid grid-cols-2 max-w-xs mx-auto gap-4 font-bold text-black">
+          <h3 className="font-bold mb-4 text-white"><u>PAYMENTS ACCEPTED</u></h3>
+          <div className="grid grid-cols-2 max-w-xs mx-auto gap-4 font-bold text-white">
             <div className="space-y-2">
               <p className="flex items-center gap-2">
                 <SiCashapp size={20} />
@@ -97,27 +97,27 @@ export default function MainContent() {
           </div>
         </div>
 
-        <div className="mb-8 font-bold text-black">
+        <div className="mb-8 font-bold text-white">
           <p>✓ Transporation Service Available</p>
           <p>✓ Bread Routing Available</p>
           <p>For Bulk Players 🏃</p>
         </div>
 
         {/* Bottom Menu Button and Social Media Buttons */}
-        <div className="flex flex-col items-center gap-4">
+        <div className="flex flex-col items-center gap-2">
           <a 
             href="/allproducts" 
-            className="inline-block bg-orange-400 text-white px-8 py-3 rounded-md hover:bg-orange-500/90 transition-colors outline outline-3 outline-black font-semibold"
+            className="inline-block bg-transparent text-white px-8 py-3 rounded-md hover:bg-white/10 transition-colors outline outline-3 outline-white font-semibold"
           >
             VIEW MENU
           </a>
           
-          <div className="flex justify-center gap-4 mt-6">
+          <div className="flex justify-center gap-4 mt-2">
             <a 
               href="https://signal.me/#eu/EnEaHC7NjCVwnGkTEFNmNrnoxzrJx4KlTjPUK3kAmgVGBNmrO7VL1qXppTsEAyn0"
               target="_blank"
               rel="noopener noreferrer"
-              className="bg-[#3A76F0] text-white px-6 py-3 rounded-md hover:bg-[#3A76F0]/90 transition-colors flex items-center gap-2 outline outline-3 outline-black font-semibold"
+              className="bg-transparent text-white px-6 py-3 rounded-md hover:bg-white/10 transition-colors flex items-center gap-2 outline outline-3 outline-white font-semibold"
               style={{ minWidth: '140px' }}
             >
               <SiSignal size={24} />
@@ -125,7 +125,7 @@ export default function MainContent() {
             </a>
             <a 
               href="https://t.me/WeUpLA_DM"
-              className="bg-[#0088CC] text-white px-6 py-3 rounded-md hover:bg-[#0088CC]/90 transition-colors flex items-center gap-2 outline outline-3 outline-black font-semibold"
+              className="bg-transparent text-white px-6 py-3 rounded-md hover:bg-white/10 transition-colors flex items-center gap-2 outline outline-3 outline-white font-semibold"
               style={{ minWidth: '140px' }}
             >
               <SiTelegram size={24} />
