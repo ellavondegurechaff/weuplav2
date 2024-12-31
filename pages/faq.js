@@ -196,7 +196,9 @@ export default function FAQPage() {
           <div className="flex flex-col items-center gap-4 mb-12">
             <div className="flex justify-center gap-4 mb-6">
               <a 
-                href="https://signal.me/#eu/EnEaHC7NjCVwnGkTEFNmNrnoxzrJx4KlTjPUK3kAmgVGBNmrO7VL1qXppTsEAyn0" 
+                href="https://signal.me/#eu/EnEaHC7NjCVwnGkTEFNmNrnoxzrJx4KlTjPUK3kAmgVGBNmrO7VL1qXppTsEAyn0"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="bg-[#3A76F0] text-white px-6 py-3 rounded-md hover:bg-[#3A76F0]/90 transition-colors flex items-center gap-2 outline outline-3 outline-black font-semibold"
                 style={{ minWidth: '140px' }}
               >
@@ -269,7 +271,9 @@ export default function FAQPage() {
             
             <div className="flex justify-center gap-4 mt-6">
               <a 
-                href="https://signal.me/#eu/EnEaHC7NjCVwnGkTEFNmNrnoxzrJx4KlTjPUK3kAmgVGBNmrO7VL1qXppTsEAyn0" 
+                href="https://signal.me/#eu/EnEaHC7NjCVwnGkTEFNmNrnoxzrJx4KlTjPUK3kAmgVGBNmrO7VL1qXppTsEAyn0"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="bg-[#3A76F0] text-white px-6 py-3 rounded-md hover:bg-[#3A76F0]/90 transition-colors flex items-center gap-2 outline outline-3 outline-black font-semibold"
                 style={{ minWidth: '140px' }}
               >

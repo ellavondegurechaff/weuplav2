@@ -90,7 +90,7 @@ export default function SidePanel({ opened, onClose }) {
             <nav className="flex-1">
               <Stack gap="xs">
                 <Link
-                  href="https://signal.me/#eu/EnEaHC7NjCVwnGkTEFNmNrnoxzrJx4KlTjPUK3kAmgVGBNmrO7VL1qXppTsEAyn0"
+                  href="/"
                   style={{ textDecoration: 'none', width: '100%' }}
                   onClick={onClose}
                 >
@@ -260,13 +260,15 @@ export default function SidePanel({ opened, onClose }) {
               Add to Homescreen
             </button>
             
-            <Link
+            <a
               href="https://signal.me/#eu/EnEaHC7NjCVwnGkTEFNmNrnoxzrJx4KlTjPUK3kAmgVGBNmrO7VL1qXppTsEAyn0"
+              target="_blank"
+              rel="noopener noreferrer"
               className="w-full py-3 px-4 bg-[#3A76F0] text-white font-semibold rounded-md hover:bg-[#3A76F0]/90 transition-colors flex items-center justify-center gap-2 outline outline-3 outline-black"
             >
               <SiSignal size={24} />
               <span className="font-bold">Signal</span>
-            </Link>
+            </a>
             
             <button
               className="w-full py-3 px-4 bg-transparent hover:bg-white/10 text-[#0088CC] font-semibold rounded-md transition-colors flex items-center justify-center gap-2 outline outline-3 outline-[#0088CC]"
