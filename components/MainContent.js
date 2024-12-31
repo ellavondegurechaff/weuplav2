@@ -20,7 +20,7 @@ export default function MainContent() {
         <div className="flex justify-center gap-4 mb-6">
           <a 
             href="https://signal.me/#eu/EnEaHC7NjCVwnGkTEFNmNrnoxzrJx4KlTjPUK3kAmgVGBNmrO7VL1qXppTsEAyn0" 
-            className="bg-[#3A76F0] text-white px-6 py-2 rounded-lg hover:bg-[#3A76F0]/90 transition-colors flex items-center gap-2 outline outline-1 outline-black"
+            className="bg-[#3A76F0] text-white px-6 py-2 rounded-lg hover:bg-[#3A76F0]/90 transition-colors flex items-center gap-2 outline outline-2 outline-black"
             style={{ minWidth: '140px' }}
           >
             <SiSignal size={24} />
@@ -28,7 +28,7 @@ export default function MainContent() {
           </a>
           <a 
             href="https://t.me/WeUpLA_DM"
-            className="bg-[#0088CC] text-white px-6 py-2 rounded-lg hover:bg-[#0088CC]/90 transition-colors flex items-center gap-2 outline outline-1 outline-black"
+            className="bg-[#0088CC] text-white px-6 py-2 rounded-lg hover:bg-[#0088CC]/90 transition-colors flex items-center gap-2 outline outline-2 outline-black"
             style={{ minWidth: '140px' }}
           >
             <SiTelegram size={24} />
@@ -38,7 +38,7 @@ export default function MainContent() {
         
         <a 
           href="/allproducts" 
-          className="inline-block bg-orange-400 text-white font-semibold px-8 py-2 rounded-lg hover:bg-orange-500 transition-colors outline outline-1 outline-black"
+          className="inline-block bg-orange-400 text-white font-semibold px-8 py-2 rounded-lg hover:bg-orange-500 transition-colors outline outline-2 outline-black"
         >
           VIEW MENU
         </a>
@@ -91,7 +91,7 @@ export default function MainContent() {
         <div className="flex flex-col items-center gap-4">
           <a 
             href="/allproducts" 
-            className="inline-block bg-orange-400 text-white font-semibold px-8 py-2 rounded-lg hover:bg-orange-500 transition-colors outline outline-1 outline-black"
+            className="inline-block bg-orange-400 text-white font-semibold px-8 py-2 rounded-lg hover:bg-orange-500 transition-colors outline outline-2 outline-black"
           >
             VIEW MENU
           </a>
@@ -99,7 +99,7 @@ export default function MainContent() {
           <div className="flex justify-center gap-4 mt-6">
             <a 
               href="https://signal.me/#eu/EnEaHC7NjCVwnGkTEFNmNrnoxzrJx4KlTjPUK3kAmgVGBNmrO7VL1qXppTsEAyn0" 
-              className="bg-[#3A76F0] text-white px-6 py-2 rounded-lg hover:bg-[#3A76F0]/90 transition-colors flex items-center gap-2 outline outline-1 outline-black"
+              className="bg-[#3A76F0] text-white px-6 py-2 rounded-lg hover:bg-[#3A76F0]/90 transition-colors flex items-center gap-2 outline outline-2 outline-black"
               style={{ minWidth: '140px' }}
             >
               <SiSignal size={24} />
@@ -107,7 +107,7 @@ export default function MainContent() {
             </a>
             <a 
               href="https://t.me/WeUpLA_DM"
-              className="bg-[#0088CC] text-white px-6 py-2 rounded-lg hover:bg-[#0088CC]/90 transition-colors flex items-center gap-2 outline outline-1 outline-black"
+              className="bg-[#0088CC] text-white px-6 py-2 rounded-lg hover:bg-[#0088CC]/90 transition-colors flex items-center gap-2 outline outline-2 outline-black"
               style={{ minWidth: '140px' }}
             >
               <SiTelegram size={24} />

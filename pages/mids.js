@@ -172,7 +172,7 @@ export default function MidsPage() {
                         color="orange" 
                         fullWidth 
                         onClick={() => handleAddToCart(product)}
-                        className="outline outline-1 outline-black"
+                        className="outline outline-2 outline-black"
                       >
                         Add to Cart
                       </Button>

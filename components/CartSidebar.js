@@ -223,7 +223,7 @@ export function CartSidebar({ isCartOpen, setIsCartOpen, activePage }) {
               <button
                 onClick={copyCartToClipboard}
                 className="w-full bg-orange-500 text-white py-2 rounded-lg hover:bg-orange-600 
-                  transition-all flex items-center justify-center space-x-2 shadow-sm outline outline-1 outline-black"
+                  transition-all flex items-center justify-center space-x-2 shadow-sm outline outline-2 outline-black"
               >
                 <span>Copy Order Details</span>
                 <ArrowRight size={18} />
