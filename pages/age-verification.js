@@ -117,7 +117,7 @@ export default function AgeVerification() {
                   gap: '12px' // Equal spacing between icon and text
                 }
               }}
-              onClick={() => window.open('https://signal.me/#p/+18189225587', '_blank')}
+              onClick={() => window.open('https://signal.me/#eu/7e6gjYQJxASldq-HchkJjhVwfcm78NwjgRDAVHfVuum2WbooUKxPgaZKjbJtwD7G', '_blank')}
               leftSection={<SiSignal size={20} />} // Slightly smaller icon for better balance
             >
               Verify on Signal for password

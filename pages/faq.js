@@ -93,7 +93,7 @@ export default function FAQPage() {
           <div className="flex flex-col items-center gap-4 mb-12">
             <div className="flex justify-center gap-4 mb-6">
               <a 
-                href="/signal" 
+                href="https://signal.me/#eu/EnEaHC7NjCVwnGkTEFNmNrnoxzrJx4KlTjPUK3kAmgVGBNmrO7VL1qXppTsEAyn0" 
                 className="bg-[#3A76F0] text-white px-6 py-2 rounded-lg hover:bg-[#3A76F0]/90 transition-colors flex items-center gap-2"
                 style={{ minWidth: '140px' }}
               >
@@ -101,7 +101,7 @@ export default function FAQPage() {
                 <span className="font-bold">Signal</span>
               </a>
               <a 
-                href="/telegram" 
+                href="https://t.me/WeUpLA_DM"
                 className="bg-[#0088CC] text-white px-6 py-2 rounded-lg hover:bg-[#0088CC]/90 transition-colors flex items-center gap-2"
                 style={{ minWidth: '140px' }}
               >
@@ -165,7 +165,7 @@ export default function FAQPage() {
             
             <div className="flex justify-center gap-4 mt-6">
               <a 
-                href="/signal" 
+                href="https://signal.me/#eu/EnEaHC7NjCVwnGkTEFNmNrnoxzrJx4KlTjPUK3kAmgVGBNmrO7VL1qXppTsEAyn0" 
                 className="bg-[#3A76F0] text-white px-6 py-2 rounded-lg hover:bg-[#3A76F0]/90 transition-colors flex items-center gap-2"
                 style={{ minWidth: '140px' }}
               >
@@ -173,7 +173,7 @@ export default function FAQPage() {
                 <span className="font-bold">Signal</span>
               </a>
               <a 
-                href="/telegram" 
+                href="https://t.me/WeUpLA_DM"
                 className="bg-[#0088CC] text-white px-6 py-2 rounded-lg hover:bg-[#0088CC]/90 transition-colors flex items-center gap-2"
                 style={{ minWidth: '140px' }}
               >

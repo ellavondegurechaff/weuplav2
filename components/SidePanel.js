@@ -238,7 +238,7 @@ export default function SidePanel({ opened, onClose }) {
             <button
               className="w-full py-3 px-4 bg-[#0088CC] text-white font-semibold rounded-md hover:bg-[#0088CC]/90 transition-colors flex items-center justify-center gap-2"
               onClick={() => {
-                window.location.href = 'https://t.me/yourusername'
+                window.location.href = 'https://t.me/WeUpLA_DM'
               }}
             >
               <SiTelegram size={24} />
