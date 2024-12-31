@@ -349,7 +349,7 @@ export default function AdminDashboard() {
                     Drag image here or click to select
                   </Text>
                   <Text size="sm" color="dimmed" inline mt={7}>
-                    File should not exceed 5mb
+                    File should not exceed 3mb
                   </Text>
                 </div>
               </Group>
