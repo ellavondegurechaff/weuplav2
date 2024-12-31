@@ -69,7 +69,7 @@ export default function FAQPage() {
       
       <AppShell.Main>
         <Container size="xl" py="xl">
-          <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
+          <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
             <Text 
               size="2.5rem"
               fw={700}
@@ -81,6 +81,12 @@ export default function FAQPage() {
             >
               Frequently Asked Questions
             </Text>
+            
+            <img 
+              src="/contact_us.png" 
+              alt="Contact Us"
+              className="mx-auto mt-4 max-w-[400px] w-full"
+            />
           </div>
 
           <div className="flex flex-col items-center gap-4 mb-12">
@@ -124,14 +130,27 @@ export default function FAQPage() {
               <div
                 key={index}
                 style={{
-                  marginBottom: index === faqItems.length - 1 ? 0 : '2rem'
+                  marginBottom: index === faqItems.length - 1 ? 0 : '2.5rem'
                 }}
               >
-                <Text fw={600} mb="0.5rem" c="white">
-                  {item.question}
+                <Text 
+                  fw={700} 
+                  mb="0.75rem" 
+                  c="white"
+                  size="3xl"
+                  className="flex gap-2 items-start"
+                >
+                  <span className="text-black font-bold text-2xl">Q:</span>
+                  <span className="text-3xl">{item.question}</span>
                 </Text>
-                <Text style={{ whiteSpace: 'pre-line' }} c="white">
-                  {item.answer}
+                <Text 
+                  style={{ whiteSpace: 'pre-line' }} 
+                  c="white"
+                  size="lg"
+                  className="flex gap-2 items-start"
+                >
+                  <span className="text-black font-bold">A:</span>
+                  <span>{item.answer}</span>
                 </Text>
               </div>
             ))}
