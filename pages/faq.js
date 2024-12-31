@@ -81,6 +81,13 @@ export default function FAQPage() {
             >
               Frequently Asked Questions
             </Text>
+            <Text
+              c="white"
+              size="xl"
+              mt="md"
+            >
+              Contact Us:
+            </Text>
           </div>
 
           <div className="flex flex-col items-center gap-4 mb-12">
@@ -131,11 +138,10 @@ export default function FAQPage() {
                   fw={700} 
                   mb="0.75rem" 
                   c="white"
-                  size="3xl"
+                  size="23px"
                   className="flex gap-2 items-start"
                 >
-                  <span className="text-black font-bold text-2xl">Q:</span>
-                  <span className="text-3xl">{item.question}</span>
+                  <span>{item.question}</span>
                 </Text>
                 <Text 
                   style={{ whiteSpace: 'pre-line' }} 
@@ -143,7 +149,6 @@ export default function FAQPage() {
                   size="lg"
                   className="flex gap-2 items-start"
                 >
-                  <span className="text-black font-bold">A:</span>
                   <span>{item.answer}</span>
                 </Text>
               </div>
