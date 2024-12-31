@@ -9,10 +9,10 @@ export default function SidePanel({ opened, onClose }) {
 
   const productItems = [
     { label: 'All Products', href: '/allproducts' },
-    { label: 'Exotics', href: '/exotics' },
-    { label: 'Highs', href: '/highs' },
-    { label: 'Mids', href: '/mids' },
-    { label: 'Lows', href: '/lows' },
+    { label: 'Exotics ($1200+)', href: '/exotics' },
+    { label: 'Highs ($900 - $1150)', href: '/highs' },
+    { label: 'Mids ($600 - $850)', href: '/mids' },
+    { label: 'Lows (Under $600)', href: '/lows' },
     { label: 'Dispos/Carts/Edibles', href: '/dce' }
   ]
 
@@ -157,7 +157,9 @@ export default function SidePanel({ opened, onClose }) {
                               color: 'black',
                               '&:hover': {
                                 backgroundColor: 'rgba(0, 0, 0, 0.05)'
-                              }
+                              },
+                              fontSize: '0.9rem',
+                              padding: '8px 12px'
                             },
                             inner: {
                               justifyContent: 'flex-start'

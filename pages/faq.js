@@ -81,12 +81,6 @@ export default function FAQPage() {
             >
               Frequently Asked Questions
             </Text>
-            
-            <img 
-              src="/contact_us.png" 
-              alt="Contact Us"
-              className="mx-auto mt-4 max-w-[400px] w-full"
-            />
           </div>
 
           <div className="flex flex-col items-center gap-4 mb-12">

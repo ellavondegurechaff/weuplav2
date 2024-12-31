@@ -6,8 +6,17 @@ import { SiTelegram, SiSignal } from '@icons-pack/react-simple-icons'
 export default function MainContent() {
   return (
     <Container size="xl" className="px-4 py-6">
+      {/* Contact Us Image */}
+      <div className="text-center mb-8">
+        <img 
+          src="/contact_us.png" 
+          alt="Contact Us"
+          className="mx-auto max-w-[400px] w-full"
+        />
+      </div>
+
       {/* Social Media Buttons and Top Menu Button */}
-      <div className="flex flex-col items-center gap-4 mb-12 mt-8">
+      <div className="flex flex-col items-center gap-4 mb-12">
         <div className="flex justify-center gap-4 mb-6">
           <a 
             href="/signal" 
