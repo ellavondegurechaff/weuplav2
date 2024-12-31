@@ -80,12 +80,12 @@ export default function HighsPage() {
         
         <AppShell.Main>
           <Container size="xl" py="xl">
-            <Container size="md" mb="xl">
+            <Container size="sm" mb="xl">
               <TextInput
                 placeholder="Search products..."
                 value={searchQuery}
                 onChange={(event) => setSearchQuery(event.currentTarget.value)}
-                size="lg"
+                size="sm"
                 radius="md"
                 styles={{
                   input: {
