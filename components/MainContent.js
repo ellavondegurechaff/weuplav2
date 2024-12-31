@@ -56,6 +56,7 @@ export default function MainContent() {
           <div className="h-12 w-px bg-gray-300" />
           <div>
             <h2 className="font-bold mb-1"><u>INTOWN</u></h2>
+            <p className="font-bold">Monday - Sunday</p>
             <p className="font-bold">1pm - 6pm</p>
           </div>
         </div>
