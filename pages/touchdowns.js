@@ -61,7 +61,7 @@ export default function TouchdownsPage() {
         <AppShell.Header>
           <Group h="100%" px="md" style={{ justifyContent: 'space-between' }}>
             <Burger opened={opened} onClick={toggleNav} size="sm" color="#f97316" />
-            <Text size="xl" fw={700} c="black">Touchdowns</Text>
+            <Text size="xl" fw={700} c="black">Touchdown</Text>
             <button onClick={() => setIsCartOpen(true)}>
               <ShoppingCart size={24} color="#f97316" />
             </button>
