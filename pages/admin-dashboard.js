@@ -12,7 +12,8 @@ import {
   Stack,
   Select,
   Textarea,
-  Loader
+  Loader,
+  Modal
 } from '@mantine/core'
 import { useRouter } from 'next/router'
 import { notifications } from '@mantine/notifications'
@@ -32,9 +33,26 @@ export default function AdminDashboard() {
   const [imageFile, setImageFile] = useState(null)
   const [searchQuery, setSearchQuery] = useState('')
   const [imagePreview, setImagePreview] = useState(null)
+  const [editingProduct, setEditingProduct] = useState(null)
+  const [isEditing, setIsEditing] = useState(false)
 
   const form = useForm({
     initialValues: {
+      name: '',
+      description: '',
+      category_id: null,
+      intown_price: '',
+      shipped_price: '',
+      image_url: ''
+    },
+    validate: {
+      category_id: (value) => (value === null ? 'Please select a category' : null)
+    }
+  })
+
+  const editForm = useForm({
+    initialValues: {
+      id: '',
       name: '',
       description: '',
       category_id: null,
@@ -245,6 +263,105 @@ export default function AdminDashboard() {
     }
   }
 
+  const handleEditClick = (product) => {
+    setEditingProduct(product)
+    setIsEditing(true)
+    editForm.setValues({
+      id: product.id,
+      name: product.name,
+      description: product.description,
+      category_id: product.category_id.toString(),
+      intown_price: product.intown_price,
+      shipped_price: product.shipped_price,
+      image_url: product.image_url
+    })
+    setImagePreview(product.image_url)
+  }
+
+  const handleUpdateProduct = async () => {
+    const validation = editForm.validate()
+    if (validation.hasErrors) {
+      notifications.show({
+        title: 'Error',
+        message: 'Please fill in all required fields',
+        color: 'red',
+        position: 'top-center'
+      })
+      return
+    }
+
+    const loadingModalId = modals.open({
+      title: 'Updating Product',
+      children: (
+        <Stack align="center" spacing="md">
+          <Text c="black">Please wait while we update your product...</Text>
+          <Loader size="lg" color="orange" />
+        </Stack>
+      ),
+      styles: {
+        title: { color: 'black' }
+      },
+      closeOnClickOutside: false,
+      closeOnEscape: false,
+      withCloseButton: false,
+    })
+
+    try {
+      let imageUrl = editForm.values.image_url
+      
+      if (imageFile) {
+        const base64 = await new Promise((resolve) => {
+          const reader = new FileReader()
+          reader.onloadend = () => resolve(reader.result.split(',')[1])
+          reader.readAsDataURL(imageFile)
+        })
+
+        const uploadResponse = await fetch('/api/upload', {
+          method: 'POST',
+          body: base64
+        })
+
+        if (!uploadResponse.ok) throw new Error('Image upload failed')
+        const { url } = await uploadResponse.json()
+        imageUrl = url
+      }
+
+      const response = await fetch('/api/products/update', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          ...editForm.values,
+          image_url: imageUrl
+        })
+      })
+
+      if (!response.ok) throw new Error('Failed to update product')
+
+      setIsEditing(false)
+      setEditingProduct(null)
+      setImageFile(null)
+      setImagePreview(null)
+      fetchProducts()
+      
+      modals.close(loadingModalId)
+      notifications.show({
+        title: 'Success',
+        message: 'Product updated successfully',
+        color: 'green',
+        position: 'top-center'
+      })
+    } catch (error) {
+      console.error('Error updating product:', error)
+      modals.close(loadingModalId)
+      notifications.show({
+        title: 'Error',
+        message: error.message || 'Failed to update product',
+        color: 'red',
+        position: 'top-center'
+      })
+    }
+  }
+
   const filteredProducts = products.filter(product => 
     product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
     product.description.toLowerCase().includes(searchQuery.toLowerCase())
@@ -444,6 +561,16 @@ export default function AdminDashboard() {
 
                 <Button 
                   variant="filled" 
+                  color="blue" 
+                  fullWidth 
+                  onClick={() => handleEditClick(product)}
+                  mb="sm"
+                >
+                  Edit
+                </Button>
+
+                <Button 
+                  variant="filled" 
                   color="red" 
                   fullWidth 
                   onClick={() => handleDeleteProduct(product)}
@@ -455,6 +582,91 @@ export default function AdminDashboard() {
           ))}
         </div>
       </Container>
+
+      {isEditing && (
+        <Modal
+          opened={isEditing}
+          onClose={() => {
+            setIsEditing(false)
+            setEditingProduct(null)
+            setImageFile(null)
+            setImagePreview(null)
+          }}
+          title="Edit Product"
+          size="lg"
+        >
+          <Stack spacing="md">
+            <TextInput
+              label="Product Name"
+              {...editForm.getInputProps('name')}
+            />
+            
+            <Textarea
+              label="Description"
+              {...editForm.getInputProps('description')}
+            />
+
+            <Select
+              label="Category"
+              data={categories.map(cat => ({ value: cat.id.toString(), label: cat.name }))}
+              {...editForm.getInputProps('category_id')}
+            />
+
+            <NumberInput
+              label="In-town Price"
+              precision={2}
+              min={0}
+              {...editForm.getInputProps('intown_price')}
+            />
+
+            <NumberInput
+              label="Shipped Price"
+              precision={2}
+              min={0}
+              {...editForm.getInputProps('shipped_price')}
+            />
+
+            <Dropzone
+              onDrop={handleImageDrop}
+              accept={IMAGE_MIME_TYPE}
+              maxSize={10 * 1024 ** 2}
+            >
+              <Group position="center" spacing="xl" style={{ minHeight: 120, pointerEvents: 'none' }}>
+                <Dropzone.Accept>
+                  <IconUpload size={50} stroke={1.5} />
+                </Dropzone.Accept>
+                <Dropzone.Reject>
+                  <IconX size={50} stroke={1.5} />
+                </Dropzone.Reject>
+                <Dropzone.Idle>
+                  <IconPhoto size={50} stroke={1.5} />
+                </Dropzone.Idle>
+                <div>
+                  <Text size="xl" inline>
+                    Drag image here or click to select
+                  </Text>
+                  <Text size="sm" color="dimmed" inline mt={7}>
+                    File should not exceed 3mb
+                  </Text>
+                </div>
+              </Group>
+            </Dropzone>
+
+            {imagePreview && (
+              <Image
+                src={imagePreview}
+                alt="Preview"
+                height={200}
+                fit="contain"
+              />
+            )}
+
+            <Button onClick={handleUpdateProduct} color="blue">
+              Update Product
+            </Button>
+          </Stack>
+        </Modal>
+      )}
     </AppShell>
   )
 } 
