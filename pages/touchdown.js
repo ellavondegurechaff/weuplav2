@@ -9,7 +9,8 @@ import {
   TextInput,
   Grid,
   Modal,
-  Burger
+  Burger,
+  Badge
 } from '@mantine/core'
 import { useDisclosure } from '@mantine/hooks'
 import { ShoppingCart } from 'lucide-react'
@@ -39,8 +40,35 @@ export default function TouchdownsPage() {
     fetchTouchdowns()
   }, [])
 
-  const handleImageClick = (url, isVideo = false) => {
+  const handleImageClick = async (url, isVideo = false, touchdownId) => {
     setSelectedMedia({ url, isVideo })
+    
+    try {
+      const response = await fetch('/api/touchdowns/track-view', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ touchdownId })
+      })
+      
+      if (!response.ok) {
+        throw new Error('Failed to track view')
+      }
+
+      const { views } = await response.json()
+      
+      // Update the view count in the touchdowns state
+      setTouchdowns(prevTouchdowns => 
+        prevTouchdowns.map(touchdown => 
+          touchdown.id === touchdownId 
+            ? { ...touchdown, view_count: views }
+            : touchdown
+        )
+      )
+    } catch (error) {
+      console.error('Error tracking view:', error)
+    }
   }
 
   const filteredTouchdowns = touchdowns.filter(touchdown => 
@@ -123,7 +151,7 @@ export default function TouchdownsPage() {
                       {touchdown.media?.length > 0 ? (
                         <MediaCarousel 
                           media={touchdown.media} 
-                          onImageClick={handleImageClick}
+                          onImageClick={(url, isVideo) => handleImageClick(url, isVideo, touchdown.id)}
                         />
                       ) : (
                         <div style={{ height: '100%' }}>
@@ -135,6 +163,28 @@ export default function TouchdownsPage() {
                     <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
                       <Group justify="space-between" mt="md" mb="xs">
                         <Text fw={700} c="black">{touchdown.title}</Text>
+                        <Badge 
+                          variant="light" 
+                          color="gray"
+                          leftSection={
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              width="14"
+                              height="14"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              stroke="currentColor"
+                              strokeWidth="2"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                            >
+                              <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" />
+                              <circle cx="12" cy="12" r="3" />
+                            </svg>
+                          }
+                        >
+                          {touchdown.view_count || 0}
+                        </Badge>
                       </Group>
 
                       <Text 

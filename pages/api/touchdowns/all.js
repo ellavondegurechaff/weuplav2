@@ -9,6 +9,7 @@ export default async function handler(req, res) {
     const touchdowns = await query(`
       SELECT 
         t.*,
+        COALESCE(tv.view_count, 0) as view_count,
         COALESCE(
           JSON_ARRAYAGG(
             IF(tm.id IS NOT NULL,
@@ -25,6 +26,7 @@ export default async function handler(req, res) {
         ) as media
       FROM touchdowns t
       LEFT JOIN touchdown_media tm ON t.id = tm.touchdown_id
+      LEFT JOIN touchdown_views tv ON t.id = tv.touchdown_id
       GROUP BY t.id
       ORDER BY t.created_at DESC
     `)

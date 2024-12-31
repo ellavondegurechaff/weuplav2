@@ -47,8 +47,35 @@ export default function HighsPage() {
     product.description.toLowerCase().includes(searchQuery.toLowerCase())
   )
 
-  const handleImageClick = (url, isVideo = false) => {
+  const handleImageClick = async (url, isVideo = false, productId) => {
     setSelectedMedia({ url, isVideo })
+    
+    try {
+      const response = await fetch('/api/products/track-view', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ productId })
+      })
+      
+      if (!response.ok) {
+        throw new Error('Failed to track view')
+      }
+
+      const { views } = await response.json()
+      
+      // Update the view count in the products state
+      setProducts(prevProducts => 
+        prevProducts.map(product => 
+          product.id === productId 
+            ? { ...product, view_count: views }
+            : product
+        )
+      )
+    } catch (error) {
+      console.error('Error tracking view:', error)
+    }
   }
 
   return (
@@ -125,7 +152,7 @@ export default function HighsPage() {
                       {product.media?.length > 0 ? (
                         <MediaCarousel 
                           media={product.media} 
-                          onImageClick={handleImageClick}
+                          onImageClick={(url, isVideo) => handleImageClick(url, isVideo, product.id)}
                         />
                       ) : (
                         <div style={{ height: '100%' }}>
@@ -137,6 +164,28 @@ export default function HighsPage() {
                     <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
                       <Group justify="space-between" mt="md" mb="xs">
                         <Text fw={700} c="black">{product.name}</Text>
+                        <Badge 
+                          variant="light" 
+                          color="gray"
+                          leftSection={
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              width="14"
+                              height="14"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              stroke="currentColor"
+                              strokeWidth="2"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                            >
+                              <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" />
+                              <circle cx="12" cy="12" r="3" />
+                            </svg>
+                          }
+                        >
+                          {product.view_count || 0}
+                        </Badge>
                       </Group>
 
                       <Group gap="lg" mb="md">

@@ -37,8 +37,35 @@ export default function AnnouncementsPage() {
     fetchAnnouncements()
   }, [])
 
-  const handleImageClick = (url, isVideo = false) => {
+  const handleImageClick = async (url, isVideo = false, announcementId) => {
     setSelectedMedia({ url, isVideo })
+    
+    try {
+      const response = await fetch('/api/announcements/track-view', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ announcementId })
+      })
+      
+      if (!response.ok) {
+        throw new Error('Failed to track view')
+      }
+
+      const { views } = await response.json()
+      
+      // Update the view count in the announcements state
+      setAnnouncements(prevAnnouncements => 
+        prevAnnouncements.map(announcement => 
+          announcement.id === announcementId 
+            ? { ...announcement, view_count: views }
+            : announcement
+        )
+      )
+    } catch (error) {
+      console.error('Error tracking view:', error)
+    }
   }
 
   const getPriorityColor = (priority) => {
@@ -122,7 +149,7 @@ export default function AnnouncementsPage() {
                       {announcement.media?.length > 0 ? (
                         <MediaCarousel 
                           media={announcement.media} 
-                          onImageClick={handleImageClick}
+                          onImageClick={(url, isVideo) => handleImageClick(url, isVideo, announcement.id)}
                         />
                       ) : (
                         <div style={{ height: '100%' }}>
@@ -135,6 +162,28 @@ export default function AnnouncementsPage() {
                       <Group justify="space-between" mt="md" mb="xs">
                         <Text fw={700} c="black">{announcement.title}</Text>
                         <Group spacing="xs">
+                          <Badge 
+                            variant="light" 
+                            color="gray"
+                            leftSection={
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="14"
+                                height="14"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                              >
+                                <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" />
+                                <circle cx="12" cy="12" r="3" />
+                              </svg>
+                            }
+                          >
+                            {announcement.view_count || 0}
+                          </Badge>
                           {announcement.priority !== 'normal' && (
                             <Badge color={getPriorityColor(announcement.priority)}>
                               {announcement.priority.charAt(0).toUpperCase() + announcement.priority.slice(1)}

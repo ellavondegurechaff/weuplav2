@@ -9,6 +9,7 @@ export default async function handler(req, res) {
     const products = await query(`
       SELECT 
         p.*,
+        COALESCE(pv.view_count, 0) as view_count,
         COALESCE(
           JSON_ARRAYAGG(
             IF(pm.id IS NOT NULL,
