@@ -352,30 +352,68 @@ export default function AdminDashboard() {
         </Container>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', gap: '1rem' }}>
           {filteredProducts.map((product) => (
-            <Card key={product.id} shadow="sm">
-              {product.image_url && (
-                <Card.Section>
+            <Card 
+              key={product.id} 
+              shadow="sm" 
+              padding="lg" 
+              radius="md" 
+              withBorder 
+              bg="white"
+              style={{
+                backdropFilter: 'blur(10px)',
+                backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                height: '100%',
+                display: 'flex',
+                flexDirection: 'column'
+              }}
+            >
+              <Card.Section>
+                {product.image_url && product.image_url.trim() ? (
                   <Image
                     src={product.image_url}
-                    height={160}
+                    height={200}
                     alt={product.name}
                   />
-                </Card.Section>
-              )}
-              <Text weight={500} mt="md">{product.name}</Text>
-              <Text size="sm" color="dimmed">{product.description}</Text>
-              <Group mt="md">
-                <Text size="sm">In-town: ${product.intown_price}</Text>
-                <Text size="sm">Shipped: ${product.shipped_price}</Text>
-              </Group>
-              <Button 
-                color="red" 
-                fullWidth 
-                mt="md"
-                onClick={() => handleDeleteProduct(product)}
-              >
-                Delete
-              </Button>
+                ) : (
+                  <div style={{ height: 200 }}>
+                    <LetterPlaceholder name={product.name} />
+                  </div>
+                )}
+              </Card.Section>
+
+              <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+                <Group justify="space-between" mt="md" mb="xs">
+                  <Text fw={700} c="black">{product.name}</Text>
+                </Group>
+
+                <Group gap="lg" mb="md">
+                  <div>
+                    <Text size="sm" fw={700} c="dark">In-town</Text>
+                    <Text size="xl" fw={700} c="green.6">
+                      ${product.intown_price}
+                    </Text>
+                  </div>
+                  <div>
+                    <Text size="sm" fw={700} c="dark">Shipped</Text>
+                    <Text size="xl" fw={700} c="orange.6">
+                      ${product.shipped_price}
+                    </Text>
+                  </div>
+                </Group>
+
+                <Text size="sm" c="dimmed" lineClamp={2} mb="md" style={{ flex: 1 }}>
+                  {product.description}
+                </Text>
+
+                <Button 
+                  variant="filled" 
+                  color="red" 
+                  fullWidth 
+                  onClick={() => handleDeleteProduct(product)}
+                >
+                  Delete
+                </Button>
+              </div>
             </Card>
           ))}
         </div>
