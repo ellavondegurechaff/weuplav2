@@ -33,7 +33,7 @@ export default function SidePanel({ opened, onClose }) {
         variant="subtle"
         color="dark"
         fullWidth
-        leftSection={<SiSignal size={20} />}
+        leftSection={<SiTelegram size={20} />}
         justify="start"
         styles={{
           root: {

@@ -35,14 +35,14 @@ export default function AgeVerification() {
         backgroundRepeat: 'no-repeat'
       }}
     >
-      <Container size="xs">
-        <Stack spacing="xs" align="center">
-          <div className="w-64 h-64 relative mb-0">
+      <Container size="xs" className="relative">
+        <Stack spacing={0} align="center">
+          <div className="w-80 h-80 relative -mb-20">
             <img
               src="/logo.png"
               alt="WeUp LA Logo"
-              width={256}
-              height={256}
+              width={320}
+              height={320}
               style={{ 
                 maxWidth: '100%', 
                 height: 'auto',
@@ -51,17 +51,16 @@ export default function AgeVerification() {
             />
           </div>
 
-          <Text 
-            size="lg" 
-            fw={600} 
-            c="white" 
-            ta="center"
-            className="mb-2"
-          >
-            You must be 21 or older to access this application.
-          </Text>
+          <Stack spacing={2} w="100%" className="relative">
+            <Text 
+              size="md"
+              fw={600} 
+              c="white" 
+              ta="center"
+            >
+              You must be 21 or older to access this application.
+            </Text>
 
-          <Stack spacing="xs" w="100%">
             <Text fw={600} c="white" size="sm" ta="center">
               PASSWORD:
             </Text>
@@ -70,7 +69,7 @@ export default function AgeVerification() {
               placeholder="Enter Password to access menu"
               value={password}
               onChange={(e) => setPassword(e.currentTarget.value)}
-              size="lg"
+              size="md"
               styles={{
                 input: {
                   backgroundColor: 'white',
@@ -89,7 +88,7 @@ export default function AgeVerification() {
                   backgroundColor: 'white',
                   color: '#FF4500',
                   width: '120px',
-                  margin: '0 auto',
+                  margin: '4px auto',
                   '&:hover': {
                     backgroundColor: '#f8f9fa'
                   }
