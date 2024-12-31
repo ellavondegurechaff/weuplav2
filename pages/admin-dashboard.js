@@ -201,24 +201,29 @@ export default function AdminDashboard() {
 
     try {
       const mediaUrls = []
+      const BATCH_SIZE = 2 // Upload 2 files at a time
+      const mediaItems = form.values.media
       
-      // Upload all media files
-      for (const mediaItem of form.values.media) {
-        const base64 = await new Promise((resolve) => {
-          const reader = new FileReader()
-          reader.onloadend = () => resolve(reader.result.split(',')[1])
-          reader.readAsDataURL(mediaItem.file)
-        })
+      // Upload media in batches
+      for (let i = 0; i < mediaItems.length; i += BATCH_SIZE) {
+        const batch = mediaItems.slice(i, i + BATCH_SIZE)
+        const batchFiles = await Promise.all(batch.map(async (mediaItem) => {
+          const base64 = await new Promise((resolve) => {
+            const reader = new FileReader()
+            reader.onloadend = () => resolve(reader.result.split(',')[1])
+            reader.readAsDataURL(mediaItem.file)
+          })
+          
+          return {
+            data: base64,
+            type: mediaItem.type === 'video' ? 'video/mp4' : 'image/jpeg'
+          }
+        }))
 
         const uploadResponse = await fetch('/api/upload-multiple', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            files: [{
-              data: base64,
-              type: mediaItem.type === 'video' ? 'video/mp4' : 'image/jpeg'
-            }]
-          })
+          body: JSON.stringify({ files: batchFiles })
         })
 
         if (!uploadResponse.ok) throw new Error('Media upload failed')

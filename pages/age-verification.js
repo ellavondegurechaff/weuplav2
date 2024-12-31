@@ -36,13 +36,13 @@ export default function AgeVerification() {
       }}
     >
       <Container size="xs">
-        <Stack spacing="xl" align="center">
-          <div className="w-48 h-48 relative mb-4">
+        <Stack spacing="xs" align="center">
+          <div className="w-64 h-64 relative mb-0">
             <img
               src="/logo.png"
               alt="WeUp LA Logo"
-              width={192}
-              height={192}
+              width={256}
+              height={256}
               style={{ 
                 maxWidth: '100%', 
                 height: 'auto',
@@ -56,13 +56,13 @@ export default function AgeVerification() {
             fw={600} 
             c="white" 
             ta="center"
-            className="mb-6"
+            className="mb-2"
           >
             You must be 21 or older to access this application.
           </Text>
 
-          <Stack spacing="md" w="100%">
-            <Text fw={600} c="white" size="sm" mt="md" ta="center">
+          <Stack spacing="xs" w="100%">
+            <Text fw={600} c="white" size="sm" ta="center">
               PASSWORD:
             </Text>
 
@@ -96,14 +96,14 @@ export default function AgeVerification() {
                 }
               }}
               onClick={handleVerification}
-              className="outline outline-1 outline-black"
+              className="outline outline-3 outline-black"
             >
               Enter
             </Button>
 
             <a
               href="https://signal.me/#eu/7e6gjYQJxASldq-HchkJjhVwfcm78NwjgRDAVHfVuum2WbooUKxPgaZKjbJtwD7G"
-              className="bg-[#3A76F0] text-white px-6 py-2 rounded-lg hover:bg-[#3A76F0]/90 transition-colors flex items-center gap-2 justify-center w-full outline outline-1 outline-black"
+              className="bg-[#3A76F0] text-white px-6 py-2 rounded-lg hover:bg-[#3A76F0]/90 transition-colors flex items-center gap-2 justify-center w-full outline outline-3 outline-black"
             >
               <SiSignal size={20} />
               <span className="font-bold">Verify on Signal for password</span>
