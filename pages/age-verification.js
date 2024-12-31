@@ -100,28 +100,13 @@ export default function AgeVerification() {
               Enter
             </Button>
 
-            <Button
-              fullWidth
-              size="lg"
-              variant="filled"
-              styles={{
-                root: {
-                  backgroundColor: '#3A76F0', // Signal blue color
-                  color: 'white',
-                  '&:hover': {
-                    backgroundColor: '#2861d4'
-                  }
-                },
-                inner: {
-                  justifyContent: 'center', // Center the content
-                  gap: '12px' // Equal spacing between icon and text
-                }
-              }}
-              onClick={() => window.open('https://signal.me/#eu/7e6gjYQJxASldq-HchkJjhVwfcm78NwjgRDAVHfVuum2WbooUKxPgaZKjbJtwD7G', '_blank')}
-              leftSection={<SiSignal size={20} />} // Slightly smaller icon for better balance
+            <a
+              href="https://signal.me/#eu/7e6gjYQJxASldq-HchkJjhVwfcm78NwjgRDAVHfVuum2WbooUKxPgaZKjbJtwD7G"
+              className="bg-[#3A76F0] text-white px-6 py-2 rounded-lg hover:bg-[#3A76F0]/90 transition-colors flex items-center gap-2 justify-center w-full"
             >
-              Verify on Signal for password
-            </Button>
+              <SiSignal size={20} />
+              <span className="font-bold">Verify on Signal for password</span>
+            </a>
 
             {error && (
               <Text c="red.3" size="sm" ta="center">
