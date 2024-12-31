@@ -23,7 +23,7 @@ export default function FAQPage() {
     },
     {
       question: 'How do I get started on my first order?',
-      answer: 'First step, make sure you are Verified. Only clients who are Verified will get an immediate response. Once you are Verified, contact our sales rep on Signal. If you have an order in your CART, simply press copy list and send it over on SIGNAL MESSENGER. We will tell you payment and get your order out immediately! It\'s that SIMPLE.'
+      answer: 'First step, make sure you are Verified. Only clients who are Verified will get an immediate response. Once you are Verified, contact our sales rep on Signal. If you have an order in your CART, simply press copy list and send it over on SIGNAL MESSENGER. We will accept your payment and get your order out immediately! It\'s that SIMPLE.'
     },
     {
       question: 'What payments are accepted?',
