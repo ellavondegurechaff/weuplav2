@@ -49,26 +49,26 @@ export default function MainContent() {
         {/* Shipping and Hours Section */}
         <div className="flex justify-center items-center gap-8 mb-6">
           <div>
-            <h2 className="font-bold mb-1">Shipping</h2>
-            <p>100% Insured</p>
-            <p>Available 24/7</p>
+            <h2 className="font-bold mb-1"><u>SHIPPING</u></h2>
+            <p className="font-bold">100% Insured</p>
+            <p className="font-bold">Available 24/7</p>
           </div>
           <div className="h-12 w-px bg-gray-300" />
           <div>
-            <h2 className="font-bold mb-1">Intown</h2>
-            <p>1pm - 6pm</p>
+            <h2 className="font-bold mb-1"><u>INTOWN</u></h2>
+            <p className="font-bold">1pm - 6pm</p>
           </div>
         </div>
 
-        <p className="mb-8">
+        <p className="mb-8 font-bold">
           Menu Updated Daily. Over 100+ Flavors available at all times. Best Prices 
           guaranteed. All Touchdowns are insured with fast and discreet shipping 
-          methods. Tag us now to place your orders.
+          methods. Contact us now to place your orders.
         </p>
 
         <div className="mb-8">
-          <h3 className="font-bold mb-4">Payments Accepted</h3>
-          <div className="grid grid-cols-2 max-w-xs mx-auto gap-4">
+          <h3 className="font-bold mb-4"><u>PAYMENTS ACCEPTED</u></h3>
+          <div className="grid grid-cols-2 max-w-xs mx-auto gap-4 font-bold">
             <div>
               <p>Cashapp......... 6%</p>
               <p>Zelle.............. 5%</p>
@@ -80,7 +80,7 @@ export default function MainContent() {
           </div>
         </div>
 
-        <div className="mb-8">
+        <div className="mb-8 font-bold">
           <p>✓ TP-4 Service Available</p>
           <p>✓ Bread Routing Available</p>
           <p>For Bulk Players 🏃</p>
