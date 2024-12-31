@@ -64,7 +64,7 @@ export default function App({ Component, pageProps }) {
           zIndex: -1
         }}
       />
-      <Notifications />
+      <Notifications position="top-center" containerWidth={400} zIndex={2000} />
       <Component {...pageProps} />
     </MantineProvider>
   )

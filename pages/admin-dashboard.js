@@ -1,0 +1,385 @@
+import { useState, useEffect } from 'react'
+import { 
+  AppShell, 
+  Container, 
+  Text, 
+  Button, 
+  TextInput, 
+  NumberInput, 
+  Group, 
+  Card, 
+  Image, 
+  Stack,
+  Select,
+  Textarea
+} from '@mantine/core'
+import { useRouter } from 'next/router'
+import { notifications } from '@mantine/notifications'
+import { Dropzone, IMAGE_MIME_TYPE } from '@mantine/dropzone'
+import { IconUpload, IconX, IconPhoto, IconCheck } from '@tabler/icons-react'
+import { useForm } from '@mantine/form'
+import { rem } from '@mantine/core'
+
+export default function AdminDashboard() {
+  const router = useRouter()
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const [password, setPassword] = useState('')
+  const [products, setProducts] = useState([])
+  const [categories, setCategories] = useState([])
+  const [imageFile, setImageFile] = useState(null)
+  const [searchQuery, setSearchQuery] = useState('')
+  const [imagePreview, setImagePreview] = useState(null)
+
+  const form = useForm({
+    initialValues: {
+      name: '',
+      description: '',
+      category_id: null,
+      intown_price: '',
+      shipped_price: '',
+      image_url: ''
+    },
+    validate: {
+      category_id: (value) => (value === null ? 'Please select a category' : null)
+    }
+  })
+
+  useEffect(() => {
+    fetchProducts()
+    fetchCategories()
+  }, [])
+
+  const fetchProducts = async () => {
+    try {
+      const response = await fetch('/api/products/all')
+      const data = await response.json()
+      setProducts(data)
+    } catch (error) {
+      console.error('Error fetching products:', error)
+    }
+  }
+
+  const fetchCategories = async () => {
+    try {
+      const response = await fetch('/api/categories')
+      const data = await response.json()
+      setCategories(data)
+    } catch (error) {
+      console.error('Error fetching categories:', error)
+    }
+  }
+
+  const handleLogin = () => {
+    if (password === 'admin2024') {
+      setIsAuthenticated(true)
+    } else {
+      notifications.show({
+        title: 'Error',
+        message: 'Invalid password',
+        color: 'red',
+        position: 'top-center'
+      })
+    }
+  }
+
+  const handleImageDrop = (files) => {
+    const file = files[0]
+    setImageFile(file)
+    
+    const previewUrl = URL.createObjectURL(file)
+    setImagePreview(previewUrl)
+    
+    return () => URL.revokeObjectURL(previewUrl)
+  }
+
+  const handleAddProduct = async () => {
+    const validation = form.validate()
+    if (validation.hasErrors) {
+      notifications.show({
+        title: 'Error',
+        message: 'Please fill in all required fields',
+        color: 'red',
+        position: 'top-center'
+      })
+      return
+    }
+
+    const id = notifications.show({
+      loading: true,
+      title: 'Adding product',
+      message: 'Please wait...',
+      autoClose: false,
+      withCloseButton: false,
+      position: 'top-center'
+    })
+
+    try {
+      let imageUrl = form.values.image_url
+      
+      if (imageFile) {
+        const base64 = await new Promise((resolve) => {
+          const reader = new FileReader()
+          reader.onloadend = () => resolve(reader.result.split(',')[1])
+          reader.readAsDataURL(imageFile)
+        })
+
+        const uploadResponse = await fetch('/api/upload', {
+          method: 'POST',
+          body: base64
+        })
+
+        if (!uploadResponse.ok) throw new Error('Image upload failed')
+        const { url } = await uploadResponse.json()
+        imageUrl = url
+      }
+
+      const response = await fetch('/api/products/create', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          ...form.values,
+          image_url: imageUrl
+        })
+      })
+
+      if (!response.ok) throw new Error('Failed to create product')
+      
+      form.reset()
+      setImageFile(null)
+      setImagePreview(null)
+      fetchProducts()
+      
+      notifications.update({
+        id,
+        title: 'Success',
+        message: 'Product added successfully',
+        color: 'green',
+        autoClose: 2000,
+        position: 'top-center'
+      })
+    } catch (error) {
+      console.error('Error adding product:', error)
+      notifications.update({
+        id,
+        title: 'Error',
+        message: error.message || 'Failed to add product',
+        color: 'red',
+        position: 'top-center'
+      })
+    }
+  }
+
+  const handleDeleteProduct = async (product) => {
+    const confirmed = window.confirm('Are you sure you want to delete this product?')
+    if (!confirmed) return
+
+    try {
+      const response = await fetch('/api/products/delete', {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          id: product.id,
+          image_url: product.image_url
+        })
+      })
+
+      if (!response.ok) throw new Error('Failed to delete product')
+      
+      notifications.show({
+        title: 'Success',
+        message: 'Product deleted successfully',
+        color: 'green',
+        position: 'top-center'
+      })
+      
+      fetchProducts()
+    } catch (error) {
+      console.error('Error deleting product:', error)
+      notifications.show({
+        title: 'Error',
+        message: 'Failed to delete product',
+        color: 'red',
+        position: 'top-center'
+      })
+    }
+  }
+
+  const filteredProducts = products.filter(product => 
+    product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    product.description.toLowerCase().includes(searchQuery.toLowerCase())
+  )
+
+  if (!isAuthenticated) {
+    return (
+      <Container size="xs" style={{ marginTop: '20vh' }}>
+        <Card shadow="sm" p="xl">
+          <Text size="xl" weight={500} mb="md">Admin Login</Text>
+          <TextInput
+            placeholder="Enter admin password"
+            value={password}
+            onChange={(e) => setPassword(e.currentTarget.value)}
+            type="password"
+            mb="md"
+          />
+          <Button fullWidth onClick={handleLogin}>Login</Button>
+        </Card>
+      </Container>
+    )
+  }
+
+  return (
+    <AppShell padding="md">
+      <Container size="xl">
+        <Text size="xl" weight={700} mb="xl">Admin Dashboard</Text>
+
+        {/* Add Product Form */}
+        <Card shadow="sm" p="xl" mb="xl">
+          <Text size="lg" weight={500} mb="md">Add New Product</Text>
+          <Stack spacing="md">
+            <TextInput
+              label="Product Name"
+              {...form.getInputProps('name')}
+            />
+            
+            <Textarea
+              label="Description"
+              {...form.getInputProps('description')}
+            />
+
+            <Select
+              label="Category"
+              data={categories.map(cat => ({ value: cat.id.toString(), label: cat.name }))}
+              {...form.getInputProps('category_id')}
+              styles={{
+                input: {
+                  backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                  '&:focus': {
+                    borderColor: 'var(--mantine-color-orange-6)',
+                  },
+                },
+                dropdown: {
+                  backgroundColor: 'white',
+                },
+                option: {
+                  color: 'var(--mantine-color-black)',
+                  '&[data-selected]': {
+                    backgroundColor: 'var(--mantine-color-orange-6)',
+                    color: 'white',
+                  },
+                  '&[data-hovered]': {
+                    backgroundColor: 'var(--mantine-color-orange-1)',
+                    color: 'var(--mantine-color-black)',
+                  },
+                },
+              }}
+            />
+
+            <NumberInput
+              label="In-town Price"
+              precision={2}
+              min={0}
+              {...form.getInputProps('intown_price')}
+            />
+
+            <NumberInput
+              label="Shipped Price"
+              precision={2}
+              min={0}
+              {...form.getInputProps('shipped_price')}
+            />
+
+            <Dropzone
+              onDrop={handleImageDrop}
+              accept={IMAGE_MIME_TYPE}
+              maxSize={5 * 1024 ** 2}
+            >
+              <Group position="center" spacing="xl" style={{ minHeight: 120, pointerEvents: 'none' }}>
+                <Dropzone.Accept>
+                  <IconUpload size={50} stroke={1.5} />
+                </Dropzone.Accept>
+                <Dropzone.Reject>
+                  <IconX size={50} stroke={1.5} />
+                </Dropzone.Reject>
+                <Dropzone.Idle>
+                  <IconPhoto size={50} stroke={1.5} />
+                </Dropzone.Idle>
+                <div>
+                  <Text size="xl" inline>
+                    Drag image here or click to select
+                  </Text>
+                  <Text size="sm" color="dimmed" inline mt={7}>
+                    File should not exceed 5mb
+                  </Text>
+                </div>
+              </Group>
+            </Dropzone>
+
+            {imagePreview && (
+              <Image
+                src={imagePreview}
+                alt="Preview"
+                height={200}
+                fit="contain"
+              />
+            )}
+
+            <Button onClick={handleAddProduct}>Add Product</Button>
+          </Stack>
+        </Card>
+
+        {/* Products List */}
+        <Text size="lg" weight={500} mb="md">Current Products</Text>
+        <Container size="md" mb="xl">
+          <TextInput
+            placeholder="Search products..."
+            value={searchQuery}
+            onChange={(event) => setSearchQuery(event.currentTarget.value)}
+            size="lg"
+            radius="md"
+            styles={{
+              input: {
+                backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                '&:focus': {
+                  borderColor: 'var(--mantine-color-orange-6)',
+                },
+              },
+            }}
+          />
+        </Container>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', gap: '1rem' }}>
+          {filteredProducts.map((product) => (
+            <Card key={product.id} shadow="sm">
+              {product.image_url && (
+                <Card.Section>
+                  <Image
+                    src={product.image_url}
+                    height={160}
+                    alt={product.name}
+                  />
+                </Card.Section>
+              )}
+              <Text weight={500} mt="md">{product.name}</Text>
+              <Text size="sm" color="dimmed">{product.description}</Text>
+              <Group mt="md">
+                <Text size="sm">In-town: ${product.intown_price}</Text>
+                <Text size="sm">Shipped: ${product.shipped_price}</Text>
+              </Group>
+              <Button 
+                color="red" 
+                fullWidth 
+                mt="md"
+                onClick={() => handleDeleteProduct(product)}
+              >
+                Delete
+              </Button>
+            </Card>
+          ))}
+        </div>
+      </Container>
+    </AppShell>
+  )
+} 
