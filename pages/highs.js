@@ -7,6 +7,7 @@ import { useState, useEffect } from 'react'
 import { LetterPlaceholder } from '@/components/LetterPlaceholder'
 import useCartStore from '@/store/cartStore'
 import CartSidebar from '@/components/CartSidebar'
+import { MediaCarousel } from '@/components/MediaCarousel'
 
 export default function HighsPage() {
   const [opened, { toggle: toggleNav, close: closeNav }] = useDisclosure()
@@ -14,7 +15,7 @@ export default function HighsPage() {
   const [isCartOpen, setIsCartOpen] = useState(false)
   const addToCart = useCartStore(state => state.addToCart)
   const [searchQuery, setSearchQuery] = useState('')
-  const [selectedImage, setSelectedImage] = useState(null)
+  const [selectedMedia, setSelectedMedia] = useState({ url: null, isVideo: false })
 
   useEffect(() => {
     async function fetchHighs() {
@@ -46,8 +47,8 @@ export default function HighsPage() {
     product.description.toLowerCase().includes(searchQuery.toLowerCase())
   )
 
-  const handleImageClick = (imageUrl) => {
-    setSelectedImage(imageUrl)
+  const handleImageClick = (url, isVideo = false) => {
+    setSelectedMedia({ url, isVideo })
   }
 
   return (
@@ -61,9 +62,10 @@ export default function HighsPage() {
         style={{ backgroundColor: 'transparent' }}
       >
         <AppShell.Header>
-          <Group h="100%" px="md">
+          <Group h="100%" px="md" style={{ justifyContent: 'space-between' }}>
             <Burger opened={opened} onClick={toggleNav} size="sm" color="#f97316" />
-            <button onClick={() => setIsCartOpen(true)} style={{ marginLeft: 'auto' }}>
+            <Text size="2rem" fw={700} c="#f97316">Highs</Text>
+            <button onClick={() => setIsCartOpen(true)}>
               <ShoppingCart size={24} color="#f97316" />
             </button>
           </Group>
@@ -78,20 +80,6 @@ export default function HighsPage() {
         
         <AppShell.Main>
           <Container size="xl" py="xl">
-            <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
-              <Text 
-                size="2.5rem"
-                fw={700}
-                c="white"
-                style={{
-                  textShadow: '2px 2px 4px rgba(0,0,0,0.3)',
-                  letterSpacing: '0.5px'
-                }}
-              >
-                Highs
-              </Text>
-            </div>
-
             <Container size="md" mb="xl">
               <TextInput
                 placeholder="Search products..."
@@ -127,15 +115,21 @@ export default function HighsPage() {
                       flexDirection: 'column'
                     }}
                   >
-                    <Card.Section style={{ cursor: 'pointer' }} onClick={() => handleImageClick(product.image_url)}>
-                      {product.image_url && product.image_url.trim() ? (
-                        <Image
-                          src={product.image_url}
-                          height={200}
-                          alt={product.name}
+                    <Card.Section 
+                      style={{ 
+                        cursor: 'pointer',
+                        height: '300px',
+                        position: 'relative',
+                        overflow: 'hidden'
+                      }}
+                    >
+                      {product.media?.length > 0 ? (
+                        <MediaCarousel 
+                          media={product.media} 
+                          onImageClick={handleImageClick}
                         />
                       ) : (
-                        <div style={{ height: 200 }}>
+                        <div style={{ height: '100%' }}>
                           <LetterPlaceholder name={product.name} />
                         </div>
                       )}
@@ -191,8 +185,8 @@ export default function HighsPage() {
       </AppShell>
 
       <Modal
-        opened={!!selectedImage}
-        onClose={() => setSelectedImage(null)}
+        opened={!!selectedMedia.url}
+        onClose={() => setSelectedMedia({ url: null, isVideo: false })}
         size="xl"
         padding={0}
         styles={{
@@ -208,12 +202,26 @@ export default function HighsPage() {
           }
         }}
       >
-        <Image
-          src={selectedImage}
-          alt="Full size preview"
-          fit="contain"
-          height="90vh"
-        />
+        {selectedMedia.isVideo ? (
+          <video
+            src={selectedMedia.url}
+            controls
+            autoPlay
+            style={{
+              width: '100%',
+              height: '90vh',
+              objectFit: 'contain',
+              backgroundColor: 'rgba(0, 0, 0, 0.8)'
+            }}
+          />
+        ) : (
+          <Image
+            src={selectedMedia.url}
+            alt="Full size preview"
+            fit="contain"
+            height="90vh"
+          />
+        )}
       </Modal>
     </>
   )

@@ -7,6 +7,7 @@ import { useState, useEffect } from 'react'
 import { LetterPlaceholder } from '@/components/LetterPlaceholder'
 import useCartStore from '@/store/cartStore'
 import CartSidebar from '@/components/CartSidebar'
+import { MediaCarousel } from '@/components/MediaCarousel'
 
 export default function ExoticsPage() {
   const [opened, { toggle: toggleNav, close: closeNav }] = useDisclosure()
@@ -14,15 +15,22 @@ export default function ExoticsPage() {
   const [isCartOpen, setIsCartOpen] = useState(false)
   const addToCart = useCartStore(state => state.addToCart)
   const [searchQuery, setSearchQuery] = useState('')
-  const [selectedImage, setSelectedImage] = useState(null)
+  const [selectedMedia, setSelectedMedia] = useState({ url: null, isVideo: false })
 
   useEffect(() => {
-    // Fetch products for exotics category
     async function fetchExotics() {
       try {
         const response = await fetch('/api/products/exotics')
         const data = await response.json()
-        setProducts(data)
+        // Transform the data to include media array
+        const transformedData = data.map(product => ({
+          ...product,
+          media: product.image_url ? [{
+            url: product.image_url,
+            type: product.image_url.toLowerCase().endsWith('.mp4') ? 'video' : 'image'
+          }] : []
+        }))
+        setProducts(transformedData)
       } catch (error) {
         console.error('Error fetching exotic products:', error)
       }
@@ -34,12 +42,11 @@ export default function ExoticsPage() {
     addToCart({
       id: product.id,
       name: product.name,
-      image: product.image_url,
+      image: product.media?.[0]?.url || product.image_url,
       intown_price: product.intown_price,
       shipped_price: product.shipped_price,
       quantity: 1
     })
-    // Optionally show cart after adding item
     setIsCartOpen(true)
   }
 
@@ -49,8 +56,8 @@ export default function ExoticsPage() {
     product.description.toLowerCase().includes(searchQuery.toLowerCase())
   )
 
-  const handleImageClick = (imageUrl) => {
-    setSelectedImage(imageUrl)
+  const handleImageClick = (url, isVideo = false) => {
+    setSelectedMedia({ url, isVideo })
   }
 
   return (
@@ -64,9 +71,10 @@ export default function ExoticsPage() {
         style={{ backgroundColor: 'transparent' }}
       >
         <AppShell.Header>
-          <Group h="100%" px="md">
+          <Group h="100%" px="md" style={{ justifyContent: 'space-between' }}>
             <Burger opened={opened} onClick={toggleNav} size="sm" color="#f97316" />
-            <button onClick={() => setIsCartOpen(true)} style={{ marginLeft: 'auto' }}>
+            <Text size="2rem" fw={700} c="#f97316">Exotics</Text>
+            <button onClick={() => setIsCartOpen(true)}>
               <ShoppingCart size={24} color="#f97316" />
             </button>
           </Group>
@@ -81,21 +89,6 @@ export default function ExoticsPage() {
         
         <AppShell.Main>
           <Container size="xl" py="xl">
-            <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
-              <Text 
-                size="2.5rem"
-                fw={700}
-                c="white"
-                style={{
-                  textShadow: '2px 2px 4px rgba(0,0,0,0.3)',
-                  letterSpacing: '0.5px'
-                }}
-              >
-                Exotics
-              </Text>
-            </div>
-            
-            {/* Add search input */}
             <Container size="md" mb="xl">
               <TextInput
                 placeholder="Search products..."
@@ -131,15 +124,21 @@ export default function ExoticsPage() {
                       flexDirection: 'column'
                     }}
                   >
-                    <Card.Section style={{ cursor: 'pointer' }} onClick={() => handleImageClick(product.image_url)}>
-                      {product.image_url && product.image_url.trim() ? (
-                        <Image
-                          src={product.image_url}
-                          height={200}
-                          alt={product.name}
+                    <Card.Section 
+                      style={{ 
+                        cursor: 'pointer',
+                        height: '300px',
+                        position: 'relative',
+                        overflow: 'hidden'
+                      }}
+                    >
+                      {Array.isArray(product.media) && product.media.length > 0 ? (
+                        <MediaCarousel 
+                          media={product.media} 
+                          onImageClick={handleImageClick}
                         />
                       ) : (
-                        <div style={{ height: 200 }}>
+                        <div style={{ height: '100%' }}>
                           <LetterPlaceholder name={product.name} />
                         </div>
                       )}
@@ -195,8 +194,8 @@ export default function ExoticsPage() {
       </AppShell>
 
       <Modal
-        opened={!!selectedImage}
-        onClose={() => setSelectedImage(null)}
+        opened={!!selectedMedia.url}
+        onClose={() => setSelectedMedia({ url: null, isVideo: false })}
         size="xl"
         padding={0}
         styles={{
@@ -212,12 +211,26 @@ export default function ExoticsPage() {
           }
         }}
       >
-        <Image
-          src={selectedImage}
-          alt="Full size preview"
-          fit="contain"
-          height="90vh"
-        />
+        {selectedMedia.isVideo ? (
+          <video
+            src={selectedMedia.url}
+            controls
+            autoPlay
+            style={{
+              width: '100%',
+              height: '90vh',
+              objectFit: 'contain',
+              backgroundColor: 'rgba(0, 0, 0, 0.8)'
+            }}
+          />
+        ) : (
+          <Image
+            src={selectedMedia.url}
+            alt="Full size preview"
+            fit="contain"
+            height="90vh"
+          />
+        )}
       </Modal>
     </>
   )

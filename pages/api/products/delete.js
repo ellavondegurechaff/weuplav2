@@ -1,4 +1,4 @@
-import { query } from '@/lib/db'
+import { transaction } from '@/lib/db'
 import { DeleteObjectCommand } from '@aws-sdk/client-s3'
 import { s3Client, BUCKET_NAME } from '@/lib/s3'
 
@@ -8,30 +8,36 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { id, image_url } = req.body
+    const { id } = req.body
 
-    // Delete image from DigitalOcean Spaces if exists
-    if (image_url) {
-      try {
-        // Extract key from the full URL
-        const key = image_url.split(`${BUCKET_NAME}.sgp1.cdn.digitaloceanspaces.com/`)[1]
-        
-        if (key) {
-          await s3Client.send(
-            new DeleteObjectCommand({
-              Bucket: BUCKET_NAME,
-              Key: key
-            })
-          )
+    await transaction(async (connection) => {
+      // Get media URLs
+      const [mediaItems] = await connection.execute(
+        'SELECT media_url FROM product_media WHERE product_id = ?',
+        [id]
+      )
+
+      // Delete media files from storage
+      for (const item of mediaItems) {
+        try {
+          const key = item.media_url.split(`${BUCKET_NAME}.sgp1.cdn.digitaloceanspaces.com/`)[1]
+          if (key) {
+            await s3Client.send(
+              new DeleteObjectCommand({
+                Bucket: BUCKET_NAME,
+                Key: key
+              })
+            )
+          }
+        } catch (error) {
+          console.error('Error deleting media from storage:', error)
         }
-      } catch (error) {
-        console.error('Error deleting image from storage:', error)
-        // Continue with product deletion even if image deletion fails
       }
-    }
 
-    // Delete product from database
-    await query('DELETE FROM products WHERE id = ?', [id])
+      // Delete from database
+      await connection.execute('DELETE FROM product_media WHERE product_id = ?', [id])
+      await connection.execute('DELETE FROM products WHERE id = ?', [id])
+    })
 
     return res.status(200).json({ message: 'Product deleted successfully' })
   } catch (error) {

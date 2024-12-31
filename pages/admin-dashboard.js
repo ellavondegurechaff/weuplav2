@@ -24,6 +24,7 @@ import { rem } from '@mantine/core'
 import { modals } from '@mantine/modals'
 import { LetterPlaceholder } from '@/components/LetterPlaceholder'
 import Cookies from 'js-cookie'
+import { MediaCarousel } from '@/components/MediaCarousel'
 
 const SESSION_COOKIE_NAME = 'admin_session'
 const SESSION_DURATION = 15 * 60 * 1000 // 15 minutes in milliseconds
@@ -40,6 +41,7 @@ export default function AdminDashboard() {
   const [editingProduct, setEditingProduct] = useState(null)
   const [isEditing, setIsEditing] = useState(false)
   const [selectedImage, setSelectedImage] = useState(null)
+  const [selectedMedia, setSelectedMedia] = useState({ url: null, isVideo: false })
 
   const form = useForm({
     initialValues: {
@@ -48,10 +50,11 @@ export default function AdminDashboard() {
       category_id: null,
       intown_price: '',
       shipped_price: '',
-      image_url: ''
+      media: []
     },
     validate: {
-      category_id: (value) => (value === null ? 'Please select a category' : null)
+      category_id: (value) => (value === null ? 'Please select a category' : null),
+      media: (value) => (value.length === 0 ? 'At least one image or video is required' : null)
     }
   })
 
@@ -63,10 +66,11 @@ export default function AdminDashboard() {
       category_id: null,
       intown_price: '',
       shipped_price: '',
-      image_url: ''
+      media: []
     },
     validate: {
-      category_id: (value) => (value === null ? 'Please select a category' : null)
+      category_id: (value) => (value === null ? 'Please select a category' : null),
+      media: (value) => (value.length === 0 ? 'At least one image or video is required' : null)
     }
   })
 
@@ -155,6 +159,16 @@ export default function AdminDashboard() {
     return () => URL.revokeObjectURL(previewUrl)
   }
 
+  const handleMediaDrop = (files) => {
+    const newMedia = files.map(file => ({
+      file,
+      type: file.type.startsWith('video/') ? 'video' : 'image',
+      preview: URL.createObjectURL(file)
+    }))
+    
+    form.setFieldValue('media', [...(form.values.media || []), ...newMedia])
+  }
+
   const handleAddProduct = async () => {
     const validation = form.validate()
     if (validation.hasErrors) {
@@ -186,33 +200,38 @@ export default function AdminDashboard() {
     })
 
     try {
-      let imageUrl = form.values.image_url
+      const mediaUrls = []
       
-      if (imageFile) {
+      // Upload all media files
+      for (const mediaItem of form.values.media) {
         const base64 = await new Promise((resolve) => {
           const reader = new FileReader()
           reader.onloadend = () => resolve(reader.result.split(',')[1])
-          reader.readAsDataURL(imageFile)
+          reader.readAsDataURL(mediaItem.file)
         })
 
-        const uploadResponse = await fetch('/api/upload', {
+        const uploadResponse = await fetch('/api/upload-multiple', {
           method: 'POST',
-          body: base64
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            files: [{
+              data: base64,
+              type: mediaItem.type === 'video' ? 'video/mp4' : 'image/jpeg'
+            }]
+          })
         })
 
-        if (!uploadResponse.ok) throw new Error('Image upload failed')
-        const { url } = await uploadResponse.json()
-        imageUrl = url
+        if (!uploadResponse.ok) throw new Error('Media upload failed')
+        const { urls } = await uploadResponse.json()
+        mediaUrls.push(...urls)
       }
 
       const response = await fetch('/api/products/create', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           ...form.values,
-          image_url: imageUrl
+          media: mediaUrls
         })
       })
 
@@ -315,92 +334,62 @@ export default function AdminDashboard() {
       category_id: product.category_id.toString(),
       intown_price: product.intown_price,
       shipped_price: product.shipped_price,
-      image_url: product.image_url
+      media: product.media || []
     })
     setImagePreview(product.image_url)
   }
 
-  const handleUpdateProduct = async () => {
-    const validation = editForm.validate()
-    if (validation.hasErrors) {
-      notifications.show({
-        title: 'Error',
-        message: 'Please fill in all required fields',
-        color: 'red',
-        position: 'top-center'
-      })
-      return
-    }
-
-    const loadingModalId = modals.open({
-      title: 'Updating Product',
-      children: (
-        <Stack align="center" spacing="md">
-          <Text c="black">Please wait while we update your product...</Text>
-          <Loader size="lg" color="orange" />
-        </Stack>
-      ),
-      styles: {
-        title: { color: 'black' }
-      },
-      closeOnClickOutside: false,
-      closeOnEscape: false,
-      withCloseButton: false,
-    })
-
+  const handleMediaUpload = async (files) => {
     try {
-      let imageUrl = editForm.values.image_url
-      
-      if (imageFile) {
-        const base64 = await new Promise((resolve) => {
-          const reader = new FileReader()
-          reader.onloadend = () => resolve(reader.result.split(',')[1])
-          reader.readAsDataURL(imageFile)
-        })
+      const newMedia = await Promise.all(files.map(async (file) => {
+        const isVideo = file.type.startsWith('video/')
+        const url = URL.createObjectURL(file)
+        
+        return {
+          file,
+          url,
+          type: isVideo ? 'video' : 'image',
+          preview: url
+        }
+      }))
 
-        const uploadResponse = await fetch('/api/upload', {
-          method: 'POST',
-          body: base64
-        })
-
-        if (!uploadResponse.ok) throw new Error('Image upload failed')
-        const { url } = await uploadResponse.json()
-        imageUrl = url
-      }
-
-      const response = await fetch('/api/products/update', {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          ...editForm.values,
-          image_url: imageUrl
-        })
-      })
-
-      if (!response.ok) throw new Error('Failed to update product')
-
-      setIsEditing(false)
-      setEditingProduct(null)
-      setImageFile(null)
-      setImagePreview(null)
-      fetchProducts()
-      
-      modals.close(loadingModalId)
-      notifications.show({
-        title: 'Success',
-        message: 'Product updated successfully',
-        color: 'green',
-        position: 'top-center'
-      })
+      editForm.setFieldValue('media', [...editForm.values.media, ...newMedia])
     } catch (error) {
-      console.error('Error updating product:', error)
-      modals.close(loadingModalId)
+      console.error('Error handling media upload:', error)
       notifications.show({
         title: 'Error',
-        message: error.message || 'Failed to update product',
-        color: 'red',
-        position: 'top-center'
+        message: 'Failed to process media files',
+        color: 'red'
       })
+    }
+  }
+
+  const handleUpdateProduct = async () => {
+    if (!editForm.validate().hasErrors) {
+      try {
+        const response = await fetch('/api/products/update', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(editForm.values)
+        })
+
+        if (!response.ok) throw new Error('Update failed')
+
+        notifications.show({
+          title: 'Success',
+          message: 'Product updated successfully',
+          color: 'green'
+        })
+        
+        setIsEditing(false)
+        fetchProducts()
+      } catch (error) {
+        notifications.show({
+          title: 'Error',
+          message: 'Failed to update product',
+          color: 'red'
+        })
+      }
     }
   }
 
@@ -415,8 +404,8 @@ export default function AdminDashboard() {
     setPassword('')
   }
 
-  const handleImageClick = (imageUrl) => {
-    setSelectedImage(imageUrl)
+  const handleImageClick = (url, isVideo = false) => {
+    setSelectedMedia({ url, isVideo })
   }
 
   if (!isAuthenticated) {
@@ -516,9 +505,13 @@ export default function AdminDashboard() {
             />
 
             <Dropzone
-              onDrop={handleImageDrop}
-              accept={IMAGE_MIME_TYPE}
-              maxSize={10 * 1024 ** 2}
+              onDrop={handleMediaDrop}
+              accept={{
+                'image/*': IMAGE_MIME_TYPE,
+                'video/*': ['.mp4', '.webm']
+              }}
+              maxSize={50 * 1024 ** 2}
+              multiple
             >
               <Group position="center" spacing="xl" style={{ minHeight: 120, pointerEvents: 'none' }}>
                 <Dropzone.Accept>
@@ -532,10 +525,10 @@ export default function AdminDashboard() {
                 </Dropzone.Idle>
                 <div>
                   <Text size="xl" inline c="black">
-                    Drag image here or click to select
+                    Drag images or videos here
                   </Text>
                   <Text size="sm" c="black" inline mt={7}>
-                    File should not exceed 3mb
+                    Files should not exceed 50mb
                   </Text>
                 </div>
               </Group>
@@ -548,6 +541,45 @@ export default function AdminDashboard() {
                 height={200}
                 fit="contain"
               />
+            )}
+
+            {form.values.media?.length > 0 && (
+              <Stack spacing="md">
+                <Text weight={500}>Media Preview</Text>
+                <Group spacing="md">
+                  {form.values.media.map((mediaItem, index) => (
+                    <Card key={index} p="xs" style={{ width: 150 }}>
+                      {mediaItem.type === 'video' ? (
+                        <video
+                          src={mediaItem.preview}
+                          style={{ width: '100%', height: 100, objectFit: 'cover' }}
+                          controls
+                        />
+                      ) : (
+                        <Image
+                          src={mediaItem.preview}
+                          height={100}
+                          fit="cover"
+                          alt={`Preview ${index + 1}`}
+                        />
+                      )}
+                      <Button 
+                        size="xs" 
+                        color="red" 
+                        fullWidth 
+                        mt="xs"
+                        onClick={() => {
+                          const newMedia = [...form.values.media]
+                          newMedia.splice(index, 1)
+                          form.setFieldValue('media', newMedia)
+                        }}
+                      >
+                        Remove
+                      </Button>
+                    </Card>
+                  ))}
+                </Group>
+              </Stack>
             )}
 
             <Button onClick={handleAddProduct}>Add Product</Button>
@@ -587,18 +619,25 @@ export default function AdminDashboard() {
                 backgroundColor: 'rgba(255, 255, 255, 0.95)',
                 height: '100%',
                 display: 'flex',
-                flexDirection: 'column'
+                flexDirection: 'column',
+                width: '100%'
               }}
             >
-              <Card.Section style={{ cursor: 'pointer' }} onClick={() => handleImageClick(product.image_url)}>
-                {product.image_url && product.image_url.trim() ? (
-                  <Image
-                    src={product.image_url}
-                    height={200}
-                    alt={product.name}
+              <Card.Section 
+                style={{ 
+                  cursor: 'pointer',
+                  height: '300px',
+                  position: 'relative',
+                  overflow: 'hidden'
+                }}
+              >
+                {product.media?.length > 0 ? (
+                  <MediaCarousel 
+                    media={product.media} 
+                    onImageClick={handleImageClick}
                   />
                 ) : (
-                  <div style={{ height: 200 }}>
+                  <div style={{ height: '100%' }}>
                     <LetterPlaceholder name={product.name} />
                   </div>
                 )}
@@ -734,9 +773,15 @@ export default function AdminDashboard() {
             />
 
             <Dropzone
-              onDrop={handleImageDrop}
-              accept={IMAGE_MIME_TYPE}
-              maxSize={10 * 1024 ** 2}
+              onDrop={handleMediaUpload}
+              accept={{
+                'image/*': IMAGE_MIME_TYPE,
+                'video/*': ['.mp4', '.mov']
+              }}
+              maxSize={50 * 1024 ** 2}
+              maxFiles={5}
+              multiple
+              disabled={editForm.values.media.length >= 5}
             >
               <Group position="center" spacing="xl" style={{ minHeight: 120, pointerEvents: 'none' }}>
                 <Dropzone.Accept>
@@ -750,22 +795,70 @@ export default function AdminDashboard() {
                 </Dropzone.Idle>
                 <div>
                   <Text size="xl" inline c="black">
-                    Drag image here or click to select
+                    Drag images or videos here or click to select ({editForm.values.media.length}/5)
                   </Text>
                   <Text size="sm" c="black" inline mt={7}>
-                    File should not exceed 3mb
+                    Files should not exceed 50mb
                   </Text>
                 </div>
               </Group>
             </Dropzone>
 
-            {imagePreview && (
-              <Image
-                src={imagePreview}
-                alt="Preview"
-                height={200}
-                fit="contain"
-              />
+            {editForm.values.media.length > 0 && (
+              <Stack spacing="xs">
+                <Text size="sm" weight={500} c="dimmed">Current Media ({editForm.values.media.length}/5)</Text>
+                <Group spacing="xs" style={{ maxHeight: '200px', overflowY: 'auto' }}>
+                  {editForm.values.media.map((media, index) => (
+                    <Card 
+                      key={index}
+                      padding="xs"
+                      radius="sm"
+                      style={{ width: '100px', position: 'relative' }}
+                    >
+                      {media.type === 'video' ? (
+                        <video 
+                          src={media.url} 
+                          style={{ 
+                            width: '100%', 
+                            height: '80px', 
+                            objectFit: 'cover' 
+                          }} 
+                          onClick={() => handleImageClick(media.url, true)}
+                        />
+                      ) : (
+                        <Image 
+                          src={media.url} 
+                          height={80} 
+                          width={100} 
+                          fit="cover" 
+                          radius="xs"
+                          onClick={() => handleImageClick(media.url, false)}
+                        />
+                      )}
+                      <Button 
+                        color="red" 
+                        variant="subtle"
+                        compact
+                        style={{
+                          position: 'absolute',
+                          top: 2,
+                          right: 2,
+                          padding: '2px',
+                          minWidth: 'unset',
+                          height: 'unset'
+                        }}
+                        onClick={() => {
+                          const newMedia = [...editForm.values.media]
+                          newMedia.splice(index, 1)
+                          editForm.setFieldValue('media', newMedia)
+                        }}
+                      >
+                        <IconX size={14} />
+                      </Button>
+                    </Card>
+                  ))}
+                </Group>
+              </Stack>
             )}
 
             <Button onClick={handleUpdateProduct} color="blue">
@@ -776,8 +869,8 @@ export default function AdminDashboard() {
       )}
 
       <Modal
-        opened={!!selectedImage}
-        onClose={() => setSelectedImage(null)}
+        opened={!!selectedMedia.url}
+        onClose={() => setSelectedMedia({ url: null, isVideo: false })}
         size="xl"
         padding={0}
         styles={{
@@ -793,12 +886,26 @@ export default function AdminDashboard() {
           }
         }}
       >
-        <Image
-          src={selectedImage}
-          alt="Full size preview"
-          fit="contain"
-          height="90vh"
-        />
+        {selectedMedia.isVideo ? (
+          <video
+            src={selectedMedia.url}
+            controls
+            autoPlay
+            style={{
+              width: '100%',
+              height: '90vh',
+              objectFit: 'contain',
+              backgroundColor: 'rgba(0, 0, 0, 0.8)'
+            }}
+          />
+        ) : (
+          <Image
+            src={selectedMedia.url}
+            alt="Full size preview"
+            fit="contain"
+            height="90vh"
+          />
+        )}
       </Modal>
     </AppShell>
   )

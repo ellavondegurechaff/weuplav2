@@ -1,5 +1,5 @@
 import { Drawer, Stack, Text, Button, Group, Collapse, Image } from '@mantine/core'
-import { Home, ShoppingCart, MessageCircle, Send, HelpCircle, ChevronDown } from 'lucide-react'
+import { Home, ShoppingCart, MessageCircle, Send, HelpCircle, ChevronDown, Cannabis, Box } from 'lucide-react'
 import { SiTelegram, SiSignal } from '@icons-pack/react-simple-icons'
 import { useState } from 'react'
 import Link from 'next/link'
@@ -18,6 +18,8 @@ export default function SidePanel({ opened, onClose }) {
 
   const menuItems = [
     { icon: <Home size={20} />, label: 'Home', href: '/' },
+    { icon: <Send size={20} />, label: 'Contact Us', href: '/' },
+    { icon: <Box size={20} />, label: 'Touchdown', href: '/touchdown' },
     { icon: <HelpCircle size={20} />, label: 'FAQ', href: '/faq' }
   ]
 
@@ -61,13 +63,13 @@ export default function SidePanel({ opened, onClose }) {
       )}
       
       <div 
-        className={`fixed top-0 left-0 w-64 h-full bg-white transform 
+        className={`fixed top-0 left-0 w-64 h-full bg-[#f2f0d6] transform 
           ${opened ? 'translate-x-0' : '-translate-x-full'}
           transition-transform duration-300 ease-in-out z-[140] overflow-hidden flex flex-col`}
       >
         <div className="h-full flex flex-col overflow-hidden justify-between">
           <div className="flex flex-col h-full">
-            <div className="px-6 h-16 flex items-center justify-between bg-[#FF4500]">
+            <div className="px-6 h-[60px] flex items-center justify-between bg-[#FF4500]">
               <div className="flex items-center space-x-3">
                 <img 
                   src="/logo.png" 
@@ -118,6 +120,7 @@ export default function SidePanel({ opened, onClose }) {
                   variant="subtle"
                   color="dark"
                   fullWidth
+                  leftSection={<Cannabis size={20} />}
                   rightSection={<ChevronDown size={16} />}
                   onClick={() => setIsProductsOpen(!isProductsOpen)}
                   styles={{
@@ -128,9 +131,13 @@ export default function SidePanel({ opened, onClose }) {
                       }
                     },
                     inner: {
-                      justifyContent: 'space-between'
+                      justifyContent: 'flex-start'
+                    },
+                    label: {
+                      flex: 1
                     },
                     rightSection: {
+                      marginLeft: 'auto',
                       color: 'black'
                     }
                   }}
@@ -151,6 +158,7 @@ export default function SidePanel({ opened, onClose }) {
                           variant="subtle"
                           color="dark"
                           fullWidth
+                          leftSection={item.icon}
                           justify="start"
                           styles={{
                             root: {
@@ -174,6 +182,33 @@ export default function SidePanel({ opened, onClose }) {
                 </Collapse>
 
                 <ContactButton />
+
+                <Link
+                  href="/touchdown"
+                  style={{ textDecoration: 'none', width: '100%' }}
+                  onClick={onClose}
+                >
+                  <Button
+                    variant="subtle"
+                    color="dark"
+                    fullWidth
+                    leftSection={<Box size={20} />}
+                    justify="start"
+                    styles={{
+                      root: {
+                        color: 'black',
+                        '&:hover': {
+                          backgroundColor: 'rgba(0, 0, 0, 0.05)'
+                        }
+                      },
+                      inner: {
+                        justifyContent: 'flex-start'
+                      }
+                    }}
+                  >
+                    Touchdown
+                  </Button>
+                </Link>
 
                 <Link
                   href="/faq"
@@ -207,7 +242,7 @@ export default function SidePanel({ opened, onClose }) {
 
           <div className="p-4 space-y-2">
             <button
-              className="w-full py-3 px-4 bg-[#FF4500] text-white font-semibold rounded-md hover:bg-[#FF4500]/90 transition-colors"
+              className="w-full py-3 px-4 bg-[#FF4500] text-white font-semibold rounded-md hover:bg-[#FF4500]/90 transition-colors outline outline-1 outline-black"
               onClick={() => {
                 if (navigator.standalone) {
                   alert('App is already installed on your homescreen!')
@@ -226,7 +261,7 @@ export default function SidePanel({ opened, onClose }) {
             </button>
             
             <button
-              className="w-full py-3 px-4 bg-[#3A76F0] text-white font-semibold rounded-md hover:bg-[#3A76F0]/90 transition-colors flex items-center justify-center gap-2"
+              className="w-full py-3 px-4 bg-[#3A76F0] text-white font-semibold rounded-md hover:bg-[#3A76F0]/90 transition-colors flex items-center justify-center gap-2 outline outline-1 outline-black"
               onClick={() => {
                 window.location.href = 'signal://+1234567890'
               }}
@@ -236,7 +271,7 @@ export default function SidePanel({ opened, onClose }) {
             </button>
             
             <button
-              className="w-full py-3 px-4 bg-[#0088CC] text-white font-semibold rounded-md hover:bg-[#0088CC]/90 transition-colors flex items-center justify-center gap-2"
+              className="w-full py-3 px-4 bg-[#0088CC] text-white font-semibold rounded-md hover:bg-[#0088CC]/90 transition-colors flex items-center justify-center gap-2 outline outline-1 outline-black"
               onClick={() => {
                 window.location.href = 'https://t.me/WeUpLA_DM'
               }}

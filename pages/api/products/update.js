@@ -1,24 +1,45 @@
-import { query } from '@/lib/db'
+import { transaction } from '@/lib/db'
 
 export default async function handler(req, res) {
   if (req.method !== 'PUT') {
     return res.status(405).json({ message: 'Method not allowed' })
   }
 
-  const { id, name, description, category_id, intown_price, shipped_price, image_url } = req.body
+  const { id, name, description, category_id, intown_price, shipped_price, media = [] } = req.body
+
+  if (!id || !name || !category_id) {
+    return res.status(400).json({ message: 'Missing required fields' })
+  }
 
   try {
-    await query(`
-      UPDATE products 
-      SET name = ?, 
-          description = ?, 
-          category_id = ?, 
-          intown_price = ?, 
-          shipped_price = ?,
-          image_url = ?,
-          updated_at = CURRENT_TIMESTAMP
-      WHERE id = ?
-    `, [name, description, category_id, intown_price, shipped_price, image_url, id])
+    await transaction(async (connection) => {
+      // Update product
+      await connection.execute(`
+        UPDATE products 
+        SET name = ?, 
+            description = ?, 
+            category_id = ?, 
+            intown_price = ?, 
+            shipped_price = ?,
+            image_url = ?,
+            updated_at = CURRENT_TIMESTAMP
+        WHERE id = ?
+      `, [name, description, category_id, intown_price, shipped_price, media[0]?.url || null, id])
+
+      // Delete existing media
+      await connection.execute('DELETE FROM product_media WHERE product_id = ?', [id])
+
+      // Insert new media if provided
+      if (media.length > 0) {
+        for (let i = 0; i < media.length; i++) {
+          await connection.execute(
+            `INSERT INTO product_media (product_id, media_url, media_type, display_order) 
+             VALUES (?, ?, ?, ?)`,
+            [id, media[i].url, media[i].type || 'image', i]
+          )
+        }
+      }
+    })
 
     return res.status(200).json({ message: 'Product updated successfully' })
   } catch (error) {

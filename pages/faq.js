@@ -52,9 +52,10 @@ export default function FAQPage() {
       style={{ backgroundColor: 'transparent' }}
     >
       <AppShell.Header>
-        <Group h="100%" px="md">
+        <Group h="100%" px="md" style={{ justifyContent: 'space-between' }}>
           <Burger opened={opened} onClick={toggleNav} size="sm" color="#f97316" />
-          <button onClick={() => setIsCartOpen(true)} style={{ marginLeft: 'auto' }}>
+          <Text size="xl" fw={700} c="#f97316">FAQ</Text>
+          <button onClick={() => setIsCartOpen(true)}>
             <ShoppingCart size={24} color="#f97316" />
           </button>
         </Group>
@@ -87,7 +88,7 @@ export default function FAQPage() {
             <div className="flex justify-center gap-4 mb-6">
               <a 
                 href="https://signal.me/#eu/EnEaHC7NjCVwnGkTEFNmNrnoxzrJx4KlTjPUK3kAmgVGBNmrO7VL1qXppTsEAyn0" 
-                className="bg-[#3A76F0] text-white px-6 py-2 rounded-lg hover:bg-[#3A76F0]/90 transition-colors flex items-center gap-2"
+                className="bg-[#3A76F0] text-white px-6 py-2 rounded-lg hover:bg-[#3A76F0]/90 transition-colors flex items-center gap-2 outline outline-1 outline-black"
                 style={{ minWidth: '140px' }}
               >
                 <SiSignal size={24} />
@@ -95,7 +96,7 @@ export default function FAQPage() {
               </a>
               <a 
                 href="https://t.me/WeUpLA_DM"
-                className="bg-[#0088CC] text-white px-6 py-2 rounded-lg hover:bg-[#0088CC]/90 transition-colors flex items-center gap-2"
+                className="bg-[#0088CC] text-white px-6 py-2 rounded-lg hover:bg-[#0088CC]/90 transition-colors flex items-center gap-2 outline outline-1 outline-black"
                 style={{ minWidth: '140px' }}
               >
                 <SiTelegram size={24} />
@@ -105,7 +106,7 @@ export default function FAQPage() {
             
             <a 
               href="/allproducts" 
-              className="inline-block bg-orange-400 text-white font-semibold px-8 py-2 rounded-lg hover:bg-orange-500 transition-colors"
+              className="inline-block bg-orange-400 text-white font-semibold px-8 py-2 rounded-lg hover:bg-orange-500 transition-colors outline outline-1 outline-black"
             >
               VIEW MENU
             </a>
@@ -151,7 +152,7 @@ export default function FAQPage() {
           <div className="flex flex-col items-center gap-4 mt-12">
             <a 
               href="/allproducts" 
-              className="inline-block bg-orange-400 text-white font-semibold px-8 py-2 rounded-lg hover:bg-orange-500 transition-colors"
+              className="inline-block bg-orange-400 text-white font-semibold px-8 py-2 rounded-lg hover:bg-orange-500 transition-colors outline outline-1 outline-black"
             >
               VIEW MENU
             </a>
@@ -159,7 +160,7 @@ export default function FAQPage() {
             <div className="flex justify-center gap-4 mt-6">
               <a 
                 href="https://signal.me/#eu/EnEaHC7NjCVwnGkTEFNmNrnoxzrJx4KlTjPUK3kAmgVGBNmrO7VL1qXppTsEAyn0" 
-                className="bg-[#3A76F0] text-white px-6 py-2 rounded-lg hover:bg-[#3A76F0]/90 transition-colors flex items-center gap-2"
+                className="bg-[#3A76F0] text-white px-6 py-2 rounded-lg hover:bg-[#3A76F0]/90 transition-colors flex items-center gap-2 outline outline-1 outline-black"
                 style={{ minWidth: '140px' }}
               >
                 <SiSignal size={24} />
@@ -167,7 +168,7 @@ export default function FAQPage() {
               </a>
               <a 
                 href="https://t.me/WeUpLA_DM"
-                className="bg-[#0088CC] text-white px-6 py-2 rounded-lg hover:bg-[#0088CC]/90 transition-colors flex items-center gap-2"
+                className="bg-[#0088CC] text-white px-6 py-2 rounded-lg hover:bg-[#0088CC]/90 transition-colors flex items-center gap-2 outline outline-1 outline-black"
                 style={{ minWidth: '140px' }}
               >
                 <SiTelegram size={24} />

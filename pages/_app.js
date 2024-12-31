@@ -33,14 +33,19 @@ const theme = createTheme({
           background: 'transparent'
         },
         header: {
-          backgroundColor: '#ffffff',
+          backgroundColor: '#f2f0d6',
           borderBottom: 'none',
           boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
           'button': {
             color: '#f97316'
           },
           '.mantine-Text-root': {
-            color: '#f97316'
+            color: '#f97316',
+            position: 'absolute',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            fontSize: '24px',
+            fontWeight: 700
           }
         }
       }
