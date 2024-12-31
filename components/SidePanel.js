@@ -1,5 +1,5 @@
 import { Drawer, Stack, Text, Button, Group, Collapse, Image } from '@mantine/core'
-import { Home, ShoppingCart, MessageCircle, Send, HelpCircle, ChevronDown, Cannabis, Box } from 'lucide-react'
+import { Home, ShoppingCart, MessageCircle, Send, HelpCircle, ChevronDown, Cannabis, Box, Bell } from 'lucide-react'
 import { SiTelegram, SiSignal } from '@icons-pack/react-simple-icons'
 import { useState } from 'react'
 import Link from 'next/link'
@@ -18,6 +18,7 @@ export default function SidePanel({ opened, onClose }) {
 
   const menuItems = [
     { icon: <Home size={20} />, label: 'Home', href: '/' },
+    { icon: <Bell size={20} />, label: 'Announcements', href: '/announcements' },
     { icon: <Send size={20} />, label: 'Contact Us', href: '/' },
     { icon: <Box size={20} />, label: 'Touchdown', href: '/touchdown' },
     { icon: <HelpCircle size={20} />, label: 'FAQ', href: '/faq' }
@@ -113,6 +114,33 @@ export default function SidePanel({ opened, onClose }) {
                     }}
                   >
                     Home
+                  </Button>
+                </Link>
+
+                <Link
+                  href="/announcements"
+                  style={{ textDecoration: 'none', width: '100%' }}
+                  onClick={onClose}
+                >
+                  <Button
+                    variant="subtle"
+                    color="dark"
+                    fullWidth
+                    leftSection={<Bell size={20} />}
+                    justify="start"
+                    styles={{
+                      root: {
+                        color: 'black',
+                        '&:hover': {
+                          backgroundColor: 'rgba(0, 0, 0, 0.05)'
+                        }
+                      },
+                      inner: {
+                        justifyContent: 'flex-start'
+                      }
+                    }}
+                  >
+                    Announcements
                   </Button>
                 </Link>
 
