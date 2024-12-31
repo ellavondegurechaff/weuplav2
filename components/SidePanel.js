@@ -17,9 +17,37 @@ export default function SidePanel({ opened, onClose }) {
 
   const menuItems = [
     { icon: <Home size={20} />, label: 'Home', href: '/' },
-    { icon: <Send size={20} />, label: 'Contact Us', href: '/contact' },
     { icon: <HelpCircle size={20} />, label: 'FAQ', href: '/faq' }
   ]
+
+  const ContactButton = () => (
+    <Link
+      href="/"
+      style={{ textDecoration: 'none', width: '100%' }}
+      onClick={onClose}
+    >
+      <Button
+        variant="subtle"
+        color="dark"
+        fullWidth
+        leftSection={<Send size={20} />}
+        justify="start"
+        styles={{
+          root: {
+            color: 'black',
+            '&:hover': {
+              backgroundColor: 'rgba(0, 0, 0, 0.05)'
+            }
+          },
+          inner: {
+            justifyContent: 'flex-start'
+          }
+        }}
+      >
+        Contact Us
+      </Button>
+    </Link>
+  )
 
   return (
     <>
@@ -142,35 +170,34 @@ export default function SidePanel({ opened, onClose }) {
                   </Stack>
                 </Collapse>
 
-                {menuItems.slice(1).map((item, index) => (
-                  <Link
-                    key={index}
-                    href={item.href}
-                    style={{ textDecoration: 'none', width: '100%' }}
-                    onClick={onClose}
-                  >
-                    <Button
-                      variant="subtle"
-                      color="dark"
-                      fullWidth
-                      leftSection={item.icon}
-                      justify="start"
-                      styles={{
-                        root: {
-                          color: 'black',
-                          '&:hover': {
-                            backgroundColor: 'rgba(0, 0, 0, 0.05)'
-                          }
-                        },
-                        inner: {
-                          justifyContent: 'flex-start'
+                <ContactButton />
+
+                <Link
+                  href="/faq"
+                  style={{ textDecoration: 'none', width: '100%' }}
+                  onClick={onClose}
+                >
+                  <Button
+                    variant="subtle"
+                    color="dark"
+                    fullWidth
+                    leftSection={<HelpCircle size={20} />}
+                    justify="start"
+                    styles={{
+                      root: {
+                        color: 'black',
+                        '&:hover': {
+                          backgroundColor: 'rgba(0, 0, 0, 0.05)'
                         }
-                      }}
-                    >
-                      {item.label}
-                    </Button>
-                  </Link>
-                ))}
+                      },
+                      inner: {
+                        justifyContent: 'flex-start'
+                      }
+                    }}
+                  >
+                    FAQ
+                  </Button>
+                </Link>
               </Stack>
             </nav>
           </div>

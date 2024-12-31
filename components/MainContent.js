@@ -1,6 +1,7 @@
 import React from 'react';
 import { Container } from '@mantine/core';
 import { Clock, MapPin, CreditCard, Package } from 'lucide-react';
+import { SiTelegram, SiSignal } from '@icons-pack/react-simple-icons'
 
 export default function MainContent() {
   return (
@@ -10,15 +11,17 @@ export default function MainContent() {
         <div className="flex justify-center gap-4 mb-6">
           <a 
             href="/telegram" 
-            className="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition-colors"
+            className="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition-colors flex items-center gap-2"
           >
-            Telegram
+            <SiTelegram size={20} />
+            <span className="font-bold">Telegram</span>
           </a>
           <a 
             href="/signal" 
-            className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+            className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2"
           >
-            Signal
+            <SiSignal size={20} />
+            <span className="font-bold">Signal</span>
           </a>
         </div>
         
@@ -72,12 +75,32 @@ export default function MainContent() {
           <p>For Bulk Players 🏃</p>
         </div>
 
-        <a 
-          href="/allproducts" 
-          className="inline-block bg-orange-500 text-white font-semibold px-8 py-2 rounded-lg hover:bg-orange-600 transition-colors"
-        >
-          VIEW MENU
-        </a>
+        {/* Bottom Menu Button and Social Media Buttons */}
+        <div className="flex flex-col items-center gap-4">
+          <a 
+            href="/allproducts" 
+            className="inline-block bg-orange-500 text-white font-semibold px-8 py-2 rounded-lg hover:bg-orange-600 transition-colors"
+          >
+            VIEW MENU
+          </a>
+          
+          <div className="flex justify-center gap-4 mt-6">
+            <a 
+              href="/telegram" 
+              className="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition-colors flex items-center gap-2"
+            >
+              <SiTelegram size={20} />
+              <span className="font-bold">Telegram</span>
+            </a>
+            <a 
+              href="/signal" 
+              className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2"
+            >
+              <SiSignal size={20} />
+              <span className="font-bold">Signal</span>
+            </a>
+          </div>
+        </div>
       </div>
     </Container>
   )
