@@ -240,7 +240,7 @@ export default function SidePanel({ opened, onClose }) {
             </nav>
           </div>
 
-          <div className="p-4 space-y-2">
+          <div className="p-4 space-y-3">
             <button
               className="w-full py-3 px-4 bg-[#FF4500] text-white font-semibold rounded-md hover:bg-[#FF4500]/90 transition-colors outline outline-3 outline-black"
               onClick={() => {
@@ -271,7 +271,7 @@ export default function SidePanel({ opened, onClose }) {
             </button>
             
             <button
-              className="w-full py-3 px-4 bg-[#0088CC] text-white font-semibold rounded-md hover:bg-[#0088CC]/90 transition-colors flex items-center justify-center gap-2 outline outline-4 outline-black"
+              className="w-full py-3 px-4 bg-[#0088CC] text-white font-semibold rounded-md hover:bg-[#0088CC]/90 transition-colors flex items-center justify-center gap-2 outline outline-3 outline-black"
               onClick={() => {
                 window.location.href = 'https://t.me/WeUpLA_DM'
               }}

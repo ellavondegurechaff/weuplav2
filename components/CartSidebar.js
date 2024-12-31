@@ -222,8 +222,8 @@ export function CartSidebar({ isCartOpen, setIsCartOpen, activePage }) {
               </div>
               <button
                 onClick={copyCartToClipboard}
-                className="w-full bg-orange-500 text-white py-2 rounded-lg hover:bg-orange-600 
-                  transition-all flex items-center justify-center space-x-2 shadow-sm outline outline-2 outline-black"
+                className="w-full bg-orange-500 text-white py-3 px-4 rounded-md hover:bg-orange-500/90 
+                  transition-colors flex items-center justify-center space-x-2 outline outline-3 outline-black font-semibold"
               >
                 <span>Copy Order Details</span>
                 <ArrowRight size={18} />

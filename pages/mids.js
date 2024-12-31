@@ -172,7 +172,13 @@ export default function MidsPage() {
                         color="orange" 
                         fullWidth 
                         onClick={() => handleAddToCart(product)}
-                        className="outline outline-2 outline-black"
+                        className="outline outline-3 outline-black font-semibold hover:bg-orange-500/90 transition-colors"
+                        styles={{
+                          root: {
+                            padding: '0.75rem 1rem', // py-3 px-4
+                            borderRadius: '0.375rem', // rounded-md
+                          }
+                        }}
                       >
                         Add to Cart
                       </Button>
