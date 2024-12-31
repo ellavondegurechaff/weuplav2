@@ -54,7 +54,7 @@ export default function FAQPage() {
       <AppShell.Header>
         <Group h="100%" px="md" style={{ justifyContent: 'space-between' }}>
           <Burger opened={opened} onClick={toggleNav} size="sm" color="#f97316" />
-          <Text size="xl" fw={700} c="#f97316">FAQ</Text>
+          <Text size="xl" fw={700} c="black">FAQ</Text>
           <button onClick={() => setIsCartOpen(true)}>
             <ShoppingCart size={24} color="#f97316" />
           </button>

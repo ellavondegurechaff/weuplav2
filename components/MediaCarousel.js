@@ -52,6 +52,9 @@ export function MediaCarousel({ media, onImageClick }) {
           <video
             src={currentMedia.url}
             controls
+            autoPlay
+            muted
+            loop
             style={{ 
               width: '100%', 
               height: '100%', 

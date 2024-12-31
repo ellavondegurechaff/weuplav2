@@ -63,7 +63,7 @@ export default function SidePanel({ opened, onClose }) {
       )}
       
       <div 
-        className={`fixed top-0 left-0 w-64 h-full bg-[#ECDCB9] transform 
+        className={`fixed top-0 left-0 w-64 h-full bg-[#f2f0d6] transform 
           ${opened ? 'translate-x-0' : '-translate-x-full'}
           transition-transform duration-300 ease-in-out z-[140] overflow-hidden flex flex-col`}
       >
@@ -242,7 +242,7 @@ export default function SidePanel({ opened, onClose }) {
 
           <div className="p-4 space-y-2">
             <button
-              className="w-full py-3 px-4 bg-[#FF4500] text-white font-semibold rounded-md hover:bg-[#FF4500]/90 transition-colors outline outline-2 outline-black"
+              className="w-full py-3 px-4 bg-[#FF4500] text-white font-semibold rounded-md hover:bg-[#FF4500]/90 transition-colors outline outline-3 outline-black"
               onClick={() => {
                 if (navigator.standalone) {
                   alert('App is already installed on your homescreen!')
@@ -261,7 +261,7 @@ export default function SidePanel({ opened, onClose }) {
             </button>
             
             <button
-              className="w-full py-3 px-4 bg-[#3A76F0] text-white font-semibold rounded-md hover:bg-[#3A76F0]/90 transition-colors flex items-center justify-center gap-2 outline outline-2 outline-black"
+              className="w-full py-3 px-4 bg-[#3A76F0] text-white font-semibold rounded-md hover:bg-[#3A76F0]/90 transition-colors flex items-center justify-center gap-2 outline outline-3 outline-black"
               onClick={() => {
                 window.location.href = 'signal://+1234567890'
               }}
@@ -271,7 +271,7 @@ export default function SidePanel({ opened, onClose }) {
             </button>
             
             <button
-              className="w-full py-3 px-4 bg-[#0088CC] text-white font-semibold rounded-md hover:bg-[#0088CC]/90 transition-colors flex items-center justify-center gap-2 outline outline-2 outline-black"
+              className="w-full py-3 px-4 bg-[#0088CC] text-white font-semibold rounded-md hover:bg-[#0088CC]/90 transition-colors flex items-center justify-center gap-2 outline outline-4 outline-black"
               onClick={() => {
                 window.location.href = 'https://t.me/WeUpLA_DM'
               }}

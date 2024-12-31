@@ -64,7 +64,7 @@ export default function AllProductsPage() {
         <AppShell.Header>
           <Group h="100%" px="md" style={{ justifyContent: 'space-between' }}>
             <Burger opened={opened} onClick={toggleNav} size="sm" color="#f97316" />
-            <Text size="2rem" fw={700} c="#f97316">All Products</Text>
+            <Text size="xl" fw={700} c="black">All Products</Text>
             <button onClick={() => setIsCartOpen(true)}>
               <ShoppingCart size={24} color="#f97316" />
             </button>

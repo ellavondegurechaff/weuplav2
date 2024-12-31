@@ -33,7 +33,7 @@ const theme = createTheme({
           background: 'transparent'
         },
         header: {
-          backgroundColor: '#ECDCB9',
+          backgroundColor: '#f2f0d6',
           borderBottom: 'none',
           boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
           'button': {

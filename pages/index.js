@@ -17,10 +17,10 @@ export default function WelcomePage() {
       padding="0"
       style={{ backgroundColor: 'transparent' }}
     >
-      <AppShell.Header>
+      <AppShell.Header style={{ backgroundColor: '#f2f0d6' }}>
         <Group h="100%" px="md" style={{ justifyContent: 'space-between' }}>
           <Burger opened={opened} onClick={toggleNav} size="sm" color="#f97316" />
-          <Text size="2rem" fw={700} c="#f97316">Home</Text>
+          <Text size="xl" fw={700} c="black">Home</Text>
           <button onClick={() => setIsCartOpen(true)}>
             <ShoppingCart size={24} color="#f97316" />
           </button>
