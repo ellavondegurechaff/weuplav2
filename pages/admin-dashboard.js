@@ -23,6 +23,10 @@ import { useForm } from '@mantine/form'
 import { rem } from '@mantine/core'
 import { modals } from '@mantine/modals'
 import { LetterPlaceholder } from '@/components/LetterPlaceholder'
+import Cookies from 'js-cookie'
+
+const SESSION_COOKIE_NAME = 'admin_session'
+const SESSION_DURATION = 15 * 60 * 1000 // 15 minutes in milliseconds
 
 export default function AdminDashboard() {
   const router = useRouter()
@@ -70,6 +74,39 @@ export default function AdminDashboard() {
     fetchCategories()
   }, [])
 
+  useEffect(() => {
+    const sessionCookie = Cookies.get(SESSION_COOKIE_NAME)
+    if (sessionCookie) {
+      setIsAuthenticated(true)
+    }
+  }, [])
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      // Set initial cookie
+      Cookies.set(SESSION_COOKIE_NAME, 'true', { 
+        expires: new Date(new Date().getTime() + SESSION_DURATION),
+        sameSite: 'strict'
+      })
+
+      // Refresh cookie every minute
+      const intervalId = setInterval(() => {
+        const sessionCookie = Cookies.get(SESSION_COOKIE_NAME)
+        if (sessionCookie) {
+          Cookies.set(SESSION_COOKIE_NAME, 'true', {
+            expires: new Date(new Date().getTime() + SESSION_DURATION),
+            sameSite: 'strict'
+          })
+        } else {
+          setIsAuthenticated(false)
+          clearInterval(intervalId)
+        }
+      }, 60000) // Check every minute
+
+      return () => clearInterval(intervalId)
+    }
+  }, [isAuthenticated])
+
   const fetchProducts = async () => {
     try {
       const response = await fetch('/api/products/all')
@@ -93,6 +130,10 @@ export default function AdminDashboard() {
   const handleLogin = () => {
     if (password === 'admin2024') {
       setIsAuthenticated(true)
+      Cookies.set(SESSION_COOKIE_NAME, 'true', {
+        expires: new Date(new Date().getTime() + SESSION_DURATION),
+        sameSite: 'strict'
+      })
     } else {
       notifications.show({
         title: 'Error',
@@ -367,6 +408,12 @@ export default function AdminDashboard() {
     product.description.toLowerCase().includes(searchQuery.toLowerCase())
   )
 
+  const handleLogout = () => {
+    Cookies.remove(SESSION_COOKIE_NAME)
+    setIsAuthenticated(false)
+    setPassword('')
+  }
+
   if (!isAuthenticated) {
     return (
       <Container size="xs" style={{ marginTop: '20vh' }}>
@@ -387,7 +434,16 @@ export default function AdminDashboard() {
 
   return (
     <AppShell padding="md">
-      <Container size="xl">
+      <Container size="xl" py="xl">
+        {isAuthenticated && (
+          <Button 
+            onClick={handleLogout}
+            color="red"
+            mb="xl"
+          >
+            Logout
+          </Button>
+        )}
         <Text size="xl" weight={700} mb="xl">Admin Dashboard</Text>
 
         {/* Add Product Form */}
