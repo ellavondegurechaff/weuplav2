@@ -15,7 +15,7 @@ export default async function handler(req, res) {
     await query(`
       INSERT INTO announcement_views (announcement_id, view_count) 
       VALUES (?, 1)
-      ON DUPLICATE KEY UPDATE view_count = view_count + 1
+      ON DUPLICATE KEY UPDATE view_count = view_count + 1;
     `, [announcementId])
 
     const [viewData] = await query(`

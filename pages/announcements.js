@@ -147,10 +147,12 @@ export default function AnnouncementsPage() {
                       }}
                     >
                       {announcement.media?.length > 0 ? (
-                        <MediaCarousel 
-                          media={announcement.media} 
-                          onImageClick={(url, isVideo) => handleImageClick(url, isVideo, announcement.id)}
-                        />
+                        <Card.Section>
+                          <MediaCarousel 
+                            media={announcement.media} 
+                            onImageClick={(url, isVideo) => handleImageClick(url, isVideo, announcement.id)}
+                          />
+                        </Card.Section>
                       ) : (
                         <div style={{ height: '100%' }}>
                           <LetterPlaceholder name={announcement.title} />

@@ -9,7 +9,7 @@ export default async function handler(req, res) {
     const touchdowns = await query(`
       SELECT 
         t.*,
-        COALESCE(tv.view_count, 0) as view_count,
+        MAX(COALESCE(tv.view_count, 0)) as view_count,
         COALESCE(
           JSON_ARRAYAGG(
             IF(tm.id IS NOT NULL,

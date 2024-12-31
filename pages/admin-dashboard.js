@@ -27,7 +27,7 @@ import Cookies from 'js-cookie'
 import { MediaCarousel } from '@/components/MediaCarousel'
 
 const SESSION_COOKIE_NAME = 'admin_session'
-const SESSION_DURATION = 15 * 60 * 1000 // 15 minutes in milliseconds
+const SESSION_DURATION = 30 * 60 * 1000 // 30 minutes in milliseconds
 
 export default function AdminDashboard() {
   const router = useRouter()

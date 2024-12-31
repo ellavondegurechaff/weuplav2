@@ -9,7 +9,7 @@ export default async function handler(req, res) {
     const announcements = await query(`
       SELECT 
         a.*,
-        COALESCE(av.view_count, 0) as view_count,
+        MAX(COALESCE(av.view_count, 0)) as view_count,
         COALESCE(
           JSON_ARRAYAGG(
             IF(am.id IS NOT NULL,
@@ -27,7 +27,7 @@ export default async function handler(req, res) {
       FROM announcements a
       LEFT JOIN announcement_media am ON a.id = am.announcement_id
       LEFT JOIN announcement_views av ON a.id = av.announcement_id
-      GROUP BY a.id
+      GROUP BY a.id, a.title, a.content, a.priority, a.created_at, a.updated_at
       ORDER BY a.created_at DESC
     `)
 

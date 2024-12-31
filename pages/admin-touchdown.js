@@ -24,7 +24,7 @@ import { MediaCarousel } from '@/components/MediaCarousel'
 import { useRouter } from 'next/router'
 
 const SESSION_COOKIE_NAME = 'admin_session'
-const SESSION_DURATION = 15 * 60 * 1000
+const SESSION_DURATION = 30 * 60 * 1000 // 30 minutes in milliseconds
 
 export default function AdminTouchdown() {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
