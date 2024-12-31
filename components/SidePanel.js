@@ -63,7 +63,7 @@ export default function SidePanel({ opened, onClose }) {
       )}
       
       <div 
-        className={`fixed top-0 left-0 w-64 h-full bg-[#f2f0d6] transform 
+        className={`fixed top-0 left-0 w-64 h-full bg-[#ECDCB9] transform 
           ${opened ? 'translate-x-0' : '-translate-x-full'}
           transition-transform duration-300 ease-in-out z-[140] overflow-hidden flex flex-col`}
       >
