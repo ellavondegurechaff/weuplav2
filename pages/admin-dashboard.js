@@ -449,7 +449,12 @@ export default function AdminDashboard() {
   const handleLogout = () => {
     Cookies.remove(SESSION_COOKIE_NAME)
     setIsAuthenticated(false)
-    setPassword('')
+    notifications.show({
+      title: 'Success',
+      message: 'Logged out successfully',
+      color: 'green',
+      position: 'top-center'
+    })
   }
 
   const handleImageClick = (url, isVideo = false) => {
@@ -487,6 +492,19 @@ export default function AdminDashboard() {
           </Button>
         )}
         <Text size="xl" weight={700} mb="xl">Admin Dashboard</Text>
+
+        <Group position="apart" mb="xl">
+          <Text size="xl" weight={700}>Product Management</Text>
+          <Group>
+            <Button 
+              onClick={() => router.push('/admin-touchdown')} 
+              color="blue"
+            >
+              Manage Touchdowns
+            </Button>
+            <Button onClick={handleLogout} color="red">Logout</Button>
+          </Group>
+        </Group>
 
         {/* Add Product Form */}
         <Card shadow="sm" p="xl" mb="xl">
