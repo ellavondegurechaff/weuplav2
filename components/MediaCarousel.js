@@ -1,24 +1,53 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { Image, Card, ActionIcon, Box } from '@mantine/core'
 import { IconChevronLeft, IconChevronRight } from '@tabler/icons-react'
 
 export function MediaCarousel({ media, onImageClick }) {
   const [currentIndex, setCurrentIndex] = useState(0)
+  const [isDragging, setIsDragging] = useState(false)
+  const startXRef = useRef(0)
+  const currentXRef = useRef(0)
 
   if (!media?.length) return null
 
   const currentMedia = media[currentIndex]
   
-  const handlePrevious = (e) => {
-    e.preventDefault()
-    e.stopPropagation()
-    setCurrentIndex((prev) => (prev === 0 ? media.length - 1 : prev - 1))
+  const navigate = (direction) => {
+    if (direction === 'prev') {
+      setCurrentIndex((prev) => (prev === 0 ? media.length - 1 : prev - 1))
+    } else {
+      setCurrentIndex((prev) => (prev === media.length - 1 ? 0 : prev + 1))
+    }
   }
 
-  const handleNext = (e) => {
+  const handleDragStart = (e) => {
+    setIsDragging(true)
+    const clientX = e.type === 'mousedown' ? e.clientX : e.touches[0].clientX
+    startXRef.current = clientX
+    currentXRef.current = clientX
+  }
+
+  const handleDragMove = (e) => {
+    if (!isDragging) return
     e.preventDefault()
-    e.stopPropagation()
-    setCurrentIndex((prev) => (prev === media.length - 1 ? 0 : prev + 1))
+    const clientX = e.type === 'mousemove' ? e.clientX : e.touches[0].clientX
+    currentXRef.current = clientX
+  }
+
+  const handleDragEnd = () => {
+    if (!isDragging) return
+    setIsDragging(false)
+    
+    const diff = currentXRef.current - startXRef.current
+    const minSwipeDistance = 50
+
+    if (Math.abs(diff) > minSwipeDistance) {
+      if (diff > 0) {
+        navigate('prev')
+      } else {
+        navigate('next')
+      }
+    }
   }
 
   const handleMediaClick = (e) => {
@@ -44,9 +73,17 @@ export function MediaCarousel({ media, onImageClick }) {
           width: '100%',
           margin: 0,
           padding: 0,
-          overflow: 'hidden'
+          overflow: 'hidden',
+          cursor: isDragging ? 'grabbing' : 'grab'
         }}
         onClick={handleMediaClick}
+        onMouseDown={handleDragStart}
+        onMouseMove={handleDragMove}
+        onMouseUp={handleDragEnd}
+        onMouseLeave={handleDragEnd}
+        onTouchStart={handleDragStart}
+        onTouchMove={handleDragMove}
+        onTouchEnd={handleDragEnd}
       >
         {(currentMedia.type === 'video' || isVideo(currentMedia.url)) ? (
           <video
@@ -86,7 +123,7 @@ export function MediaCarousel({ media, onImageClick }) {
         <>
           <ActionIcon 
             variant="filled"
-            onClick={handlePrevious}
+            onClick={() => navigate('prev')}
             size="sm"
             radius="xl"
             color="gray.6"
@@ -106,7 +143,7 @@ export function MediaCarousel({ media, onImageClick }) {
 
           <ActionIcon 
             variant="filled"
-            onClick={handleNext}
+            onClick={() => navigate('next')}
             size="sm"
             radius="xl"
             color="gray.6"
