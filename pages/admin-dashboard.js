@@ -156,7 +156,11 @@ export default function AdminDashboard() {
         })
       })
 
-      if (!response.ok) throw new Error('Failed to create product')
+      const data = await response.json()
+      
+      if (!response.ok) {
+        throw new Error(data.message || 'Failed to create product')
+      }
       
       form.reset()
       setImageFile(null)
@@ -189,7 +193,7 @@ export default function AdminDashboard() {
         children: (
           <Stack align="center" spacing="md">
             <IconX size={50} color="red" />
-            <Text c="black">{error.message || 'Failed to add product'}</Text>
+            <Text c="black">{error.message}</Text>
             <Button fullWidth color="red" onClick={() => modals.closeAll()}>
               Close
             </Button>

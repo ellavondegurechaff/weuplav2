@@ -6,7 +6,8 @@ export const config = {
     bodyParser: {
       sizeLimit: '10mb'
     }
-  }
+  },
+  runtime: 'nodejs'
 }
 
 export default async function handler(req, res) {

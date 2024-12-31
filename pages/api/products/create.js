@@ -22,6 +22,15 @@ export default async function handler(req, res) {
     return res.status(200).json({ id: result.insertId })
   } catch (error) {
     console.error('Database error:', error)
+    
+    // Check for duplicate entry error
+    if (error.code === 'ER_DUP_ENTRY') {
+      return res.status(409).json({ 
+        message: 'A product with this name already exists',
+        error: 'DUPLICATE_NAME'
+      })
+    }
+    
     return res.status(500).json({ message: 'Error creating product' })
   }
 } 
