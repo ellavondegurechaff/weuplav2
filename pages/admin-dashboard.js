@@ -462,10 +462,10 @@ export default function AdminDashboard() {
                   <IconPhoto size={50} stroke={1.5} />
                 </Dropzone.Idle>
                 <div>
-                  <Text size="xl" inline>
+                  <Text size="xl" inline c="black">
                     Drag image here or click to select
                   </Text>
-                  <Text size="sm" color="dimmed" inline mt={7}>
+                  <Text size="sm" c="black" inline mt={7}>
                     File should not exceed 3mb
                   </Text>
                 </div>
@@ -594,22 +594,38 @@ export default function AdminDashboard() {
           }}
           title="Edit Product"
           size="lg"
+          styles={{
+            title: { color: 'black' }
+          }}
         >
           <Stack spacing="md">
             <TextInput
               label="Product Name"
               {...editForm.getInputProps('name')}
+              styles={{
+                input: { color: 'black' },
+                label: { color: 'black' }
+              }}
             />
             
             <Textarea
               label="Description"
               {...editForm.getInputProps('description')}
+              styles={{
+                input: { color: 'black' },
+                label: { color: 'black' }
+              }}
             />
 
             <Select
               label="Category"
               data={categories.map(cat => ({ value: cat.id.toString(), label: cat.name }))}
               {...editForm.getInputProps('category_id')}
+              styles={{
+                input: { color: 'black' },
+                label: { color: 'black' },
+                item: { color: 'black' }
+              }}
             />
 
             <NumberInput
@@ -617,6 +633,10 @@ export default function AdminDashboard() {
               precision={2}
               min={0}
               {...editForm.getInputProps('intown_price')}
+              styles={{
+                input: { color: 'black' },
+                label: { color: 'black' }
+              }}
             />
 
             <NumberInput
@@ -624,6 +644,10 @@ export default function AdminDashboard() {
               precision={2}
               min={0}
               {...editForm.getInputProps('shipped_price')}
+              styles={{
+                input: { color: 'black' },
+                label: { color: 'black' }
+              }}
             />
 
             <Dropzone
@@ -642,10 +666,10 @@ export default function AdminDashboard() {
                   <IconPhoto size={50} stroke={1.5} />
                 </Dropzone.Idle>
                 <div>
-                  <Text size="xl" inline>
+                  <Text size="xl" inline c="black">
                     Drag image here or click to select
                   </Text>
-                  <Text size="sm" color="dimmed" inline mt={7}>
+                  <Text size="sm" c="black" inline mt={7}>
                     File should not exceed 3mb
                   </Text>
                 </div>
