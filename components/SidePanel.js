@@ -299,7 +299,7 @@ export default function SidePanel({ opened, onClose }) {
             </a>
             
             <button
-              className="w-full py-3 px-4 bg-transparent hover:bg-white/10 text-[#0088CC] font-semibold rounded-md transition-colors flex items-center justify-center gap-2 outline outline-3 outline-[#0088CC]"
+              className="w-full py-3 px-4 bg-transparent hover:bg-white/10 text-[#3A76F0] font-semibold rounded-md transition-colors flex items-center justify-center gap-2 outline outline-3 outline-[#3A76F0]"
               onClick={() => {
                 window.location.href = 'https://t.me/WeUpLA_DM'
               }}

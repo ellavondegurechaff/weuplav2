@@ -22,13 +22,13 @@ const MarkdownComponents = {
     <span className="italic text-white">{children}</span>
   ),
   p: ({ children }) => (
-    <p className="text-white text-[23px] whitespace-pre-line">{children}</p>
+    <p className="text-white text-base whitespace-pre-line">{children}</p>
   )
 }
 
 // Create a custom component for overnight shipping answer
 const OvernightShippingAnswer = () => (
-  <div className="text-white text-[23px] italic">
+  <div className="text-white text-base italic">
     <p>You can always add 2 day shipping or Overnight shipping services to any small order for the following rates:</p>
     
     <div className="mt-4">
@@ -51,7 +51,7 @@ const OvernightShippingAnswer = () => (
 
 // Create a custom component for shipping prices answer
 const ShippingPricesAnswer = () => (
-  <div className="text-white text-[23px] italic">
+  <div className="text-white text-base italic">
     <p>Yes, all prices on the menu are shipped prices. Depending on your location, regular transit times can take around 2 - 3 days.</p>
     
     <p className="mt-4 font-bold underline text-black">
@@ -62,7 +62,7 @@ const ShippingPricesAnswer = () => (
 
 // Create a custom component for getting started answer
 const GettingStartedAnswer = () => (
-  <div className="text-white text-[23px] italic">
+  <div className="text-white text-base italic">
     <p>
       First step, make sure you are <span className="underline">Verified</span>. Only clients who are <span className="underline">Verified</span> will get an immediate response. Once you are <span className="underline">Verified</span>, contact our sales rep on <span className="underline">Signal</span>. If you have an order in your <strong>CART</strong>, simply press copy list and send it over on <span className="underline">SIGNAL MESSENGER</span>. We will take payment and get your order out immediately! It's that <strong>SIMPLE</strong>.
     </p>
@@ -71,7 +71,7 @@ const GettingStartedAnswer = () => (
 
 // Create a custom component for verification answer
 const VerificationAnswer = () => (
-  <div className="text-white text-[23px] italic">
+  <div className="text-white text-base italic">
     <p>
       Send us a video to our <span className="underline">SIGNAL</span> showing Weed & Proof of Funds. Say "<strong>WeUpLA Verification</strong>" in the video or write it on a piece of paper. Show time & date. Our Verification team will review it and get back to you shortly. The better your verification, the faster we will approve!
     </p>
@@ -94,7 +94,7 @@ export default function FAQPage() {
     {
       question: 'What payments are accepted?',
       answer: (
-        <div className="flex flex-col gap-2 text-white text-[23px] italic">
+        <div className="flex flex-col gap-2 text-white text-base italic">
           <p className="flex items-center gap-2">
             <SiCashapp size={20} />
             • Cashapp - <strong>6%</strong>
@@ -131,7 +131,7 @@ export default function FAQPage() {
     {
       question: 'If I want to order bulk and get transportation to my city, do you offer that service?',
       answer: (
-        <div className="text-white text-[23px] italic">
+        <div className="text-white text-base italic">
           <p>Yes, you can work closely with our sales to order <strong>TO-YOUR-DOOR</strong> delivery. Here are our requirements:</p>
           
           <div className="flex mt-4">
@@ -243,7 +243,7 @@ export default function FAQPage() {
                   fw={700} 
                   mb="0.75rem" 
                   c="black"
-                  size="23px"
+                  size="md"
                   className="flex gap-2 items-start"
                 >
                   <span>{item.question}</span>

@@ -80,27 +80,27 @@ export default function AgeVerification() {
               variant="filled"
               styles={{
                 root: {
-                  backgroundColor: 'white',
-                  color: '#FF4500',
+                  backgroundColor: 'transparent',
+                  color: 'white',
                   width: '120px',
                   margin: '4px auto',
                   '&:hover': {
-                    backgroundColor: '#f8f9fa'
+                    backgroundColor: 'rgba(255, 255, 255, 0.1)'
                   }
                 }
               }}
               onClick={handleVerification}
-              className="outline outline-3 outline-black"
+              className="outline outline-3 outline-white"
             >
               Enter
             </Button>
 
             <a
               href="https://signal.me/#eu/7e6gjYQJxASldq-HchkJjhVwfcm78NwjgRDAVHfVuum2WbooUKxPgaZKjbJtwD7G"
-              className="bg-[#3A76F0] text-white px-6 py-2 rounded-lg hover:bg-[#3A76F0]/90 transition-colors flex items-center gap-2 justify-center w-full outline outline-3 outline-black"
+              className="bg-transparent text-white px-6 py-3 rounded-md hover:bg-white/10 transition-colors flex items-center gap-2 justify-center w-full outline outline-3 outline-white font-semibold"
             >
               <SiSignal size={20} />
-              <span className="font-bold">Verify on Signal for password</span>
+              <span>Verify on Signal for password</span>
             </a>
 
             {error && (
