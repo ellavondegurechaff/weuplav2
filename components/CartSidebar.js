@@ -118,13 +118,13 @@ export function CartSidebar({ isCartOpen, setIsCartOpen, activePage }) {
       )}
       
       <div 
-        className={`fixed right-0 w-full sm:w-96 bg-[#f2f0d6] shadow-xl transform 
+        className={`fixed right-0 w-full sm:w-96 bg-orange-50/80 shadow-xl transform 
           ${isCartOpen ? 'translate-x-0' : 'translate-x-full'}
           top-0 h-full transition-transform duration-300 ease-in-out z-[160]`}
       >
         <div className="h-full flex flex-col pt-16">
-          <div className="px-4 py-3 bg-[#f2f0d6] flex justify-between items-center border-b border-orange-100">
-            <h2 className="text-lg font-semibold text-gray-900">Your Cart</h2>
+          <div className="px-4 py-3 bg-orange-50/80 flex justify-between items-center border-b border-orange-200">
+            <h2 className="text-lg font-semibold text-orange-900">Your Cart</h2>
             <button
               onClick={() => setIsCartOpen(false)}
               className="p-1.5 text-gray-600 hover:text-orange-500 transition-colors"
@@ -135,7 +135,7 @@ export function CartSidebar({ isCartOpen, setIsCartOpen, activePage }) {
 
           {/* Clear Cart button */}
           {cart.length > 0 && (
-            <div className="px-4 py-2 bg-[#f2f0d6] border-b border-gray-100">
+            <div className="px-4 py-2 bg-orange-50/80 border-b border-orange-200">
               <button
                 onClick={clearCart}
                 className="text-sm text-red-600 hover:text-red-700 transition-colors flex items-center space-x-2"
@@ -146,7 +146,7 @@ export function CartSidebar({ isCartOpen, setIsCartOpen, activePage }) {
             </div>
           )}
 
-          <div className="flex-1 overflow-y-auto p-4 bg-[#f2f0d6]">
+          <div className="flex-1 overflow-y-auto p-4 bg-orange-50/80">
             {cart.length === 0 ? (
               <div className="flex flex-col items-center justify-center h-full text-gray-500">
                 <ShoppingCart size={32} className="mb-3" />
@@ -205,7 +205,7 @@ export function CartSidebar({ isCartOpen, setIsCartOpen, activePage }) {
           </div>
 
           {cart.length > 0 && (
-            <div className="p-4 bg-[#f2f0d6] border-t border-orange-100">
+            <div className="p-4 bg-orange-50/80 border-t border-orange-200">
               <div className="flex flex-col gap-2 mb-4">
                 <div className="flex justify-between items-center">
                   <span className="text-gray-700 font-medium">Intown Total:</span>
@@ -222,8 +222,9 @@ export function CartSidebar({ isCartOpen, setIsCartOpen, activePage }) {
               </div>
               <button
                 onClick={copyCartToClipboard}
-                className="w-full bg-orange-500 text-white py-3 px-4 rounded-md hover:bg-orange-500/90 
-                  transition-colors flex items-center justify-center space-x-2 outline outline-3 outline-black font-semibold"
+                className="w-full bg-orange-500/10 text-orange-700 py-3 px-4 rounded-md 
+                  hover:bg-orange-500/20 transition-colors flex items-center justify-center 
+                  space-x-2 outline outline-2 outline-orange-500 font-semibold"
               >
                 <span>Copy Order Details</span>
                 <ArrowRight size={18} />

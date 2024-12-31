@@ -108,8 +108,7 @@ export default function EdiblesPage() {
                     withBorder 
                     bg="white"
                     style={{
-                      backdropFilter: 'blur(10px)',
-                      backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                      backgroundColor: 'white',
                       height: '100%',
                       display: 'flex',
                       flexDirection: 'column'
@@ -168,15 +167,20 @@ export default function EdiblesPage() {
                       </Text>
 
                       <Button 
-                        variant="filled" 
+                        variant="light" 
                         color="orange" 
                         fullWidth 
                         onClick={() => handleAddToCart(product)}
-                        className="outline outline-3 outline-black font-semibold hover:bg-orange-500/90 transition-colors"
+                        className="bg-transparent text-orange-700 hover:bg-orange-500/10 
+                          transition-colors outline outline-2 outline-orange-500 font-semibold"
                         styles={{
                           root: {
-                            padding: '0.75rem 1rem', // py-3 px-4
-                            borderRadius: '0.375rem', // rounded-md
+                            padding: '0.75rem 1rem',
+                            borderRadius: '0.375rem',
+                            backgroundColor: 'transparent',
+                            '&:hover': {
+                              backgroundColor: 'rgba(249, 115, 22, 0.1)',
+                            },
                           }
                         }}
                       >

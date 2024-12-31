@@ -22,15 +22,8 @@ export default function ExoticsPage() {
       try {
         const response = await fetch('/api/products/exotics')
         const data = await response.json()
-        // Transform the data to include media array
-        const transformedData = data.map(product => ({
-          ...product,
-          media: product.image_url ? [{
-            url: product.image_url,
-            type: product.image_url.toLowerCase().endsWith('.mp4') ? 'video' : 'image'
-          }] : []
-        }))
-        setProducts(transformedData)
+        // The API now returns media array directly, no need for transformation
+        setProducts(data)
       } catch (error) {
         console.error('Error fetching exotic products:', error)
       }
@@ -117,8 +110,7 @@ export default function ExoticsPage() {
                     withBorder 
                     bg="white"
                     style={{
-                      backdropFilter: 'blur(10px)',
-                      backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                      backgroundColor: 'white',
                       height: '100%',
                       display: 'flex',
                       flexDirection: 'column'
@@ -132,7 +124,7 @@ export default function ExoticsPage() {
                         overflow: 'hidden'
                       }}
                     >
-                      {Array.isArray(product.media) && product.media.length > 0 ? (
+                      {product.media?.length > 0 ? (
                         <MediaCarousel 
                           media={product.media} 
                           onImageClick={handleImageClick}
@@ -177,15 +169,20 @@ export default function ExoticsPage() {
                       </Text>
 
                       <Button 
-                        variant="filled" 
+                        variant="light" 
                         color="orange" 
                         fullWidth 
                         onClick={() => handleAddToCart(product)}
-                        className="outline outline-3 outline-black font-semibold hover:bg-orange-500/90 transition-colors"
+                        className="bg-transparent text-orange-700 hover:bg-orange-500/10 
+                          transition-colors outline outline-2 outline-orange-500 font-semibold"
                         styles={{
                           root: {
-                            padding: '0.75rem 1rem', // py-3 px-4
-                            borderRadius: '0.375rem', // rounded-md
+                            padding: '0.75rem 1rem',
+                            borderRadius: '0.375rem',
+                            backgroundColor: 'transparent',
+                            '&:hover': {
+                              backgroundColor: 'rgba(249, 115, 22, 0.1)',
+                            },
                           }
                         }}
                       >
