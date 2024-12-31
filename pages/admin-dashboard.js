@@ -39,6 +39,7 @@ export default function AdminDashboard() {
   const [imagePreview, setImagePreview] = useState(null)
   const [editingProduct, setEditingProduct] = useState(null)
   const [isEditing, setIsEditing] = useState(false)
+  const [selectedImage, setSelectedImage] = useState(null)
 
   const form = useForm({
     initialValues: {
@@ -414,6 +415,10 @@ export default function AdminDashboard() {
     setPassword('')
   }
 
+  const handleImageClick = (imageUrl) => {
+    setSelectedImage(imageUrl)
+  }
+
   if (!isAuthenticated) {
     return (
       <Container size="xs" style={{ marginTop: '20vh' }}>
@@ -458,6 +463,14 @@ export default function AdminDashboard() {
             <Textarea
               label="Description"
               {...form.getInputProps('description')}
+              minRows={8}
+              autosize
+              maxRows={15}
+              styles={{
+                input: {
+                  whiteSpace: 'pre-wrap'
+                }
+              }}
             />
 
             <Select
@@ -577,7 +590,7 @@ export default function AdminDashboard() {
                 flexDirection: 'column'
               }}
             >
-              <Card.Section>
+              <Card.Section style={{ cursor: 'pointer' }} onClick={() => handleImageClick(product.image_url)}>
                 {product.image_url && product.image_url.trim() ? (
                   <Image
                     src={product.image_url}
@@ -611,7 +624,15 @@ export default function AdminDashboard() {
                   </div>
                 </Group>
 
-                <Text size="sm" c="dimmed" lineClamp={2} mb="md" style={{ flex: 1 }}>
+                <Text 
+                  size="sm" 
+                  c="dimmed" 
+                  mb="md" 
+                  style={{ 
+                    flex: 1,
+                    whiteSpace: 'pre-wrap'
+                  }}
+                >
                   {product.description}
                 </Text>
 
@@ -667,8 +688,14 @@ export default function AdminDashboard() {
             <Textarea
               label="Description"
               {...editForm.getInputProps('description')}
+              minRows={8}
+              autosize
+              maxRows={15}
               styles={{
-                input: { color: 'black' },
+                input: { 
+                  color: 'black',
+                  whiteSpace: 'pre-wrap'
+                },
                 label: { color: 'black' }
               }}
             />
@@ -747,6 +774,32 @@ export default function AdminDashboard() {
           </Stack>
         </Modal>
       )}
+
+      <Modal
+        opened={!!selectedImage}
+        onClose={() => setSelectedImage(null)}
+        size="xl"
+        padding={0}
+        styles={{
+          modal: {
+            backgroundColor: 'transparent',
+            boxShadow: 'none',
+          },
+          header: {
+            position: 'absolute',
+            right: 0,
+            top: 0,
+            zIndex: 1000,
+          }
+        }}
+      >
+        <Image
+          src={selectedImage}
+          alt="Full size preview"
+          fit="contain"
+          height="90vh"
+        />
+      </Modal>
     </AppShell>
   )
 } 

@@ -1,4 +1,4 @@
-import { AppShell, Container, Grid, Card, Text, Image, Group, Badge, Burger, Button, TextInput } from '@mantine/core'
+import { AppShell, Container, Grid, Card, Text, Image, Group, Badge, Burger, Button, TextInput, Modal } from '@mantine/core'
 import { useDisclosure } from '@mantine/hooks'
 import { ShoppingCart, Search } from 'lucide-react'
 import Head from 'next/head'
@@ -14,6 +14,7 @@ export default function LowsPage() {
   const [isCartOpen, setIsCartOpen] = useState(false)
   const addToCart = useCartStore(state => state.addToCart)
   const [searchQuery, setSearchQuery] = useState('')
+  const [selectedImage, setSelectedImage] = useState(null)
 
   useEffect(() => {
     async function fetchLows() {
@@ -44,6 +45,10 @@ export default function LowsPage() {
     product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
     product.description.toLowerCase().includes(searchQuery.toLowerCase())
   )
+
+  const handleImageClick = (imageUrl) => {
+    setSelectedImage(imageUrl)
+  }
 
   return (
     <>
@@ -122,7 +127,7 @@ export default function LowsPage() {
                       flexDirection: 'column'
                     }}
                   >
-                    <Card.Section>
+                    <Card.Section style={{ cursor: 'pointer' }} onClick={() => handleImageClick(product.image_url)}>
                       {product.image_url && product.image_url.trim() ? (
                         <Image
                           src={product.image_url}
@@ -156,7 +161,15 @@ export default function LowsPage() {
                         </div>
                       </Group>
 
-                      <Text size="sm" c="dimmed" lineClamp={2} mb="md" style={{ flex: 1 }}>
+                      <Text 
+                        size="sm" 
+                        c="dimmed" 
+                        mb="md" 
+                        style={{ 
+                          flex: 1,
+                          whiteSpace: 'pre-wrap'
+                        }}
+                      >
                         {product.description}
                       </Text>
 
@@ -176,6 +189,32 @@ export default function LowsPage() {
           </Container>
         </AppShell.Main>
       </AppShell>
+
+      <Modal
+        opened={!!selectedImage}
+        onClose={() => setSelectedImage(null)}
+        size="xl"
+        padding={0}
+        styles={{
+          modal: {
+            backgroundColor: 'transparent',
+            boxShadow: 'none',
+          },
+          header: {
+            position: 'absolute',
+            right: 0,
+            top: 0,
+            zIndex: 1000,
+          }
+        }}
+      >
+        <Image
+          src={selectedImage}
+          alt="Full size preview"
+          fit="contain"
+          height="90vh"
+        />
+      </Modal>
     </>
   )
 } 
