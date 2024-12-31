@@ -69,6 +69,20 @@ export default function FAQPage() {
       
       <AppShell.Main>
         <Container size="xl" py="xl">
+          <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
+            <Text 
+              size="2.5rem"
+              fw={700}
+              c="white"
+              style={{
+                textShadow: '2px 2px 4px rgba(0,0,0,0.3)',
+                letterSpacing: '0.5px'
+              }}
+            >
+              Frequently Asked Questions
+            </Text>
+          </div>
+
           <div className="flex flex-col items-center gap-4 mb-12">
             <div className="flex justify-center gap-4 mb-6">
               <a 
@@ -93,20 +107,6 @@ export default function FAQPage() {
             >
               VIEW MENU
             </a>
-          </div>
-
-          <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-            <Text 
-              size="2.5rem"
-              fw={700}
-              c="white"
-              style={{
-                textShadow: '2px 2px 4px rgba(0,0,0,0.3)',
-                letterSpacing: '0.5px'
-              }}
-            >
-              Frequently Asked Questions
-            </Text>
           </div>
 
           <div

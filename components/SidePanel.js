@@ -1,5 +1,6 @@
 import { Drawer, Stack, Text, Button, Group, Collapse, Image } from '@mantine/core'
 import { Home, ShoppingCart, MessageCircle, Send, HelpCircle, ChevronDown } from 'lucide-react'
+import { SiTelegram, SiSignal } from '@icons-pack/react-simple-icons'
 import { useState } from 'react'
 import Link from 'next/link'
 
@@ -221,21 +222,25 @@ export default function SidePanel({ opened, onClose }) {
             >
               Add to Homescreen
             </button>
+            
             <button
-              className="w-full py-3 px-4 bg-[#0088CC] text-white font-semibold rounded-md hover:bg-[#0088CC]/90 transition-colors"
+              className="w-full py-3 px-4 bg-[#0088CC] text-white font-semibold rounded-md hover:bg-[#0088CC]/90 transition-colors flex items-center justify-center gap-2"
               onClick={() => {
                 window.location.href = 'https://t.me/yourusername'
               }}
             >
-              Telegram
+              <SiTelegram size={20} />
+              <span className="font-bold">Telegram</span>
             </button>
+            
             <button
-              className="w-full py-3 px-4 bg-[#3A76F0] text-white font-semibold rounded-md hover:bg-[#3A76F0]/90 transition-colors"
+              className="w-full py-3 px-4 bg-[#3A76F0] text-white font-semibold rounded-md hover:bg-[#3A76F0]/90 transition-colors flex items-center justify-center gap-2"
               onClick={() => {
                 window.location.href = 'signal://+1234567890'
               }}
             >
-              Signal
+              <SiSignal size={20} />
+              <span className="font-bold">Signal</span>
             </button>
           </div>
         </div>
