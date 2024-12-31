@@ -181,6 +181,7 @@ export default function ExoticsPage() {
                         color="orange" 
                         fullWidth 
                         onClick={() => handleAddToCart(product)}
+                        className="outline outline-1 outline-black"
                       >
                         Add to Cart
                       </Button>

@@ -96,13 +96,14 @@ export default function AgeVerification() {
                 }
               }}
               onClick={handleVerification}
+              className="outline outline-1 outline-black"
             >
               Enter
             </Button>
 
             <a
               href="https://signal.me/#eu/7e6gjYQJxASldq-HchkJjhVwfcm78NwjgRDAVHfVuum2WbooUKxPgaZKjbJtwD7G"
-              className="bg-[#3A76F0] text-white px-6 py-2 rounded-lg hover:bg-[#3A76F0]/90 transition-colors flex items-center gap-2 justify-center w-full"
+              className="bg-[#3A76F0] text-white px-6 py-2 rounded-lg hover:bg-[#3A76F0]/90 transition-colors flex items-center gap-2 justify-center w-full outline outline-1 outline-black"
             >
               <SiSignal size={20} />
               <span className="font-bold">Verify on Signal for password</span>

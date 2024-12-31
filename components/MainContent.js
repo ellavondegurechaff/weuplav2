@@ -82,7 +82,7 @@ export default function MainContent() {
         </div>
 
         <div className="mb-8 font-bold">
-          <p>✓ TP-4 Service Available</p>
+          <p>✓ Transporation Service Available</p>
           <p>✓ Bread Routing Available</p>
           <p>For Bulk Players 🏃</p>
         </div>

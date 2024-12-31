@@ -172,6 +172,7 @@ export default function HighsPage() {
                         color="orange" 
                         fullWidth 
                         onClick={() => handleAddToCart(product)}
+                        className="outline outline-1 outline-black"
                       >
                         Add to Cart
                       </Button>
