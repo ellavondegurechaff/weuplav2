@@ -1,6 +1,7 @@
 import '@mantine/core/styles.css'
 import '@/styles/globals.css'
 import { MantineProvider, createTheme } from '@mantine/core'
+import { ModalsProvider } from '@mantine/modals'
 import { Notifications } from '@mantine/notifications'
 
 const theme = createTheme({
@@ -50,22 +51,10 @@ const theme = createTheme({
 export default function App({ Component, pageProps }) {
   return (
     <MantineProvider theme={theme}>
-      <div 
-        style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          background: `url('/desktop_bg.png')`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat',
-          zIndex: -1
-        }}
-      />
-      <Notifications position="top-center" containerWidth={400} zIndex={2000} />
-      <Component {...pageProps} />
+      <ModalsProvider>
+        <Notifications />
+        <Component {...pageProps} />
+      </ModalsProvider>
     </MantineProvider>
   )
 }

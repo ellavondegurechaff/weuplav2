@@ -4,6 +4,12 @@ const nextConfig = {
   images: {
     unoptimized: true,
     domains: ['localhost', 'weupla.net']
+  },
+  api: {
+    bodyParser: {
+      sizeLimit: '10mb'
+    },
+    responseLimit: false
   }
 };
 

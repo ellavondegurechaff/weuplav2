@@ -1,22 +1,13 @@
-import { Text, Box } from '@mantine/core'
+import { Center, Text } from '@mantine/core'
 
 export function LetterPlaceholder({ name }) {
-  const letter = name?.charAt(0)?.toUpperCase() || '?'
+  const letter = name ? name.charAt(0).toUpperCase() : '?'
   
   return (
-    <Box 
-      bg="dark.6" 
-      h="100%" 
-      w="100%"
-      style={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center'
-      }}
-    >
-      <Text size="40px" fw={700} c="dimmed">
+    <Center h="100%" bg="gray.1">
+      <Text size="xl" weight={700} color="gray.5">
         {letter}
       </Text>
-    </Box>
+    </Center>
   )
 } 

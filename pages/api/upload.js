@@ -4,7 +4,7 @@ import { s3Client, BUCKET_NAME } from '@/lib/s3'
 export const config = {
   api: {
     bodyParser: {
-      sizeLimit: '5mb'
+      sizeLimit: '10mb'
     }
   }
 }

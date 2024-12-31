@@ -11,7 +11,8 @@ import {
   Image, 
   Stack,
   Select,
-  Textarea
+  Textarea,
+  Loader
 } from '@mantine/core'
 import { useRouter } from 'next/router'
 import { notifications } from '@mantine/notifications'
@@ -19,6 +20,8 @@ import { Dropzone, IMAGE_MIME_TYPE } from '@mantine/dropzone'
 import { IconUpload, IconX, IconPhoto, IconCheck } from '@tabler/icons-react'
 import { useForm } from '@mantine/form'
 import { rem } from '@mantine/core'
+import { modals } from '@mantine/modals'
+import { LetterPlaceholder } from '@/components/LetterPlaceholder'
 
 export default function AdminDashboard() {
   const router = useRouter()
@@ -104,13 +107,22 @@ export default function AdminDashboard() {
       return
     }
 
-    const id = notifications.show({
-      loading: true,
-      title: 'Adding product',
-      message: 'Please wait...',
-      autoClose: false,
+    const loadingModalId = modals.open({
+      title: 'Adding Product',
+      children: (
+        <Stack align="center" spacing="md">
+          <Text c="black">Please wait while we add your product...</Text>
+          <Loader size="lg" color="orange" />
+        </Stack>
+      ),
+      styles: {
+        title: {
+          color: 'black'
+        }
+      },
+      closeOnClickOutside: false,
+      closeOnEscape: false,
       withCloseButton: false,
-      position: 'top-center'
     })
 
     try {
@@ -151,22 +163,43 @@ export default function AdminDashboard() {
       setImagePreview(null)
       fetchProducts()
       
-      notifications.update({
-        id,
+      modals.close(loadingModalId)
+      modals.open({
         title: 'Success',
-        message: 'Product added successfully',
-        color: 'green',
-        autoClose: 2000,
-        position: 'top-center'
+        children: (
+          <Stack align="center" spacing="md">
+            <IconCheck size={50} color="green" />
+            <Text c="black">Product added successfully!</Text>
+            <Button fullWidth color="green" onClick={() => modals.closeAll()}>
+              Close
+            </Button>
+          </Stack>
+        ),
+        styles: {
+          title: {
+            color: 'black'
+          }
+        },
       })
     } catch (error) {
       console.error('Error adding product:', error)
-      notifications.update({
-        id,
+      modals.close(loadingModalId)
+      modals.open({
         title: 'Error',
-        message: error.message || 'Failed to add product',
-        color: 'red',
-        position: 'top-center'
+        children: (
+          <Stack align="center" spacing="md">
+            <IconX size={50} color="red" />
+            <Text c="black">{error.message || 'Failed to add product'}</Text>
+            <Button fullWidth color="red" onClick={() => modals.closeAll()}>
+              Close
+            </Button>
+          </Stack>
+        ),
+        styles: {
+          title: {
+            color: 'black'
+          }
+        },
       })
     }
   }
@@ -295,7 +328,7 @@ export default function AdminDashboard() {
             <Dropzone
               onDrop={handleImageDrop}
               accept={IMAGE_MIME_TYPE}
-              maxSize={5 * 1024 ** 2}
+              maxSize={10 * 1024 ** 2}
             >
               <Group position="center" spacing="xl" style={{ minHeight: 120, pointerEvents: 'none' }}>
                 <Dropzone.Accept>
