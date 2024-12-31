@@ -86,18 +86,20 @@ export default function FAQPage() {
           <div className="flex flex-col items-center gap-4 mb-12">
             <div className="flex justify-center gap-4 mb-6">
               <a 
-                href="/telegram" 
-                className="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition-colors flex items-center gap-2"
+                href="/signal" 
+                className="bg-[#3A76F0] text-white px-6 py-2 rounded-lg hover:bg-[#3A76F0]/90 transition-colors flex items-center gap-2"
+                style={{ minWidth: '140px' }}
               >
-                <SiTelegram size={20} />
-                <span className="font-bold">Telegram</span>
+                <SiSignal size={24} />
+                <span className="font-bold">Signal</span>
               </a>
               <a 
-                href="/signal" 
-                className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2"
+                href="/telegram" 
+                className="bg-[#0088CC] text-white px-6 py-2 rounded-lg hover:bg-[#0088CC]/90 transition-colors flex items-center gap-2"
+                style={{ minWidth: '140px' }}
               >
-                <SiSignal size={20} />
-                <span className="font-bold">Signal</span>
+                <SiTelegram size={24} />
+                <span className="font-bold">Telegram</span>
               </a>
             </div>
             
@@ -145,18 +147,20 @@ export default function FAQPage() {
             
             <div className="flex justify-center gap-4 mt-6">
               <a 
-                href="/telegram" 
-                className="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition-colors flex items-center gap-2"
+                href="/signal" 
+                className="bg-[#3A76F0] text-white px-6 py-2 rounded-lg hover:bg-[#3A76F0]/90 transition-colors flex items-center gap-2"
+                style={{ minWidth: '140px' }}
               >
-                <SiTelegram size={20} />
-                <span className="font-bold">Telegram</span>
+                <SiSignal size={24} />
+                <span className="font-bold">Signal</span>
               </a>
               <a 
-                href="/signal" 
-                className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2"
+                href="/telegram" 
+                className="bg-[#0088CC] text-white px-6 py-2 rounded-lg hover:bg-[#0088CC]/90 transition-colors flex items-center gap-2"
+                style={{ minWidth: '140px' }}
               >
-                <SiSignal size={20} />
-                <span className="font-bold">Signal</span>
+                <SiTelegram size={24} />
+                <span className="font-bold">Telegram</span>
               </a>
             </div>
           </div>

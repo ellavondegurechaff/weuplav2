@@ -224,23 +224,23 @@ export default function SidePanel({ opened, onClose }) {
             </button>
             
             <button
-              className="w-full py-3 px-4 bg-[#0088CC] text-white font-semibold rounded-md hover:bg-[#0088CC]/90 transition-colors flex items-center justify-center gap-2"
-              onClick={() => {
-                window.location.href = 'https://t.me/yourusername'
-              }}
-            >
-              <SiTelegram size={20} />
-              <span className="font-bold">Telegram</span>
-            </button>
-            
-            <button
               className="w-full py-3 px-4 bg-[#3A76F0] text-white font-semibold rounded-md hover:bg-[#3A76F0]/90 transition-colors flex items-center justify-center gap-2"
               onClick={() => {
                 window.location.href = 'signal://+1234567890'
               }}
             >
-              <SiSignal size={20} />
+              <SiSignal size={24} />
               <span className="font-bold">Signal</span>
+            </button>
+            
+            <button
+              className="w-full py-3 px-4 bg-[#0088CC] text-white font-semibold rounded-md hover:bg-[#0088CC]/90 transition-colors flex items-center justify-center gap-2"
+              onClick={() => {
+                window.location.href = 'https://t.me/yourusername'
+              }}
+            >
+              <SiTelegram size={24} />
+              <span className="font-bold">Telegram</span>
             </button>
           </div>
         </div>
