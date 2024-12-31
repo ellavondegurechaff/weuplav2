@@ -129,7 +129,7 @@ export default function AdminDashboard() {
   }
 
   const handleLogin = () => {
-    if (password === 'admin2024') {
+    if (password === 'AdminUpWe$2518') {
       setIsAuthenticated(true)
       Cookies.set(SESSION_COOKIE_NAME, 'true', {
         expires: new Date(new Date().getTime() + SESSION_DURATION),

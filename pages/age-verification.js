@@ -13,7 +13,7 @@ export default function AgeVerification() {
   const setVerified = useAgeVerification((state) => state.setVerified)
 
   const handleVerification = () => {    
-    if (password === 'weupla2024') {
+    if (password === 'Weupla2025') {
       setVerified(true)
       setCookie('age-verified', 'true', {
         maxAge: 60 * 60 * 24 * 7, // 7 days
