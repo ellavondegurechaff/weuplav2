@@ -159,14 +159,23 @@ export default function AdminDashboard() {
     return () => URL.revokeObjectURL(previewUrl)
   }
 
-  const handleMediaDrop = (files) => {
-    const newMedia = files.map(file => ({
-      file,
-      type: file.type.startsWith('video/') ? 'video' : 'image',
-      preview: URL.createObjectURL(file)
-    }))
-    
-    form.setFieldValue('media', [...(form.values.media || []), ...newMedia])
+  const handleMediaDrop = async (files) => {
+    try {
+      const newMedia = files.map(file => ({
+        file,
+        type: file.type.startsWith('video/') ? 'video' : 'image',
+        preview: URL.createObjectURL(file)
+      }))
+      
+      form.setFieldValue('media', [...(form.values.media || []), ...newMedia])
+    } catch (error) {
+      console.error('Error handling media drop:', error)
+      notifications.show({
+        title: 'Error',
+        message: 'Failed to process media files',
+        color: 'red'
+      })
+    }
   }
 
   const handleAddProduct = async () => {
@@ -201,36 +210,50 @@ export default function AdminDashboard() {
 
     try {
       const mediaUrls = []
-      const BATCH_SIZE = 2 // Upload 2 files at a time
+      const BATCH_SIZE = 2
       const mediaItems = form.values.media
       
-      // Upload media in batches
       for (let i = 0; i < mediaItems.length; i += BATCH_SIZE) {
         const batch = mediaItems.slice(i, i + BATCH_SIZE)
-        const batchFiles = await Promise.all(batch.map(async (mediaItem) => {
-          const base64 = await new Promise((resolve) => {
-            const reader = new FileReader()
-            reader.onloadend = () => resolve(reader.result.split(',')[1])
-            reader.readAsDataURL(mediaItem.file)
+        const uploadPromises = batch.map(async (mediaItem) => {
+          const response = await fetch('/api/generate-upload-url', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              fileType: mediaItem.file.type,
+              fileName: mediaItem.file.name
+            })
           })
-          
-          return {
-            data: base64,
-            type: mediaItem.type === 'video' ? 'video/mp4' : 'image/jpeg'
-          }
-        }))
 
-        const uploadResponse = await fetch('/api/upload-multiple', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ files: batchFiles })
+          if (!response.ok) {
+            throw new Error('Failed to get upload URL')
+          }
+
+          const { presignedUrl, fileUrl } = await response.json()
+
+          // Modified fetch call with correct headers
+          await fetch(presignedUrl, {
+            method: 'PUT',
+            body: mediaItem.file,
+            headers: {
+              'Content-Type': mediaItem.file.type,
+              'x-amz-acl': 'public-read',
+              'x-amz-content-sha256': 'UNSIGNED-PAYLOAD'
+            },
+            mode: 'cors'
+          })
+
+          return {
+            url: fileUrl,
+            type: mediaItem.type
+          }
         })
 
-        if (!uploadResponse.ok) throw new Error('Media upload failed')
-        const { urls } = await uploadResponse.json()
-        mediaUrls.push(...urls)
+        const uploadedBatch = await Promise.all(uploadPromises)
+        mediaUrls.push(...uploadedBatch)
       }
 
+      // Create product with uploaded media URLs
       const response = await fetch('/api/products/create', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -240,12 +263,10 @@ export default function AdminDashboard() {
         })
       })
 
-      const data = await response.json()
-      
       if (!response.ok) {
-        throw new Error(data.message || 'Failed to create product')
+        throw new Error('Failed to create product')
       }
-      
+
       form.reset()
       setImageFile(null)
       setImagePreview(null)
@@ -346,24 +367,46 @@ export default function AdminDashboard() {
 
   const handleMediaUpload = async (files) => {
     try {
-      const newMedia = await Promise.all(files.map(async (file) => {
-        const isVideo = file.type.startsWith('video/')
-        const url = URL.createObjectURL(file)
-        
-        return {
-          file,
-          url,
-          type: isVideo ? 'video' : 'image',
-          preview: url
-        }
-      }))
+      const uploadPromises = files.map(async (file) => {
+        // Get presigned URL
+        const response = await fetch('/api/generate-upload-url', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            fileType: file.type,
+            fileName: file.name
+          })
+        })
 
+        if (!response.ok) {
+          throw new Error('Failed to get upload URL')
+        }
+
+        const { presignedUrl, fileUrl } = await response.json()
+
+        // Upload file directly to S3
+        await fetch(presignedUrl, {
+          method: 'PUT',
+          body: file,
+          headers: {
+            'Content-Type': file.type
+          }
+        })
+
+        return {
+          url: fileUrl,
+          type: file.type.startsWith('video/') ? 'video' : 'image',
+          preview: URL.createObjectURL(file)
+        }
+      })
+
+      const newMedia = await Promise.all(uploadPromises)
       editForm.setFieldValue('media', [...editForm.values.media, ...newMedia])
     } catch (error) {
       console.error('Error handling media upload:', error)
       notifications.show({
         title: 'Error',
-        message: 'Failed to process media files',
+        message: 'Failed to upload media files',
         color: 'red'
       })
     }
