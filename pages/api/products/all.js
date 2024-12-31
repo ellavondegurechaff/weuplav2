@@ -10,7 +10,7 @@ export default async function handler(req, res) {
       SELECT p.* 
       FROM products p
       JOIN categories c ON p.category_id = c.id
-      ORDER BY c.slug, p.name
+      ORDER BY p.created_at DESC, c.slug, p.name
     `)
 
     return res.status(200).json(products)

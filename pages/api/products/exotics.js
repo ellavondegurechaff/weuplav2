@@ -11,6 +11,7 @@ export default async function handler(req, res) {
       FROM products p
       JOIN categories c ON p.category_id = c.id
       WHERE c.slug = ?
+      ORDER BY p.created_at DESC, p.name
     `, ['exotics'])
 
     return res.status(200).json(products)
