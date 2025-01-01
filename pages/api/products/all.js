@@ -9,6 +9,7 @@ export default async function handler(req, res) {
     const products = await query(`
       SELECT 
         p.*,
+        COALESCE(pv.view_count, 0) as view_count,
         COALESCE(
           JSON_ARRAYAGG(
             IF(pm.id IS NOT NULL,
@@ -25,6 +26,7 @@ export default async function handler(req, res) {
         ) as media
       FROM products p
       LEFT JOIN product_media pm ON p.id = pm.product_id
+      LEFT JOIN product_views pv ON p.id = pv.product_id
       GROUP BY p.id
       ORDER BY p.created_at DESC, p.name
     `)
