@@ -3,12 +3,12 @@ import { useDisclosure } from '@mantine/hooks'
 import { ShoppingCart } from 'lucide-react'
 import Head from 'next/head'
 import SidePanel from '@/components/SidePanel'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import useCartStore from '@/store/cartStore'
 import CartSidebar from '@/components/CartSidebar'
 import ProductCard from '@/components/ProductCard'
 import { useGesture } from '@use-gesture/react'
-import { IconX } from '@tabler/icons-react'
+import { IconX, IconChevronLeft, IconChevronRight } from '@tabler/icons-react'
 import { NavHeader } from '@/components/NavHeader'
 
 export function ProductPageLayout({ 
@@ -25,33 +25,79 @@ export function ProductPageLayout({
   const [position, setPosition] = useState({ x: 0, y: 0 })
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [origin, setOrigin] = useState({ x: 0, y: 0 })
+  const [currentPreviewIndex, setCurrentPreviewIndex] = useState(0)
+  const startXRef = useRef(0)
+  const currentXRef = useRef(0)
+  const [isDragging, setIsDragging] = useState(false)
+  const dragDistanceRef = useRef(0)
+  const dragThresholdRef = useRef(50)
+  const dragDirectionRef = useRef(null)
 
   const bind = useGesture({
-    onPinch: ({ origin: [ox, oy], offset: [s], event }) => {
+    onPinch: ({ offset: [s], event }) => {
       event.preventDefault()
-      
-      if (s === 1) {
-        setOrigin({ x: ox, y: oy })
-      }
-      
-      const newScale = Math.min(Math.max(0.5, s), 4)
+      const newScale = Math.min(Math.max(1, s), 3)
       setScale(newScale)
-      
-      if (newScale > 1) {
-        const x = (ox - origin.x) * (1 - newScale)
-        const y = (oy - origin.y) * (1 - newScale)
-        setPosition({ x, y })
-      } else {
-        setPosition({ x: 0, y: 0 })
-      }
     },
     onPinchEnd: () => {
-      if (scale <= 1) {
-        setScale(1)
-        setPosition({ x: 0, y: 0 })
-      }
+      setScale(1)
+    }
+  }, {
+    drag: false,
+    pinch: {
+      from: () => [scale],
+      filterTaps: true
     }
   })
+
+  const handleTouchStart = (e) => {
+    if (e.touches.length > 1) return // Ignore multi-touch
+    setIsDragging(true)
+    startXRef.current = e.touches[0].clientX
+    dragDirectionRef.current = null
+  }
+
+  const handleTouchMove = (e) => {
+    if (!isDragging || e.touches.length > 1) return
+    
+    const currentX = e.touches[0].clientX
+    const deltaX = currentX - startXRef.current
+    
+    if (Math.abs(deltaX) > dragThresholdRef.current) {
+      dragDirectionRef.current = deltaX > 0 ? 'right' : 'left'
+    }
+  }
+
+  const handleTouchEnd = () => {
+    if (!isDragging) return
+    setIsDragging(false)
+
+    if (dragDirectionRef.current && selectedMedia.productMedia) {
+      const currentIndex = selectedMedia.productMedia.findIndex(m => m.url === selectedMedia.url)
+      
+      if (dragDirectionRef.current === 'right' && currentIndex > 0) {
+        navigateMedia('prev', currentIndex)
+      } else if (dragDirectionRef.current === 'left' && currentIndex < selectedMedia.productMedia.length - 1) {
+        navigateMedia('next', currentIndex)
+      }
+    }
+  }
+
+  const navigateMedia = (direction, currentIndex) => {
+    const newIndex = direction === 'prev' ? currentIndex - 1 : currentIndex + 1
+    if (newIndex >= 0 && newIndex < selectedMedia.productMedia.length) {
+      setSelectedMedia({
+        url: selectedMedia.productMedia[newIndex].url,
+        isVideo: isVideo(selectedMedia.productMedia[newIndex].url),
+        productMedia: selectedMedia.productMedia
+      })
+    }
+  }
+
+  const isVideo = (url) => {
+    const videoExtensions = ['.mp4', '.mov', '.MP4', '.MOV']
+    return videoExtensions.some(ext => url.toLowerCase().endsWith(ext.toLowerCase()))
+  }
 
   const resetZoom = () => {
     setScale(1)
@@ -71,8 +117,12 @@ export function ProductPageLayout({
     fetchProducts()
   }, [fetchUrl])
 
-  const handleImageClick = async (url, isVideo = false, productId) => {
-    setSelectedMedia({ url, isVideo })
+  const handleImageClick = async (url, isVideo = false, productId, productMedia) => {
+    setSelectedMedia({ 
+      url, 
+      isVideo,
+      productMedia
+    })
     setIsModalOpen(true)
     
     try {
@@ -245,6 +295,9 @@ export function ProductPageLayout({
           ) : (
             <div
               {...bind()}
+              onTouchStart={handleTouchStart}
+              onTouchMove={handleTouchMove}
+              onTouchEnd={handleTouchEnd}
               style={{
                 width: '100%',
                 height: '100%',
@@ -253,7 +306,9 @@ export function ProductPageLayout({
                 justifyContent: 'center',
                 background: 'none',
                 overflow: 'hidden',
-                touchAction: 'none'
+                touchAction: 'none',
+                position: 'relative',
+                cursor: isDragging ? 'grabbing' : 'grab'
               }}
             >
               <Image
@@ -263,15 +318,66 @@ export function ProductPageLayout({
                 style={{
                   maxWidth: '90vw',
                   maxHeight: '90vh',
-                  transform: `scale(${scale}) translate(${position.x}px, ${position.y}px)`,
+                  transform: `scale(${scale})`,
                   transformOrigin: 'center center',
                   willChange: 'transform',
                   transition: 'none',
                   userSelect: 'none',
+                  pointerEvents: 'none',
+                  margin: 'auto'
                 }}
                 onDoubleClick={resetZoom}
               />
             </div>
+          )}
+
+          {selectedMedia.productMedia?.length > 1 && (
+            <>
+              <ActionIcon 
+                variant="filled"
+                onClick={() => {
+                  const currentIndex = selectedMedia.productMedia.findIndex(m => m.url === selectedMedia.url)
+                  if (currentIndex > 0) {
+                    setSelectedMedia({
+                      url: selectedMedia.productMedia[currentIndex - 1].url,
+                      isVideo: isVideo(selectedMedia.productMedia[currentIndex - 1].url),
+                      productMedia: selectedMedia.productMedia
+                    })
+                  }
+                }}
+                style={{
+                  position: 'absolute',
+                  left: '20px',
+                  top: '50%',
+                  transform: 'translateY(-50%)',
+                  backgroundColor: 'rgba(255, 255, 255, 0.8)',
+                }}
+              >
+                <IconChevronLeft size={24} />
+              </ActionIcon>
+              <ActionIcon 
+                variant="filled"
+                onClick={() => {
+                  const currentIndex = selectedMedia.productMedia.findIndex(m => m.url === selectedMedia.url)
+                  if (currentIndex < selectedMedia.productMedia.length - 1) {
+                    setSelectedMedia({
+                      url: selectedMedia.productMedia[currentIndex + 1].url,
+                      isVideo: isVideo(selectedMedia.productMedia[currentIndex + 1].url),
+                      productMedia: selectedMedia.productMedia
+                    })
+                  }
+                }}
+                style={{
+                  position: 'absolute',
+                  right: '20px',
+                  top: '50%',
+                  transform: 'translateY(-50%)',
+                  backgroundColor: 'rgba(255, 255, 255, 0.8)',
+                }}
+              >
+                <IconChevronRight size={24} />
+              </ActionIcon>
+            </>
           )}
         </div>
       </Modal>

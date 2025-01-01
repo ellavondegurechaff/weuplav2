@@ -1,7 +1,6 @@
 import { useState, useRef } from 'react'
 import { Image, Card, ActionIcon, Box } from '@mantine/core'
 import { IconChevronLeft, IconChevronRight } from '@tabler/icons-react'
-import { useGesture } from '@use-gesture/react'
 
 export function MediaCarousel({ media, onImageClick }) {
   const [currentIndex, setCurrentIndex] = useState(0)
@@ -9,12 +8,6 @@ export function MediaCarousel({ media, onImageClick }) {
   const startXRef = useRef(0)
   const currentXRef = useRef(0)
   const imageRef = useRef(null)
-
-  const bind = useGesture({
-    onPinch: ({ event }) => {
-      event.preventDefault()
-    }
-  })
 
   if (!media?.length) return null
 
@@ -38,19 +31,7 @@ export function MediaCarousel({ media, onImageClick }) {
   const handleDragMove = (e) => {
     if (!isDragging) return
     
-    // Only prevent default for horizontal movements
     const clientX = e.type === 'mousemove' ? e.clientX : e.touches[0].clientX
-    const clientY = e.type === 'mousemove' ? e.clientY : e.touches[0].clientY
-    
-    // Calculate movement delta
-    const deltaX = clientX - startXRef.current
-    const deltaY = Math.abs(clientY - (e.type === 'mousemove' ? e.clientY : e.touches[0].clientY))
-    
-    // Only prevent default if horizontal movement is greater than vertical
-    if (Math.abs(deltaX) > deltaY) {
-      e.preventDefault()
-    }
-    
     currentXRef.current = clientX
   }
 
@@ -72,7 +53,7 @@ export function MediaCarousel({ media, onImageClick }) {
 
   const handleMediaClick = (e) => {
     e.preventDefault()
-    onImageClick?.(currentMedia.url, isVideo(currentMedia.url))
+    onImageClick?.(currentMedia.url, isVideo(currentMedia.url), media)
   }
 
   const isVideo = (url) => {
@@ -91,7 +72,6 @@ export function MediaCarousel({ media, onImageClick }) {
       aspectRatio: '1 / 1'
     }}>
       <Card.Section 
-        {...bind()}
         style={{ 
           height: '100%', 
           width: '100%',
@@ -103,7 +83,11 @@ export function MediaCarousel({ media, onImageClick }) {
           background: 'none',
           position: 'relative'
         }}
-        onClick={handleMediaClick}
+        onClick={(e) => {
+          if (!isDragging) {
+            handleMediaClick(e)
+          }
+        }}
         onMouseDown={handleDragStart}
         onMouseMove={handleDragMove}
         onMouseUp={handleDragEnd}
