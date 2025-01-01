@@ -11,6 +11,7 @@ import { useGesture } from '@use-gesture/react'
 import { IconX, IconChevronLeft, IconChevronRight } from '@tabler/icons-react'
 import { NavHeader } from '@/components/NavHeader'
 import { useSpring, animated } from '@react-spring/web'
+import { TransformWrapper, TransformComponent } from 'react-zoom-pan-pinch'
 
 export function ProductPageLayout({ 
   pageTitle, 
@@ -432,120 +433,76 @@ export function ProductPageLayout({
         styles={{
           modal: {
             background: 'black',
-            boxShadow: 'none',
             maxWidth: '100%',
             width: '100%',
             height: '100vh',
             margin: 0,
           },
-          header: {
-            display: 'none',
-          },
           body: {
             padding: 0,
             height: '100vh',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            background: 'black',
           },
           inner: {
             padding: 0,
-            margin: 0,
-          },
-          overlay: {
-            backgroundColor: 'rgba(0, 0, 0, 0.95)',
-          },
-          content: {
-            background: 'black',
           }
         }}
       >
-        <div style={{
-          width: '100vw',
-          height: '100vh',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          background: 'none',
-          position: 'relative',
-        }}>
-          <ActionIcon
-            onClick={() => setIsModalOpen(false)}
-            style={{
-              position: 'absolute',
-              top: '20px',
-              right: '20px',
-              zIndex: 1000,
-              background: 'rgba(0, 0, 0, 0.5)',
-              color: 'white',
-              borderRadius: '50%',
+        <div style={{ width: '100%', height: '100%', background: 'black' }}>
+          <TransformWrapper
+            initialScale={1}
+            minScale={1}
+            maxScale={3}
+            centerOnInit={true}
+            doubleClick={{
+              mode: 'reset'
             }}
-            size="lg"
+            panning={{
+              velocityDisabled: true
+            }}
           >
-            <IconX size={18} />
-          </ActionIcon>
-
-          {selectedMedia.isVideo ? (
-            <video
-              src={selectedMedia.url}
-              controls
-              autoPlay
-              style={{
-                maxWidth: '100%',
-                maxHeight: '100vh',
-                objectFit: 'contain',
-                background: 'none',
+            <TransformComponent
+              wrapperStyle={{
+                width: '100%',
+                height: '100%',
+                background: 'black'
               }}
-            />
-          ) : (
-            <div
-              {...bind()}
-              onTouchStart={(e) => {
-                handleTouchStart(e)
-                handleDoubleTap(e)
-              }}
-              onTouchMove={handleTouchMove}
-              onTouchEnd={handleTouchEnd}
-              onClick={handleDoubleTap}
-              style={{
+              contentStyle={{
                 width: '100%',
                 height: '100%',
                 display: 'flex',
                 alignItems: 'center',
-                justifyContent: 'center',
-                background: 'black',
-                overflow: 'hidden',
-                touchAction: 'none',
-                position: 'relative',
-                cursor: isDragging ? 'grabbing' : 'grab',
-                willChange: 'transform'
+                justifyContent: 'center'
               }}
             >
-              <animated.img
-                src={selectedMedia.url}
-                alt="Full size preview"
-                style={{
-                  maxWidth: '100vw',
-                  maxHeight: '100vh',
-                  width: 'auto',
-                  height: 'auto',
-                  objectFit: 'contain',
-                  transform: springProps.scale.to(
-                    s => `scale(${s}) translate3d(${position.x}px, ${position.y}px, 0)`
-                  ),
-                  transformOrigin: '50% 50%',
-                  willChange: 'transform',
-                  userSelect: 'none',
-                  pointerEvents: 'none',
-                  touchAction: 'none',
-                  transition: 'transform 0.05s linear' // Add slight smoothing
-                }}
-                onDoubleClick={resetZoom}
-              />
-            </div>
-          )}
+              {selectedMedia.isVideo ? (
+                <video
+                  src={selectedMedia.url}
+                  controls
+                  autoPlay
+                  muted
+                  loop
+                  style={{
+                    maxWidth: '100%',
+                    maxHeight: '100vh',
+                    objectFit: 'contain'
+                  }}
+                  playsInline
+                />
+              ) : (
+                <img
+                  src={selectedMedia.url}
+                  alt="Preview"
+                  style={{
+                    maxWidth: '100%',
+                    maxHeight: '100vh',
+                    objectFit: 'contain'
+                  }}
+                />
+              )}
+            </TransformComponent>
+          </TransformWrapper>
 
+          {/* Navigation arrows */}
           {selectedMedia.productMedia?.length > 1 && (
             <>
               <ActionIcon 
@@ -594,6 +551,19 @@ export function ProductPageLayout({
               </ActionIcon>
             </>
           )}
+
+          {/* Close button */}
+          <ActionIcon
+            onClick={() => setIsModalOpen(false)}
+            style={{
+              position: 'absolute',
+              top: '20px',
+              right: '20px',
+              backgroundColor: 'rgba(255, 255, 255, 0.8)',
+            }}
+          >
+            <IconX size={24} />
+          </ActionIcon>
         </div>
       </Modal>
     </>
