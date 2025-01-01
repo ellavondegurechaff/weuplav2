@@ -12,12 +12,29 @@ export default async function handler(req, res) {
   }
 
   try {
-    await query(`
-      INSERT INTO touchdown_views (touchdown_id, view_count) 
-      VALUES (?, 1)
-      ON DUPLICATE KEY UPDATE view_count = view_count + 1
+    // First, check if a record exists
+    const [existingView] = await query(`
+      SELECT view_count 
+      FROM touchdown_views 
+      WHERE touchdown_id = ?
     `, [touchdownId])
 
+    if (existingView) {
+      // Update existing record
+      await query(`
+        UPDATE touchdown_views 
+        SET view_count = view_count + 1 
+        WHERE touchdown_id = ?
+      `, [touchdownId])
+    } else {
+      // Create new record
+      await query(`
+        INSERT INTO touchdown_views (touchdown_id, view_count) 
+        VALUES (?, 1)
+      `, [touchdownId])
+    }
+
+    // Get updated view count
     const [viewData] = await query(`
       SELECT view_count 
       FROM touchdown_views 
