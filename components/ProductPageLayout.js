@@ -1,4 +1,4 @@
-import { AppShell, Container, Grid, Text, Group, Burger, Button, TextInput, Modal, Image } from '@mantine/core'
+import { AppShell, Container, Grid, Text, Group, Burger, Button, TextInput, Modal, Image, ActionIcon } from '@mantine/core'
 import { useDisclosure } from '@mantine/hooks'
 import { ShoppingCart } from 'lucide-react'
 import Head from 'next/head'
@@ -158,107 +158,108 @@ export function ProductPageLayout({
 
       <Modal
         opened={isModalOpen}
-        onClose={() => {
-          setIsModalOpen(false)
-        }}
-        transitionProps={{
-          duration: 200,
-          onExitComplete: () => {
-            setSelectedMedia({ url: null, isVideo: false })
-            resetZoom()
-          }
-        }}
-        size="xl"
+        onClose={() => setIsModalOpen(false)}
+        size="100vw"
+        fullScreen
         padding={0}
-        closeButtonProps={{
-          icon: <IconX size={16} />,
-          iconSize: 16,
-        }}
+        withCloseButton={false}
         styles={{
           modal: {
-            backgroundColor: 'transparent',
+            background: 'none',
             boxShadow: 'none',
+            maxWidth: '100%',
+            width: '100%',
+            height: '100vh',
+            margin: 0,
           },
           header: {
-            position: 'absolute',
-            right: 8,
-            top: 8,
-            zIndex: 1000,
-            margin: 0,
-            padding: 0,
-            height: 'auto',
-            backgroundColor: 'transparent',
-            border: 'none',
-          },
-          close: {
-            color: 'white',
-            backgroundColor: 'transparent',
-            width: '24px',
-            height: '24px',
-            minHeight: '24px',
-            minWidth: '24px',
-            borderRadius: '50%',
-            padding: 0,
-            border: 'none',
-            '&:hover': {
-              backgroundColor: 'rgba(0, 0, 0, 0.3)',
-            },
-            svg: {
-              width: '14px',
-              height: '14px',
-            }
+            display: 'none',
           },
           body: {
-            backgroundColor: 'rgba(0, 0, 0, 0.9)',
             padding: 0,
+            height: '100vh',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            background: 'none',
           },
           inner: {
             padding: 0,
+            margin: 0,
           },
           overlay: {
-            backgroundColor: 'rgba(0, 0, 0, 0.9)',
+            backgroundColor: 'rgba(0, 0, 0, 0.75)',
+          },
+          content: {
+            background: 'none',
           }
         }}
       >
-        {selectedMedia.isVideo ? (
-          <video
-            src={selectedMedia.url}
-            controls
-            autoPlay
+        <div style={{
+          width: '100vw',
+          height: '100vh',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          background: 'none',
+          position: 'relative',
+        }}>
+          <ActionIcon
+            onClick={() => setIsModalOpen(false)}
             style={{
-              width: '100%',
-              height: '90vh',
-              objectFit: 'contain',
-              backgroundColor: 'rgba(0, 0, 0, 0.9)'
+              position: 'absolute',
+              top: '20px',
+              right: '20px',
+              zIndex: 1000,
+              background: 'rgba(0, 0, 0, 0.5)',
+              color: 'white',
+              borderRadius: '50%',
             }}
-          />
-        ) : (
-          <div
-            {...bind()}
-            style={{
-              width: '100%',
-              height: '90vh',
-              overflow: 'hidden',
-              touchAction: 'none',
-              backgroundColor: 'rgba(0, 0, 0, 0.9)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center'
-            }}
+            size="lg"
           >
-            <Image
+            <IconX size={18} />
+          </ActionIcon>
+
+          {selectedMedia.isVideo ? (
+            <video
               src={selectedMedia.url}
-              alt="Full size preview"
-              fit="contain"
-              height="90vh"
+              controls
+              autoPlay
               style={{
-                transform: `scale(${scale}) translate(${position.x}px, ${position.y}px)`,
-                transition: scale === 1 ? 'all 0.3s ease' : 'none'
+                maxWidth: '100%',
+                maxHeight: '100vh',
+                objectFit: 'contain',
+                background: 'none',
               }}
-              onDoubleClick={resetZoom}
             />
-          </div>
-        )}
+          ) : (
+            <div
+              {...bind()}
+              style={{
+                width: '100%',
+                height: '100%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                background: 'none',
+              }}
+            >
+              <Image
+                src={selectedMedia.url}
+                alt="Full size preview"
+                fit="contain"
+                style={{
+                  maxWidth: '100%',
+                  maxHeight: '100vh',
+                  transform: `scale(${scale}) translate(${position.x}px, ${position.y}px)`,
+                  transition: scale === 1 ? 'all 0.3s ease' : 'none',
+                  background: 'none',
+                }}
+                onDoubleClick={resetZoom}
+              />
+            </div>
+          )}
+        </div>
       </Modal>
     </>
   )

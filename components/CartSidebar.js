@@ -175,12 +175,26 @@ Total due = ${Math.round(totals.total)}`
           {/* Cart Header */}
           <div className="px-4 py-3 bg-orange-50/80 flex justify-between items-center border-b border-orange-200">
             <h2 className="text-lg font-semibold text-black">Your Cart</h2>
-            <button
-              onClick={() => setIsCartOpen(false)}
-              className="p-1.5 text-black hover:text-orange-500 transition-colors"
-            >
-              <X size={18} />
-            </button>
+            <div className="flex items-center gap-2">
+              {cart.length > 0 && (
+                <button
+                  onClick={() => {
+                    if (window.confirm('Are you sure you want to clear your cart?')) {
+                      clearCart()
+                    }
+                  }}
+                  className="p-1.5 text-black hover:text-red-500 transition-colors"
+                >
+                  Clear
+                </button>
+              )}
+              <button
+                onClick={() => setIsCartOpen(false)}
+                className="p-1.5 text-black hover:text-orange-500 transition-colors"
+              >
+                <X size={18} />
+              </button>
+            </div>
           </div>
 
           {/* Cart Items Section */}

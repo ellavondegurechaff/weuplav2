@@ -93,7 +93,9 @@ export function MediaCarousel({ media, onImageClick }) {
       height: '300px', 
       position: 'relative',
       margin: 0,
-      padding: 0
+      padding: 0,
+      overflow: 'hidden',
+      background: 'none'
     }}>
       <Card.Section 
         {...bind()}
@@ -104,7 +106,8 @@ export function MediaCarousel({ media, onImageClick }) {
           padding: 0,
           overflow: 'hidden',
           cursor: isDragging ? 'grabbing' : 'grab',
-          touchAction: 'none'
+          touchAction: 'none',
+          background: 'none'
         }}
         onClick={handleMediaClick}
         onMouseDown={handleDragStart}
@@ -125,8 +128,8 @@ export function MediaCarousel({ media, onImageClick }) {
             style={{ 
               width: '100%', 
               height: '100%', 
-              objectFit: 'cover',
-              backgroundColor: '#f5f5f5',
+              objectFit: 'contain',
+              background: 'none',
               display: 'block'
             }}
             playsInline
@@ -137,7 +140,8 @@ export function MediaCarousel({ media, onImageClick }) {
             style={{
               width: '100%',
               height: '100%',
-              overflow: 'hidden'
+              overflow: 'hidden',
+              background: 'none'
             }}
           >
             <Image
@@ -147,9 +151,10 @@ export function MediaCarousel({ media, onImageClick }) {
               style={{
                 width: '100%',
                 height: '300px',
-                objectFit: 'cover',
+                objectFit: 'contain',
                 transform: `scale(${scale}) translate(${position.x}px, ${position.y}px)`,
-                transition: scale === 1 ? 'all 0.3s ease' : 'none'
+                transition: scale === 1 ? 'all 0.3s ease' : 'none',
+                background: 'none'
               }}
               onDoubleClick={resetZoom}
             />

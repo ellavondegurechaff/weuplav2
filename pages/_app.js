@@ -34,7 +34,7 @@ const theme = createTheme({
           background: 'transparent'
         },
         header: {
-          backgroundColor: '#f2f0d6',
+          backgroundColor: 'white',
           borderBottom: 'none',
           boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
           'button': {

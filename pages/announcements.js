@@ -10,19 +10,47 @@ import {
   Grid,
   Modal,
   Burger,
-  Badge
+  Badge,
+  ActionIcon
 } from '@mantine/core'
 import { useDisclosure } from '@mantine/hooks'
 import Head from 'next/head'
 import SidePanel from '@/components/SidePanel'
 import { MediaCarousel } from '@/components/MediaCarousel'
 import { LetterPlaceholder } from '@/components/LetterPlaceholder'
+import { IconX } from '@tabler/icons-react'
+import { useGesture } from '@use-gesture/react'
 
 export default function AnnouncementsPage() {
   const [opened, { toggle: toggleNav, close: closeNav }] = useDisclosure()
   const [announcements, setAnnouncements] = useState([])
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedMedia, setSelectedMedia] = useState({ url: null, isVideo: false })
+  const [scale, setScale] = useState(1)
+  const [position, setPosition] = useState({ x: 0, y: 0 })
+
+  const bind = useGesture({
+    onPinch: ({ offset: [scale], event }) => {
+      event.preventDefault()
+      setScale(Math.min(Math.max(0.5, scale), 4))
+    },
+    onDrag: ({ movement: [x, y], pinching }) => {
+      if (scale > 1 && !pinching) {
+        setPosition({ x, y })
+      }
+    },
+    onPinchEnd: () => {
+      if (scale <= 1) {
+        setScale(1)
+        setPosition({ x: 0, y: 0 })
+      }
+    }
+  })
+
+  const resetZoom = () => {
+    setScale(1)
+    setPosition({ x: 0, y: 0 })
+  }
 
   useEffect(() => {
     async function fetchAnnouncements() {
@@ -118,6 +146,15 @@ export default function AnnouncementsPage() {
                   },
                 }}
               />
+              
+              <div className="flex justify-center mt-4">
+                <a 
+                  href="/allproducts" 
+                  className="inline-block bg-transparent text-white px-8 py-3 rounded-md hover:bg-white/10 transition-colors outline outline-3 outline-white font-semibold"
+                >
+                  VIEW MENU
+                </a>
+              </div>
             </Container>
 
             <Grid>
@@ -134,7 +171,8 @@ export default function AnnouncementsPage() {
                       backgroundColor: 'rgba(255, 255, 255, 0.95)',
                       height: '100%',
                       display: 'flex',
-                      flexDirection: 'column'
+                      flexDirection: 'column',
+                      borderWidth: '7px'
                     }}
                   >
                     <Card.Section 
@@ -160,12 +198,15 @@ export default function AnnouncementsPage() {
                     </Card.Section>
 
                     <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
-                      <Group justify="space-between" mt="md" mb="xs">
-                        <Text fw={700} c="black">{announcement.title}</Text>
-                        <Group spacing="xs">
+                      <Group justify="space-between" mt="md" mb="xs" style={{ alignItems: 'flex-start' }}>
+                        <Text fw={700} c="black" style={{ flex: 1, marginRight: '8px' }}>
+                          {announcement.title}
+                        </Text>
+                        <Group gap="xs" style={{ flexShrink: 0 }}>
                           <Badge 
                             variant="light" 
                             color="gray"
+                            style={{ flexShrink: 0 }}
                             leftSection={
                               <svg
                                 xmlns="http://www.w3.org/2000/svg"
@@ -190,15 +231,13 @@ export default function AnnouncementsPage() {
                               {announcement.priority.charAt(0).toUpperCase() + announcement.priority.slice(1)}
                             </Badge>
                           )}
-                          <Text size="sm" c="dimmed">
-                            {new Date(announcement.created_at).toLocaleDateString()}
-                          </Text>
                         </Group>
                       </Group>
 
                       <Text 
                         size="sm" 
                         c="dimmed" 
+                        mb="md"
                         style={{ 
                           flex: 1,
                           whiteSpace: 'pre-wrap',
@@ -246,6 +285,12 @@ export default function AnnouncementsPage() {
                           announcement.content
                         )}
                       </Text>
+
+                      <Group gap="lg">
+                        <Text size="sm" c="dimmed">
+                          {new Date(announcement.created_at).toLocaleDateString()}
+                        </Text>
+                      </Group>
                     </div>
                   </Card>
                 </Grid.Col>
@@ -257,41 +302,107 @@ export default function AnnouncementsPage() {
         <Modal
           opened={!!selectedMedia.url}
           onClose={() => setSelectedMedia({ url: null, isVideo: false })}
-          size="xl"
+          size="100vw"
+          fullScreen
           padding={0}
+          withCloseButton={false}
           styles={{
             modal: {
-              backgroundColor: 'transparent',
+              background: 'none',
               boxShadow: 'none',
+              maxWidth: '100%',
+              width: '100%',
+              height: '100vh',
+              margin: 0,
             },
             header: {
-              position: 'absolute',
-              right: 0,
-              top: 0,
-              zIndex: 1000,
+              display: 'none',
+            },
+            body: {
+              padding: 0,
+              height: '100vh',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              background: 'none',
+            },
+            inner: {
+              padding: 0,
+              margin: 0,
+            },
+            overlay: {
+              backgroundColor: 'rgba(0, 0, 0, 0.75)',
+            },
+            content: {
+              background: 'none',
             }
           }}
         >
-          {selectedMedia.isVideo ? (
-            <video
-              src={selectedMedia.url}
-              controls
-              autoPlay
+          <div style={{
+            width: '100vw',
+            height: '100vh',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            background: 'none',
+            position: 'relative',
+          }}>
+            <ActionIcon
+              onClick={() => setSelectedMedia({ url: null, isVideo: false })}
               style={{
-                width: '100%',
-                height: '90vh',
-                objectFit: 'contain',
-                backgroundColor: 'rgba(0, 0, 0, 0.8)'
+                position: 'absolute',
+                top: '20px',
+                right: '20px',
+                zIndex: 1000,
+                background: 'rgba(0, 0, 0, 0.5)',
+                color: 'white',
+                borderRadius: '50%',
               }}
-            />
-          ) : (
-            <Image
-              src={selectedMedia.url}
-              alt="Full size preview"
-              fit="contain"
-              height="90vh"
-            />
-          )}
+              size="lg"
+            >
+              <IconX size={18} />
+            </ActionIcon>
+
+            {selectedMedia.isVideo ? (
+              <video
+                src={selectedMedia.url}
+                controls
+                autoPlay
+                style={{
+                  maxWidth: '100%',
+                  maxHeight: '100vh',
+                  objectFit: 'contain',
+                  background: 'none',
+                }}
+              />
+            ) : (
+              <div
+                {...bind()}
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  background: 'none',
+                }}
+              >
+                <Image
+                  src={selectedMedia.url}
+                  alt="Full size preview"
+                  fit="contain"
+                  style={{
+                    maxWidth: '100%',
+                    maxHeight: '100vh',
+                    transform: `scale(${scale}) translate(${position.x}px, ${position.y}px)`,
+                    transition: scale === 1 ? 'all 0.3s ease' : 'none',
+                    background: 'none',
+                  }}
+                  onDoubleClick={resetZoom}
+                />
+              </div>
+            )}
+          </div>
         </Modal>
       </AppShell>
     </>

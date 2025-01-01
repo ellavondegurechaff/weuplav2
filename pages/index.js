@@ -16,7 +16,7 @@ export default function WelcomePage() {
       padding="0"
       style={{ backgroundColor: 'transparent' }}
     >
-      <AppShell.Header style={{ backgroundColor: '#f2f0d6' }}>
+      <AppShell.Header style={{ backgroundColor: 'white' }}>
         <NavHeader 
           opened={opened} 
           toggleNav={toggleNav}
