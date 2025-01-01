@@ -7,6 +7,8 @@ import { useState, useEffect } from 'react'
 import useCartStore from '@/store/cartStore'
 import CartSidebar from '@/components/CartSidebar'
 import ProductCard from '@/components/ProductCard'
+import { useGesture } from '@use-gesture/react'
+import { IconX } from '@tabler/icons-react'
 
 export function ProductPageLayout({ 
   pageTitle, 
@@ -18,6 +20,31 @@ export function ProductPageLayout({
   const [isCartOpen, setIsCartOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedMedia, setSelectedMedia] = useState({ url: null, isVideo: false })
+  const [scale, setScale] = useState(1)
+  const [position, setPosition] = useState({ x: 0, y: 0 })
+
+  const bind = useGesture({
+    onPinch: ({ offset: [scale], event }) => {
+      event.preventDefault()
+      setScale(Math.min(Math.max(0.5, scale), 4))
+    },
+    onDrag: ({ movement: [x, y], pinching }) => {
+      if (scale > 1 && !pinching) {
+        setPosition({ x, y })
+      }
+    },
+    onPinchEnd: () => {
+      if (scale <= 1) {
+        setScale(1)
+        setPosition({ x: 0, y: 0 })
+      }
+    }
+  })
+
+  const resetZoom = () => {
+    setScale(1)
+    setPosition({ x: 0, y: 0 })
+  }
 
   useEffect(() => {
     async function fetchProducts() {
@@ -129,9 +156,16 @@ export function ProductPageLayout({
 
       <Modal
         opened={!!selectedMedia.url}
-        onClose={() => setSelectedMedia({ url: null, isVideo: false })}
+        onClose={() => {
+          setSelectedMedia({ url: null, isVideo: false })
+          resetZoom()
+        }}
         size="xl"
         padding={0}
+        closeButtonProps={{
+          icon: <IconX size={16} />,
+          iconSize: 16,
+        }}
         styles={{
           modal: {
             backgroundColor: 'transparent',
@@ -139,9 +173,40 @@ export function ProductPageLayout({
           },
           header: {
             position: 'absolute',
-            right: 0,
-            top: 0,
+            right: 8,
+            top: 8,
             zIndex: 1000,
+            margin: 0,
+            padding: 0,
+            height: 'auto',
+          },
+          close: {
+            color: 'white',
+            backgroundColor: 'rgba(0, 0, 0, 0.5)',
+            width: '24px',
+            height: '24px',
+            minHeight: '24px',
+            minWidth: '24px',
+            borderRadius: '50%',
+            padding: 0,
+            border: 'none',
+            '&:hover': {
+              backgroundColor: 'rgba(0, 0, 0, 0.7)',
+            },
+            svg: {
+              width: '14px',
+              height: '14px',
+            }
+          },
+          body: {
+            backgroundColor: 'rgba(0, 0, 0, 0.9)',
+            padding: 0,
+          },
+          inner: {
+            padding: 0,
+          },
+          overlay: {
+            backgroundColor: 'rgba(0, 0, 0, 0.9)',
           }
         }}
       >
@@ -154,16 +219,35 @@ export function ProductPageLayout({
               width: '100%',
               height: '90vh',
               objectFit: 'contain',
-              backgroundColor: 'rgba(0, 0, 0, 0.8)'
+              backgroundColor: 'rgba(0, 0, 0, 0.9)'
             }}
           />
         ) : (
-          <Image
-            src={selectedMedia.url}
-            alt="Full size preview"
-            fit="contain"
-            height="90vh"
-          />
+          <div
+            {...bind()}
+            style={{
+              width: '100%',
+              height: '90vh',
+              overflow: 'hidden',
+              touchAction: 'none',
+              backgroundColor: 'rgba(0, 0, 0, 0.9)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}
+          >
+            <Image
+              src={selectedMedia.url}
+              alt="Full size preview"
+              fit="contain"
+              height="90vh"
+              style={{
+                transform: `scale(${scale}) translate(${position.x}px, ${position.y}px)`,
+                transition: scale === 1 ? 'all 0.3s ease' : 'none'
+              }}
+              onDoubleClick={resetZoom}
+            />
+          </div>
         )}
       </Modal>
     </>

@@ -1,12 +1,40 @@
 import { useState, useRef } from 'react'
 import { Image, Card, ActionIcon, Box } from '@mantine/core'
 import { IconChevronLeft, IconChevronRight } from '@tabler/icons-react'
+import { useGesture } from '@use-gesture/react'
+import { transform } from '@mantine/core'
 
 export function MediaCarousel({ media, onImageClick }) {
   const [currentIndex, setCurrentIndex] = useState(0)
   const [isDragging, setIsDragging] = useState(false)
   const startXRef = useRef(0)
   const currentXRef = useRef(0)
+  const [scale, setScale] = useState(1)
+  const [position, setPosition] = useState({ x: 0, y: 0 })
+  const imageRef = useRef(null)
+
+  const bind = useGesture({
+    onPinch: ({ offset: [scale], event }) => {
+      event.preventDefault()
+      setScale(Math.min(Math.max(0.5, scale), 3))
+    },
+    onDrag: ({ movement: [x, y], pinching }) => {
+      if (scale > 1 && !pinching) {
+        setPosition({ x, y })
+      }
+    },
+    onPinchEnd: () => {
+      if (scale <= 1) {
+        setScale(1)
+        setPosition({ x: 0, y: 0 })
+      }
+    }
+  })
+
+  const resetZoom = () => {
+    setScale(1)
+    setPosition({ x: 0, y: 0 })
+  }
 
   if (!media?.length) return null
 
@@ -68,13 +96,15 @@ export function MediaCarousel({ media, onImageClick }) {
       padding: 0
     }}>
       <Card.Section 
+        {...bind()}
         style={{ 
           height: '100%', 
           width: '100%',
           margin: 0,
           padding: 0,
           overflow: 'hidden',
-          cursor: isDragging ? 'grabbing' : 'grab'
+          cursor: isDragging ? 'grabbing' : 'grab',
+          touchAction: 'none'
         }}
         onClick={handleMediaClick}
         onMouseDown={handleDragStart}
@@ -103,19 +133,27 @@ export function MediaCarousel({ media, onImageClick }) {
             onClick={(e) => e.stopPropagation()}
           />
         ) : (
-          <Image
-            src={currentMedia.url}
-            alt="Product media"
+          <div
             style={{
               width: '100%',
-              height: '300px',
-              objectFit: 'cover',
-              backgroundColor: '#f5f5f5',
-              display: 'block',
-              margin: 0,
-              padding: 0
+              height: '100%',
+              overflow: 'hidden'
             }}
-          />
+          >
+            <Image
+              ref={imageRef}
+              src={currentMedia.url}
+              alt="Product media"
+              style={{
+                width: '100%',
+                height: '300px',
+                objectFit: 'cover',
+                transform: `scale(${scale}) translate(${position.x}px, ${position.y}px)`,
+                transition: scale === 1 ? 'all 0.3s ease' : 'none'
+              }}
+              onDoubleClick={resetZoom}
+            />
+          </div>
         )}
       </Card.Section>
 

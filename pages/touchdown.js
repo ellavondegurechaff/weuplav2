@@ -110,11 +110,10 @@ export default function TouchdownsPage() {
                 placeholder="Search touchdowns..."
                 value={searchQuery}
                 onChange={(event) => setSearchQuery(event.currentTarget.value)}
-                size="lg"
                 radius="md"
                 styles={{
                   input: {
-                    backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                    backgroundColor: 'white',
                     '&:focus': {
                       borderColor: 'var(--mantine-color-orange-6)',
                     },

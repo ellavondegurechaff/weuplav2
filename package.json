@@ -19,6 +19,7 @@
     "@mantine/modals": "^7.15.2",
     "@mantine/notifications": "^7.15.1",
     "@tabler/icons-react": "^3.26.0",
+    "@use-gesture/react": "^10.3.1",
     "cookies-next": "^5.0.2",
     "formidable": "^3.5.2",
     "framer-motion": "^11.15.0",
