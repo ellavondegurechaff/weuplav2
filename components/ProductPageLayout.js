@@ -34,6 +34,7 @@ export function ProductPageLayout({
   const dragThresholdRef = useRef(50)
   const dragDirectionRef = useRef(null)
   const lastScale = useRef(1)
+  const initialPinchDistance = useRef(null)
 
   const [springProps, api] = useSpring(() => ({
     scale: 1,
@@ -47,36 +48,58 @@ export function ProductPageLayout({
   }))
 
   const bind = useGesture({
-    onPinch: ({ offset: [s], movement: [ms], event, velocity }) => {
+    onPinch: ({ event, origin: [ox, oy], first, movement: [ms], offset: [s] }) => {
       event.preventDefault()
-      const newScale = Math.min(Math.max(0.5, s), 4)
+
+      if (first) {
+        initialPinchDistance.current = s
+      }
+
+      const newScale = Math.min(Math.max(0.8, s), 4)
       lastScale.current = newScale
-      api.start({ scale: newScale })
+
+      const rect = event.target.getBoundingClientRect()
+      const centerX = (ox - rect.left) / rect.width
+      const centerY = (oy - rect.top) / rect.height
+
+      const newPosition = {
+        x: position.x + (centerX - 0.5) * (newScale - scale) * rect.width,
+        y: position.y + (centerY - 0.5) * (newScale - scale) * rect.height
+      }
+
+      setScale(newScale)
+      setPosition(newPosition)
+
+      api.start({
+        scale: newScale,
+        x: newPosition.x,
+        y: newPosition.y,
+        immediate: true
+      })
     },
     onPinchEnd: () => {
       if (lastScale.current < 1) {
         setScale(1)
         setPosition({ x: 0, y: 0 })
+        api.start({ scale: 1, x: 0, y: 0 })
       }
     },
-    onDrag: ({ movement: [x, y] }) => {
+    onDrag: ({ movement: [mx, my], first, active }) => {
       if (lastScale.current > 1) {
-        setPosition(prev => ({
-          x: prev.x + x,
-          y: prev.y + y
-        }))
+        const maxX = (lastScale.current - 1) * 200
+        const maxY = (lastScale.current - 1) * 200
+
+        const newX = Math.min(Math.max(position.x + mx, -maxX), maxX)
+        const newY = Math.min(Math.max(position.y + my, -maxY), maxY)
+
+        setPosition({ x: newX, y: newY })
+        api.start({ x: newX, y: newY, immediate: true })
       }
     }
   }, {
     drag: {
       from: () => [position.x, position.y],
       filterTaps: true,
-      bounds: {
-        left: -100,
-        right: 100,
-        top: -100,
-        bottom: 100
-      },
       rubberband: true
     },
     pinch: {
@@ -262,7 +285,7 @@ export function ProductPageLayout({
         withCloseButton={false}
         styles={{
           modal: {
-            background: 'none',
+            background: 'black',
             boxShadow: 'none',
             maxWidth: '100%',
             width: '100%',
@@ -278,17 +301,17 @@ export function ProductPageLayout({
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            background: 'none',
+            background: 'black',
           },
           inner: {
             padding: 0,
             margin: 0,
           },
           overlay: {
-            backgroundColor: 'rgba(0, 0, 0, 0.75)',
+            backgroundColor: 'rgba(0, 0, 0, 0.95)',
           },
           content: {
-            background: 'none',
+            background: 'black',
           }
         }}
       >
@@ -356,13 +379,14 @@ export function ProductPageLayout({
                   maxWidth: '90vw',
                   maxHeight: '90vh',
                   transform: springProps.scale.to(
-                    s => `scale(${s}) translate(${position.x}px, ${position.y}px)`
+                    s => `scale(${s}) translate3d(${position.x}px, ${position.y}px, 0)`
                   ),
                   transformOrigin: 'center center',
                   willChange: 'transform',
                   userSelect: 'none',
                   pointerEvents: 'none',
-                  margin: 'auto'
+                  margin: 'auto',
+                  touchAction: 'none'
                 }}
                 onDoubleClick={resetZoom}
               />
