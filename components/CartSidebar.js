@@ -90,22 +90,18 @@ export function CartSidebar({ isCartOpen: propIsCartOpen, setIsCartOpen: propSet
   // Add this useEffect to handle body scroll locking
   useEffect(() => {
     if (isCartOpen) {
-      // Lock scroll
+      // Prevent background scrolling
       document.body.style.overflow = 'hidden'
-      document.body.style.position = 'fixed'
-      document.body.style.width = '100%'
+      document.body.style.paddingRight = '15px' // Prevent layout shift
     } else {
-      // Restore scroll
       document.body.style.overflow = ''
-      document.body.style.position = ''
-      document.body.style.width = ''
+      document.body.style.paddingRight = ''
     }
 
-    // Cleanup function
     return () => {
+      // Cleanup
       document.body.style.overflow = ''
-      document.body.style.position = ''
-      document.body.style.width = ''
+      document.body.style.paddingRight = ''
     }
   }, [isCartOpen])
 
@@ -191,7 +187,7 @@ Total due = ${Math.round(totals.total)}`
       
       <div className={`fixed right-0 w-full sm:w-96 bg-white shadow-xl transform 
         ${isCartOpen ? 'translate-x-0' : 'translate-x-full'}
-        top-0 h-full transition-transform duration-300 ease-in-out z-[160]`}
+        top-0 h-full transition-transform duration-300 ease-in-out z-[160] overflow-y-auto`}
       >
         <div className="h-full flex flex-col">
           <div className="h-16 bg-white" />
