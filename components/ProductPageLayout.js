@@ -38,6 +38,7 @@ export function ProductPageLayout({
   const [lastTapTime, setLastTapTime] = useState(0)
   const [tapPosition, setTapPosition] = useState({ x: 0, y: 0 })
   const doubleTapScale = 2.5 // The zoom level for double tap
+  const [windowDimensions, setWindowDimensions] = useState({ width: 0, height: 0 })
 
   const [springProps, api] = useSpring(() => ({
     scale: 1,
@@ -72,8 +73,8 @@ export function ProductPageLayout({
         y: (focalY - (focalY * (newScale / initialScale)))
       }
 
-      const maxX = Math.abs((window.innerWidth * newScale) - window.innerWidth) / 2
-      const maxY = Math.abs((window.innerHeight * newScale) - window.innerHeight) / 2
+      const maxX = Math.abs((windowDimensions.width * newScale) - windowDimensions.width) / 2
+      const maxY = Math.abs((windowDimensions.height * newScale) - windowDimensions.height) / 2
 
       newPosition.x = Math.min(Math.max(newPosition.x, -maxX), maxX)
       newPosition.y = Math.min(Math.max(newPosition.y, -maxY), maxY)
@@ -99,8 +100,8 @@ export function ProductPageLayout({
       if (scale <= 1) return
       if (first) return { x: position.x, y: position.y }
 
-      const maxX = Math.abs((window.innerWidth * scale) - window.innerWidth) / 2
-      const maxY = Math.abs((window.innerHeight * scale) - window.innerHeight) / 2
+      const maxX = Math.abs((windowDimensions.width * scale) - windowDimensions.width) / 2
+      const maxY = Math.abs((windowDimensions.height * scale) - windowDimensions.height) / 2
 
       const newX = Math.min(Math.max(position.x + mx, -maxX), maxX)
       const newY = Math.min(Math.max(position.y + my, -maxY), maxY)
@@ -116,12 +117,12 @@ export function ProductPageLayout({
       filterTaps: true,
       rubberband: true,
       bounds: {
-        left: -window.innerWidth,
-        right: window.innerWidth,
-        top: -window.innerHeight,
-        bottom: window.innerHeight
+        left: -windowDimensions.width || 0,
+        right: windowDimensions.width || 0,
+        top: -windowDimensions.height || 0,
+        bottom: windowDimensions.height || 0
       },
-      delay: 100 // Add small delay to better handle double tap
+      delay: 100
     },
     pinch: {
       distanceBounds: { min: 0 },
@@ -197,30 +198,48 @@ export function ProductPageLayout({
   }
 
   const handleDoubleTap = (e) => {
+    // Prevent default behavior
+    e.preventDefault()
+    
     const currentTime = new Date().getTime()
     const tapLength = currentTime - lastTapTime
-    const touch = e.touches[0] || e.changedTouches[0]
     
+    // Get coordinates from either touch or mouse event
+    let clientX, clientY
+    
+    if (e.type === 'touchend' || e.type === 'touchstart') {
+      // Touch event
+      if (e.touches && e.touches[0]) {
+        clientX = e.touches[0].clientX
+        clientY = e.touches[0].clientY
+      } else if (e.changedTouches && e.changedTouches[0]) {
+        clientX = e.changedTouches[0].clientX
+        clientY = e.changedTouches[0].clientY
+      } else {
+        // If no touch coordinates available, use center of screen
+        clientX = windowDimensions.width / 2
+        clientY = windowDimensions.height / 2
+      }
+    } else {
+      // Mouse event
+      clientX = e.clientX
+      clientY = e.clientY
+    }
+
     if (tapLength < 300 && tapLength > 0) {
-      e.preventDefault()
-      
       if (scale !== 1) {
-        // If already zoomed in, reset zoom
         resetZoom()
       } else {
-        // Get the tap position relative to the image
         const rect = e.target.getBoundingClientRect()
-        const x = touch.clientX - rect.left
-        const y = touch.clientY - rect.top
+        const x = clientX - rect.left
+        const y = clientY - rect.top
         
-        // Calculate the focal point for zooming
         const focalX = x - (rect.width / 2)
         const focalY = y - (rect.height / 2)
         
-        // Apply zoom with bounds
         const newScale = doubleTapScale
-        const maxX = Math.abs((window.innerWidth * newScale) - window.innerWidth) / 2
-        const maxY = Math.abs((window.innerHeight * newScale) - window.innerHeight) / 2
+        const maxX = Math.abs((windowDimensions.width * newScale) - windowDimensions.width) / 2
+        const maxY = Math.abs((windowDimensions.height * newScale) - windowDimensions.height) / 2
         
         const newX = Math.min(Math.max(focalX * -0.5, -maxX), maxX)
         const newY = Math.min(Math.max(focalY * -0.5, -maxY), maxY)
@@ -242,10 +261,7 @@ export function ProductPageLayout({
     }
     
     setLastTapTime(currentTime)
-    setTapPosition({ 
-      x: touch.clientX, 
-      y: touch.clientY 
-    })
+    setTapPosition({ x: clientX, y: clientY })
   }
 
   const isMobile = () => {
@@ -305,6 +321,25 @@ export function ProductPageLayout({
     product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
     product.description?.toLowerCase().includes(searchQuery.toLowerCase())
   )
+
+  useEffect(() => {
+    const updateDimensions = () => {
+      setWindowDimensions({
+        width: window.innerWidth,
+        height: window.innerHeight
+      })
+    }
+
+    // Initial dimensions
+    updateDimensions()
+
+    // Update dimensions on resize
+    window.addEventListener('resize', updateDimensions)
+
+    return () => {
+      window.removeEventListener('resize', updateDimensions)
+    }
+  }, [])
 
   return (
     <>
@@ -445,7 +480,10 @@ export function ProductPageLayout({
           ) : (
             <div
               {...bind()}
-              onTouchStart={handleTouchStart}
+              onTouchStart={(e) => {
+                handleTouchStart(e)
+                handleDoubleTap(e)
+              }}
               onTouchMove={handleTouchMove}
               onTouchEnd={handleTouchEnd}
               onClick={handleDoubleTap}
