@@ -57,8 +57,20 @@ export function MediaCarousel({ media, onImageClick }) {
 
   const handleDragMove = (e) => {
     if (!isDragging) return
-    e.preventDefault()
+    
+    // Only prevent default for horizontal movements
     const clientX = e.type === 'mousemove' ? e.clientX : e.touches[0].clientX
+    const clientY = e.type === 'mousemove' ? e.clientY : e.touches[0].clientY
+    
+    // Calculate movement delta
+    const deltaX = clientX - startXRef.current
+    const deltaY = Math.abs(clientY - (e.type === 'mousemove' ? e.clientY : e.touches[0].clientY))
+    
+    // Only prevent default if horizontal movement is greater than vertical
+    if (Math.abs(deltaX) > deltaY) {
+      e.preventDefault()
+    }
+    
     currentXRef.current = clientX
   }
 
@@ -106,7 +118,7 @@ export function MediaCarousel({ media, onImageClick }) {
           padding: 0,
           overflow: 'hidden',
           cursor: isDragging ? 'grabbing' : 'grab',
-          touchAction: 'none',
+          touchAction: 'pan-x pan-y pinch-zoom',
           background: 'none'
         }}
         onClick={handleMediaClick}

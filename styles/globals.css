@@ -29,7 +29,7 @@ body {
   background-repeat: no-repeat;
   min-height: 100vh;
   overscroll-behavior: none;
-  touch-action: none;
+  touch-action: pan-y pinch-zoom;
 }
 
 @keyframes pulse {
