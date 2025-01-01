@@ -10,6 +10,7 @@ import ProductCard from '@/components/ProductCard'
 import { useGesture } from '@use-gesture/react'
 import { IconX, IconChevronLeft, IconChevronRight } from '@tabler/icons-react'
 import { NavHeader } from '@/components/NavHeader'
+import { useSpring, animated } from '@react-spring/web'
 
 export function ProductPageLayout({ 
   pageTitle, 
@@ -32,21 +33,57 @@ export function ProductPageLayout({
   const dragDistanceRef = useRef(0)
   const dragThresholdRef = useRef(50)
   const dragDirectionRef = useRef(null)
+  const lastScale = useRef(1)
+
+  const [springProps, api] = useSpring(() => ({
+    scale: 1,
+    x: 0,
+    y: 0,
+    config: {
+      tension: 300,
+      friction: 30,
+      mass: 1
+    }
+  }))
 
   const bind = useGesture({
-    onPinch: ({ offset: [s], event }) => {
+    onPinch: ({ offset: [s], movement: [ms], event, velocity }) => {
       event.preventDefault()
-      const newScale = Math.min(Math.max(1, s), 3)
-      setScale(newScale)
+      const newScale = Math.min(Math.max(0.5, s), 4)
+      lastScale.current = newScale
+      api.start({ scale: newScale })
     },
     onPinchEnd: () => {
-      setScale(1)
+      if (lastScale.current < 1) {
+        setScale(1)
+        setPosition({ x: 0, y: 0 })
+      }
+    },
+    onDrag: ({ movement: [x, y] }) => {
+      if (lastScale.current > 1) {
+        setPosition(prev => ({
+          x: prev.x + x,
+          y: prev.y + y
+        }))
+      }
     }
   }, {
-    drag: false,
+    drag: {
+      from: () => [position.x, position.y],
+      filterTaps: true,
+      bounds: {
+        left: -100,
+        right: 100,
+        top: -100,
+        bottom: 100
+      },
+      rubberband: true
+    },
     pinch: {
-      from: () => [scale],
-      filterTaps: true
+      distanceBounds: { min: 0 },
+      rubberband: true,
+      preventDefault: true,
+      from: () => [scale]
     }
   })
 
@@ -308,20 +345,21 @@ export function ProductPageLayout({
                 overflow: 'hidden',
                 touchAction: 'none',
                 position: 'relative',
-                cursor: isDragging ? 'grabbing' : 'grab'
+                cursor: isDragging ? 'grabbing' : 'grab',
+                willChange: 'transform'
               }}
             >
-              <Image
+              <animated.img
                 src={selectedMedia.url}
                 alt="Full size preview"
-                fit="contain"
                 style={{
                   maxWidth: '90vw',
                   maxHeight: '90vh',
-                  transform: `scale(${scale})`,
+                  transform: springProps.scale.to(
+                    s => `scale(${s}) translate(${position.x}px, ${position.y}px)`
+                  ),
                   transformOrigin: 'center center',
                   willChange: 'transform',
-                  transition: 'none',
                   userSelect: 'none',
                   pointerEvents: 'none',
                   margin: 'auto'
