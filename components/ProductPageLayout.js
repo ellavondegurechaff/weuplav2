@@ -23,6 +23,7 @@ export function ProductPageLayout({
   const [selectedMedia, setSelectedMedia] = useState({ url: null, isVideo: false })
   const [scale, setScale] = useState(1)
   const [position, setPosition] = useState({ x: 0, y: 0 })
+  const [isModalOpen, setIsModalOpen] = useState(false)
 
   const bind = useGesture({
     onPinch: ({ offset: [scale], event }) => {
@@ -62,6 +63,7 @@ export function ProductPageLayout({
 
   const handleImageClick = async (url, isVideo = false, productId) => {
     setSelectedMedia({ url, isVideo })
+    setIsModalOpen(true)
     
     try {
       const response = await fetch('/api/products/track-view', {
@@ -155,10 +157,16 @@ export function ProductPageLayout({
       </AppShell>
 
       <Modal
-        opened={!!selectedMedia.url}
+        opened={isModalOpen}
         onClose={() => {
-          setSelectedMedia({ url: null, isVideo: false })
-          resetZoom()
+          setIsModalOpen(false)
+        }}
+        transitionProps={{
+          duration: 200,
+          onExitComplete: () => {
+            setSelectedMedia({ url: null, isVideo: false })
+            resetZoom()
+          }
         }}
         size="xl"
         padding={0}
@@ -179,10 +187,12 @@ export function ProductPageLayout({
             margin: 0,
             padding: 0,
             height: 'auto',
+            backgroundColor: 'transparent',
+            border: 'none',
           },
           close: {
             color: 'white',
-            backgroundColor: 'rgba(0, 0, 0, 0.5)',
+            backgroundColor: 'transparent',
             width: '24px',
             height: '24px',
             minHeight: '24px',
@@ -191,7 +201,7 @@ export function ProductPageLayout({
             padding: 0,
             border: 'none',
             '&:hover': {
-              backgroundColor: 'rgba(0, 0, 0, 0.7)',
+              backgroundColor: 'rgba(0, 0, 0, 0.3)',
             },
             svg: {
               width: '14px',
