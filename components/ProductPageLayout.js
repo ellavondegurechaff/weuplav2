@@ -198,59 +198,57 @@ export function ProductPageLayout({
   }
 
   const handleDoubleTap = (e) => {
-    // Prevent default behavior
     e.preventDefault()
-    
     const currentTime = new Date().getTime()
     const tapLength = currentTime - lastTapTime
-    
-    // Get coordinates from either touch or mouse event
-    let clientX, clientY
-    
-    if (e.type === 'touchend' || e.type === 'touchstart') {
-      // Touch event
-      if (e.touches && e.touches[0]) {
-        clientX = e.touches[0].clientX
-        clientY = e.touches[0].clientY
-      } else if (e.changedTouches && e.changedTouches[0]) {
-        clientX = e.changedTouches[0].clientX
-        clientY = e.changedTouches[0].clientY
-      } else {
-        // If no touch coordinates available, use center of screen
-        clientX = windowDimensions.width / 2
-        clientY = windowDimensions.height / 2
-      }
+
+    // Get the image element and its bounding rectangle
+    const imageElement = e.currentTarget.querySelector('img')
+    const rect = imageElement.getBoundingClientRect()
+
+    // Get precise coordinates
+    let x, y
+    if (e.type.startsWith('touch')) {
+      const touch = e.touches?.[0] || e.changedTouches?.[0]
+      if (!touch) return
+      x = touch.clientX - rect.left
+      y = touch.clientY - rect.top
     } else {
-      // Mouse event
-      clientX = e.clientX
-      clientY = e.clientY
+      x = e.clientX - rect.left
+      y = e.clientY - rect.top
     }
+
+    // Convert coordinates to percentages relative to image size
+    const percentX = x / rect.width
+    const percentY = y / rect.height
 
     if (tapLength < 300 && tapLength > 0) {
       if (scale !== 1) {
         resetZoom()
       } else {
-        const rect = e.target.getBoundingClientRect()
-        const x = clientX - rect.left
-        const y = clientY - rect.top
-        
-        const focalX = x - (rect.width / 2)
-        const focalY = y - (rect.height / 2)
-        
         const newScale = doubleTapScale
-        const maxX = Math.abs((windowDimensions.width * newScale) - windowDimensions.width) / 2
-        const maxY = Math.abs((windowDimensions.height * newScale) - windowDimensions.height) / 2
-        
-        const newX = Math.min(Math.max(focalX * -0.5, -maxX), maxX)
-        const newY = Math.min(Math.max(focalY * -0.5, -maxY), maxY)
+
+        // Calculate the point to center the zoom on
+        const targetX = (percentX - 0.5) * rect.width * -1 * (newScale - 1)
+        const targetY = (percentY - 0.5) * rect.height * -1 * (newScale - 1)
+
+        // Apply bounds
+        const maxX = (rect.width * (newScale - 1)) / 2
+        const maxY = (rect.height * (newScale - 1)) / 2
+
+        const boundedX = Math.min(Math.max(targetX, -maxX), maxX)
+        const boundedY = Math.min(Math.max(targetY, -maxY), maxY)
 
         setScale(newScale)
-        setPosition({ x: newX, y: newY })
-        
+        setPosition({ 
+          x: boundedX,
+          y: boundedY
+        })
+
         api.start({
           scale: newScale,
-          x: newX,
-          y: newY,
+          x: boundedX,
+          y: boundedY,
           immediate: false,
           config: {
             tension: 300,
@@ -259,9 +257,9 @@ export function ProductPageLayout({
         })
       }
     }
-    
+
     setLastTapTime(currentTime)
-    setTapPosition({ x: clientX, y: clientY })
+    setTapPosition({ x, y })
   }
 
   const isMobile = () => {
@@ -493,7 +491,7 @@ export function ProductPageLayout({
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                background: 'none',
+                background: 'black',
                 overflow: 'hidden',
                 touchAction: 'none',
                 position: 'relative',
