@@ -24,15 +24,25 @@ export function ProductPageLayout({
   const [scale, setScale] = useState(1)
   const [position, setPosition] = useState({ x: 0, y: 0 })
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [origin, setOrigin] = useState({ x: 0, y: 0 })
 
   const bind = useGesture({
-    onPinch: ({ offset: [scale], event }) => {
+    onPinch: ({ origin: [ox, oy], offset: [s], event }) => {
       event.preventDefault()
-      setScale(Math.min(Math.max(0.5, scale), 4))
-    },
-    onDrag: ({ movement: [x, y], pinching }) => {
-      if (scale > 1 && !pinching) {
+      
+      if (s === 1) {
+        setOrigin({ x: ox, y: oy })
+      }
+      
+      const newScale = Math.min(Math.max(0.5, s), 4)
+      setScale(newScale)
+      
+      if (newScale > 1) {
+        const x = (ox - origin.x) * (1 - newScale)
+        const y = (oy - origin.y) * (1 - newScale)
         setPosition({ x, y })
+      } else {
+        setPosition({ x: 0, y: 0 })
       }
     },
     onPinchEnd: () => {
@@ -242,6 +252,8 @@ export function ProductPageLayout({
                 alignItems: 'center',
                 justifyContent: 'center',
                 background: 'none',
+                overflow: 'hidden',
+                touchAction: 'none'
               }}
             >
               <Image
@@ -249,11 +261,13 @@ export function ProductPageLayout({
                 alt="Full size preview"
                 fit="contain"
                 style={{
-                  maxWidth: '100%',
-                  maxHeight: '100vh',
+                  maxWidth: '90vw',
+                  maxHeight: '90vh',
                   transform: `scale(${scale}) translate(${position.x}px, ${position.y}px)`,
-                  transition: scale === 1 ? 'all 0.3s ease' : 'none',
-                  background: 'none',
+                  transformOrigin: 'center center',
+                  willChange: 'transform',
+                  transition: 'none',
+                  userSelect: 'none',
                 }}
                 onDoubleClick={resetZoom}
               />

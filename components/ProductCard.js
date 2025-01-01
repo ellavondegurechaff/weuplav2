@@ -24,33 +24,14 @@ export default function ProductCard({ product, onImageClick }) {
   const initialDistance = useRef(0)
 
   const bind = useGesture({
-    onPinch: ({ offset: [scale], event }) => {
-      if (event.touches.length === 2) {
-        event.preventDefault()
-        api.start({
-          scale: Math.min(Math.max(0.5, scale), 3),
-        })
-      }
-    },
-    onPinchEnd: () => {
-      // Reset to original size smoothly
-      api.start({ scale: 1, x: 0, y: 0 })
-    },
-    onDrag: ({ offset: [x, y], pinching }) => {
-      // Only allow dragging when zoomed in
-      if (style.scale.get() > 1) {
-        api.start({ x, y })
-      }
+    onDrag: ({ offset: [x, y] }) => {
+      api.start({ x, y })
     }
   }, {
     drag: {
       from: () => [style.x.get(), style.y.get()],
       filterTaps: true,
       threshold: 5,
-    },
-    pinch: {
-      distanceBounds: { min: 0 },
-      rubberband: true
     }
   })
 

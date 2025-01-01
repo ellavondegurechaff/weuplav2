@@ -2,39 +2,19 @@ import { useState, useRef } from 'react'
 import { Image, Card, ActionIcon, Box } from '@mantine/core'
 import { IconChevronLeft, IconChevronRight } from '@tabler/icons-react'
 import { useGesture } from '@use-gesture/react'
-import { transform } from '@mantine/core'
 
 export function MediaCarousel({ media, onImageClick }) {
   const [currentIndex, setCurrentIndex] = useState(0)
   const [isDragging, setIsDragging] = useState(false)
   const startXRef = useRef(0)
   const currentXRef = useRef(0)
-  const [scale, setScale] = useState(1)
-  const [position, setPosition] = useState({ x: 0, y: 0 })
   const imageRef = useRef(null)
 
   const bind = useGesture({
-    onPinch: ({ offset: [scale], event }) => {
+    onPinch: ({ event }) => {
       event.preventDefault()
-      setScale(Math.min(Math.max(0.5, scale), 3))
-    },
-    onDrag: ({ movement: [x, y], pinching }) => {
-      if (scale > 1 && !pinching) {
-        setPosition({ x, y })
-      }
-    },
-    onPinchEnd: () => {
-      if (scale <= 1) {
-        setScale(1)
-        setPosition({ x: 0, y: 0 })
-      }
     }
   })
-
-  const resetZoom = () => {
-    setScale(1)
-    setPosition({ x: 0, y: 0 })
-  }
 
   if (!media?.length) return null
 
@@ -102,12 +82,13 @@ export function MediaCarousel({ media, onImageClick }) {
 
   return (
     <Box style={{ 
-      height: '300px', 
+      height: 'auto',
       position: 'relative',
       margin: 0,
       padding: 0,
       overflow: 'hidden',
-      background: 'none'
+      background: 'none',
+      aspectRatio: '1 / 1'
     }}>
       <Card.Section 
         {...bind()}
@@ -118,8 +99,9 @@ export function MediaCarousel({ media, onImageClick }) {
           padding: 0,
           overflow: 'hidden',
           cursor: isDragging ? 'grabbing' : 'grab',
-          touchAction: 'pan-x pan-y pinch-zoom',
-          background: 'none'
+          touchAction: 'pan-x pan-y',
+          background: 'none',
+          position: 'relative'
         }}
         onClick={handleMediaClick}
         onMouseDown={handleDragStart}
@@ -140,9 +122,12 @@ export function MediaCarousel({ media, onImageClick }) {
             style={{ 
               width: '100%', 
               height: '100%', 
-              objectFit: 'contain',
+              objectFit: 'cover',
               background: 'none',
-              display: 'block'
+              display: 'block',
+              position: 'absolute',
+              top: 0,
+              left: 0
             }}
             playsInline
             onClick={(e) => e.stopPropagation()}
@@ -153,7 +138,8 @@ export function MediaCarousel({ media, onImageClick }) {
               width: '100%',
               height: '100%',
               overflow: 'hidden',
-              background: 'none'
+              background: 'none',
+              position: 'relative'
             }}
           >
             <Image
@@ -162,13 +148,13 @@ export function MediaCarousel({ media, onImageClick }) {
               alt="Product media"
               style={{
                 width: '100%',
-                height: '300px',
-                objectFit: 'contain',
-                transform: `scale(${scale}) translate(${position.x}px, ${position.y}px)`,
-                transition: scale === 1 ? 'all 0.3s ease' : 'none',
-                background: 'none'
+                height: '100%',
+                objectFit: 'cover',
+                background: 'none',
+                position: 'absolute',
+                top: 0,
+                left: 0
               }}
-              onDoubleClick={resetZoom}
             />
           </div>
         )}
