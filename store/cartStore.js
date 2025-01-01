@@ -5,6 +5,8 @@ const useCartStore = create(
   persist(
     (set, get) => ({
       cart: [],
+      selectedPayment: null, // 'cashapp', 'zelle', 'crypto', 'cash'
+      receiptType: null, // 'intown', 'shipping'
       
       addToCart: (product) => set((state) => {
         const existingItem = state.cart.find(item => item.id === product.id)
@@ -53,6 +55,43 @@ const useCartStore = create(
           }),
           { intown: 0, shipped: 0 }
         )
+      },
+
+      setPaymentMethod: (method) => set({ selectedPayment: method }),
+      
+      setReceiptType: (type) => set({ receiptType: type }),
+
+      getPaymentFee: () => {
+        const { selectedPayment } = get()
+        const fees = {
+          cashapp: 0.06,
+          zelle: 0.05,
+          crypto: 0.04,
+          cash: 0
+        }
+        return fees[selectedPayment] || 0
+      },
+
+      getTotalWithFees: () => {
+        const { cart, selectedPayment, receiptType } = get()
+        
+        // Calculate base total
+        const baseTotal = cart.reduce((total, item) => {
+          const price = receiptType === 'shipping' ? item.shipped_price : item.intown_price
+          return total + (parseFloat(price) * item.quantity)
+        }, 0)
+
+        // Calculate fee
+        const fee = get().getPaymentFee()
+        const feeAmount = Math.round(baseTotal * fee) // Round to nearest dollar
+        
+        return {
+          subtotal: baseTotal,
+          feePercentage: fee * 100,
+          feeAmount: feeAmount,
+          total: baseTotal + feeAmount,
+          totalItems: cart.reduce((sum, item) => sum + item.quantity, 0)
+        }
       }
     }),
     {

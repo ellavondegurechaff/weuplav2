@@ -22,9 +22,22 @@ function CartItemImage({ src, name }) {
   )
 }
 
-export function CartSidebar({ isCartOpen, setIsCartOpen, activePage }) {
+const PAYMENT_METHODS = [
+  { id: 'cashapp', label: 'Cashapp', fee: 6 },
+  { id: 'zelle', label: 'Zelle', fee: 5 },
+  { id: 'crypto', label: 'Crypto', fee: 4 },
+  { id: 'cash', label: 'Cash', fee: 0 }
+]
+
+export function CartSidebar({ isCartOpen, setIsCartOpen }) {
   const [isMounted, setIsMounted] = useState(false)
-  const { cart, removeFromCart, updateQuantity, getTotalPrice, clearCart } = useCartStore()
+  const { cart, removeFromCart, updateQuantity, getTotalPrice, clearCart, 
+    selectedPayment,
+    setPaymentMethod,
+    receiptType,
+    setReceiptType,
+    getTotalWithFees
+  } = useCartStore()
 
   useEffect(() => {
     setIsMounted(true)
@@ -40,35 +53,30 @@ export function CartSidebar({ isCartOpen, setIsCartOpen, activePage }) {
   }
 
   const copyCartToClipboard = () => {
-    const cartText = cart.map(item => (
-      `${item.name}\n` +
-      `Quantity: ${item.quantity}\n` +
-      `------------------\n` +
-      `Intown Price: $${formatPrice(item.intown_price)} × ${item.quantity}\n` +
-      `Intown Total: $${formatPrice(item.intown_price * item.quantity)}\n` +
-      `------------------\n` +
-      `Shipped Price: $${formatPrice(item.shipped_price)} × ${item.quantity}\n` +
-      `Shipped Total: $${formatPrice(item.shipped_price * item.quantity)}\n` +
-      `==================`
-    )).join('\n\n')
-    
-    const totals = getTotalPrice()
-    const totalText = 
-      `\n\nORDER SUMMARY\n` +
-      `==================\n` +
-      `Total Items: ${cart.reduce((sum, item) => sum + item.quantity, 0)}\n` +
-      `Intown Total: $${formatPrice(totals.intown)}\n` +
-      `Shipped Total: $${formatPrice(totals.shipped)}\n` +
-      `==================`
+    if (!selectedPayment || !receiptType) {
+      alert('Please select both payment method and receipt type')
+      return
+    }
 
-    const fullText = 
-      `🛒 NEW ORDER REQUEST\n` +
-      `==================\n\n` +
-      `ITEMS:\n` +
-      `==================\n` +
-      `${cartText}${totalText}`
+    const totals = getTotalWithFees()
+    const orderText = `🛒 ORDER REQUEST
+ITEMS:
+${cart.map(item => 
+  `1x ${item.name} #${item.id} $${Math.round(
+    receiptType === 'shipping' ? item.shipped_price : item.intown_price
+  )}`
+).join('\n')}
 
-    navigator.clipboard.writeText(fullText)
+${receiptType.toUpperCase()} ORDER SELECTED ✓
+
+ORDER SUMMARY
+-------------
+Total Items: ${totals.totalItems}
+${receiptType === 'shipping' ? 'Shipped' : 'Intown'} Total: ${Math.round(totals.subtotal)}
+${selectedPayment.toUpperCase()} Fee ${totals.feePercentage}% = ${Math.round(totals.feeAmount)}
+Total due = ${Math.round(totals.total)}`
+
+    navigator.clipboard.writeText(orderText)
       .then(() => {
         const notification = document.createElement('div')
         notification.className = 
@@ -117,38 +125,26 @@ export function CartSidebar({ isCartOpen, setIsCartOpen, activePage }) {
         />
       )}
       
-      <div 
-        className={`fixed right-0 w-full sm:w-96 bg-orange-50/80 shadow-xl transform 
-          ${isCartOpen ? 'translate-x-0' : 'translate-x-full'}
-          top-0 h-full transition-transform duration-300 ease-in-out z-[160]`}
+      <div className={`fixed right-0 w-full sm:w-96 bg-orange-50/80 shadow-xl transform 
+        ${isCartOpen ? 'translate-x-0' : 'translate-x-full'}
+        top-0 h-full transition-transform duration-300 ease-in-out z-[160]`}
       >
         <div className="h-full flex flex-col pt-16">
+          {/* Cart Header */}
           <div className="px-4 py-3 bg-orange-50/80 flex justify-between items-center border-b border-orange-200">
-            <h2 className="text-lg font-semibold text-orange-900">Your Cart</h2>
+            <h2 className="text-lg font-semibold text-black">Your Cart</h2>
             <button
               onClick={() => setIsCartOpen(false)}
-              className="p-1.5 text-gray-600 hover:text-orange-500 transition-colors"
+              className="p-1.5 text-black hover:text-orange-500 transition-colors"
             >
               <X size={18} />
             </button>
           </div>
 
-          {/* Clear Cart button */}
-          {cart.length > 0 && (
-            <div className="px-4 py-2 bg-orange-50/80 border-b border-orange-200">
-              <button
-                onClick={clearCart}
-                className="text-sm text-red-600 hover:text-red-700 transition-colors flex items-center space-x-2"
-              >
-                <X size={14} />
-                <span>Clear Cart</span>
-              </button>
-            </div>
-          )}
-
+          {/* Cart Items Section */}
           <div className="flex-1 overflow-y-auto p-4 bg-orange-50/80">
             {cart.length === 0 ? (
-              <div className="flex flex-col items-center justify-center h-full text-gray-500">
+              <div className="flex flex-col items-center justify-center h-full text-black">
                 <ShoppingCart size={32} className="mb-3" />
                 <p>Your cart is empty</p>
               </div>
@@ -204,33 +200,88 @@ export function CartSidebar({ isCartOpen, setIsCartOpen, activePage }) {
             )}
           </div>
 
-          {cart.length > 0 && (
-            <div className="p-4 bg-orange-50/80 border-t border-orange-200">
-              <div className="flex flex-col gap-2 mb-4">
-                <div className="flex justify-between items-center">
-                  <span className="text-gray-700 font-medium">Intown Total:</span>
-                  <span className="text-xl font-bold text-orange-600">
-                    ${formatPrice(getTotalPrice().intown)}
-                  </span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-gray-700 font-medium">Shipped Total:</span>
-                  <span className="text-xl font-bold text-orange-600">
-                    ${formatPrice(getTotalPrice().shipped)}
-                  </span>
+          {/* Payment and Receipt Selection - Now always visible */}
+          <div className="p-4 bg-orange-50/80 border-t border-orange-200">
+            {/* Payment Method Selection */}
+            <div className="mb-4">
+              <h3 className="font-medium mb-2 text-black">Select Payment Method:</h3>
+              <div className="space-y-2">
+                {PAYMENT_METHODS.map(method => (
+                  <button
+                    key={method.id}
+                    onClick={() => setPaymentMethod(method.id)}
+                    className={`w-full text-left px-3 py-2 rounded ${
+                      selectedPayment === method.id 
+                        ? 'bg-orange-500 text-white' 
+                        : 'bg-white text-black hover:bg-orange-100'
+                    }`}
+                  >
+                    {method.label} {method.fee}%
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Receipt Type Selection */}
+            <div className="mb-4">
+              <h3 className="font-medium mb-2 text-black">Select Receipt Type:</h3>
+              <div className="flex gap-2">
+                <button
+                  onClick={() => setReceiptType('intown')}
+                  className={`flex-1 py-2 rounded ${
+                    receiptType === 'intown' 
+                      ? 'bg-orange-500 text-white' 
+                      : 'bg-white text-black hover:bg-orange-100'
+                  }`}
+                >
+                  Intown Receipt
+                </button>
+                <button
+                  onClick={() => setReceiptType('shipping')}
+                  className={`flex-1 py-2 rounded ${
+                    receiptType === 'shipping' 
+                      ? 'bg-orange-500 text-white' 
+                      : 'bg-white text-black hover:bg-orange-100'
+                  }`}
+                >
+                  Shipping Receipt
+                </button>
+              </div>
+            </div>
+
+            {/* Order Summary - Only show when cart has items */}
+            {cart.length > 0 && selectedPayment && receiptType && (
+              <div className="mb-4">
+                <div className="space-y-2 text-black">
+                  <div className="flex justify-between">
+                    <span>Subtotal:</span>
+                    <span>${formatPrice(getTotalWithFees().subtotal)}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>{PAYMENT_METHODS.find(m => m.id === selectedPayment)?.label} Fee ({getTotalWithFees().feePercentage}%):</span>
+                    <span>${formatPrice(getTotalWithFees().feeAmount)}</span>
+                  </div>
+                  <div className="flex justify-between font-bold">
+                    <span>Total:</span>
+                    <span>${formatPrice(getTotalWithFees().total)}</span>
+                  </div>
                 </div>
               </div>
-              <button
-                onClick={copyCartToClipboard}
-                className="w-full bg-orange-500/10 text-orange-700 py-3 px-4 rounded-md 
-                  hover:bg-orange-500/20 transition-colors flex items-center justify-center 
-                  space-x-2 outline outline-2 outline-orange-500 font-semibold"
-              >
-                <span>Copy Order Details</span>
-                <ArrowRight size={18} />
-              </button>
-            </div>
-          )}
+            )}
+
+            {/* Copy Order Button - Disabled when cart is empty */}
+            <button
+              onClick={copyCartToClipboard}
+              disabled={!selectedPayment || !receiptType || cart.length === 0}
+              className="w-full bg-transparent text-orange-700 py-3 px-4 rounded-md 
+                hover:bg-orange-500/20 transition-colors flex items-center justify-center 
+                space-x-2 outline outline-2 outline-orange-500 font-semibold
+                disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              <span>Copy Order Details</span>
+              <ArrowRight size={16} className="ml-1" />
+            </button>
+          </div>
         </div>
       </div>
     </>
