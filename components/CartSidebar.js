@@ -87,6 +87,28 @@ export function CartSidebar({ isCartOpen: propIsCartOpen, setIsCartOpen: propSet
   //   }
   // }, [cart.length, isCartOpen, setIsCartOpen])
 
+  // Add this useEffect to handle body scroll locking
+  useEffect(() => {
+    if (isCartOpen) {
+      // Lock scroll
+      document.body.style.overflow = 'hidden'
+      document.body.style.position = 'fixed'
+      document.body.style.width = '100%'
+    } else {
+      // Restore scroll
+      document.body.style.overflow = ''
+      document.body.style.position = ''
+      document.body.style.width = ''
+    }
+
+    // Cleanup function
+    return () => {
+      document.body.style.overflow = ''
+      document.body.style.position = ''
+      document.body.style.width = ''
+    }
+  }, [isCartOpen])
+
   if (!isMounted) {
     return null
   }
