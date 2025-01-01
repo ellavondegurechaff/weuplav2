@@ -29,3 +29,5 @@ export function MediaModal({ isOpen, close, selectedMedia }) {
     </Modal>
   )
 } 
+
+export default MediaModal 
