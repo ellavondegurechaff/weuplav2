@@ -366,7 +366,7 @@ export function ProductPageLayout({
   return (
     <>
       <Head>
-        <title>GOODSHOP</title>
+        <title>WeUpLA</title>
       </Head>
       <AppShell
         header={{ height: 60 }}

@@ -112,7 +112,7 @@ export default function AnnouncementsPage() {
   return (
     <>
       <Head>
-        <title>GOODSHOP - Announcements</title>
+        <title>WeUpLA - Announcements</title>
       </Head>
       <AppShell
         header={{ height: 60 }}
