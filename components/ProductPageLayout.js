@@ -35,6 +35,9 @@ export function ProductPageLayout({
   const dragDirectionRef = useRef(null)
   const lastScale = useRef(1)
   const initialPinchDistance = useRef(null)
+  const [lastTapTime, setLastTapTime] = useState(0)
+  const [tapPosition, setTapPosition] = useState({ x: 0, y: 0 })
+  const doubleTapScale = 2.5 // The zoom level for double tap
 
   const [springProps, api] = useSpring(() => ({
     scale: 1,
@@ -117,7 +120,8 @@ export function ProductPageLayout({
         right: window.innerWidth,
         top: -window.innerHeight,
         bottom: window.innerHeight
-      }
+      },
+      delay: 100 // Add small delay to better handle double tap
     },
     pinch: {
       distanceBounds: { min: 0 },
@@ -186,9 +190,68 @@ export function ProductPageLayout({
       immediate: false,
       config: {
         tension: 300,
-        friction: 30
+        friction: 30,
+        mass: 1
       }
     })
+  }
+
+  const handleDoubleTap = (e) => {
+    const currentTime = new Date().getTime()
+    const tapLength = currentTime - lastTapTime
+    const touch = e.touches[0] || e.changedTouches[0]
+    
+    if (tapLength < 300 && tapLength > 0) {
+      e.preventDefault()
+      
+      if (scale !== 1) {
+        // If already zoomed in, reset zoom
+        resetZoom()
+      } else {
+        // Get the tap position relative to the image
+        const rect = e.target.getBoundingClientRect()
+        const x = touch.clientX - rect.left
+        const y = touch.clientY - rect.top
+        
+        // Calculate the focal point for zooming
+        const focalX = x - (rect.width / 2)
+        const focalY = y - (rect.height / 2)
+        
+        // Apply zoom with bounds
+        const newScale = doubleTapScale
+        const maxX = Math.abs((window.innerWidth * newScale) - window.innerWidth) / 2
+        const maxY = Math.abs((window.innerHeight * newScale) - window.innerHeight) / 2
+        
+        const newX = Math.min(Math.max(focalX * -0.5, -maxX), maxX)
+        const newY = Math.min(Math.max(focalY * -0.5, -maxY), maxY)
+
+        setScale(newScale)
+        setPosition({ x: newX, y: newY })
+        
+        api.start({
+          scale: newScale,
+          x: newX,
+          y: newY,
+          immediate: false,
+          config: {
+            tension: 300,
+            friction: 30
+          }
+        })
+      }
+    }
+    
+    setLastTapTime(currentTime)
+    setTapPosition({ 
+      x: touch.clientX, 
+      y: touch.clientY 
+    })
+  }
+
+  const isMobile = () => {
+    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+      navigator.userAgent
+    )
   }
 
   useEffect(() => {
@@ -385,6 +448,7 @@ export function ProductPageLayout({
               onTouchStart={handleTouchStart}
               onTouchMove={handleTouchMove}
               onTouchEnd={handleTouchEnd}
+              onClick={handleDoubleTap}
               style={{
                 width: '100%',
                 height: '100%',
@@ -411,7 +475,7 @@ export function ProductPageLayout({
                   transform: springProps.scale.to(
                     s => `scale(${s}) translate3d(${position.x}px, ${position.y}px, 0)`
                   ),
-                  transformOrigin: '0 0',
+                  transformOrigin: '50% 50%',
                   willChange: 'transform',
                   userSelect: 'none',
                   pointerEvents: 'none',
