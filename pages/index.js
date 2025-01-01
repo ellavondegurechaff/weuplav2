@@ -21,6 +21,7 @@ export default function WelcomePage() {
           opened={opened} 
           toggleNav={toggleNav}
           title="Home" 
+          setIsCartOpen={setIsCartOpen}
         />
       </AppShell.Header>
 
