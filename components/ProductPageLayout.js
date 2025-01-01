@@ -96,18 +96,34 @@ export function ProductPageLayout({
         resetZoom()
       }
     },
-    onDrag: ({ movement: [mx, my], first, active, memo }) => {
+    onDrag: ({ movement: [mx, my], first, active, memo, delta: [dx, dy] }) => {
       if (scale <= 1) return
       if (first) return { x: position.x, y: position.y }
 
+      // Add movement dampening factor based on scale
+      const dampening = 1 / scale
+      const deltaX = dx * dampening
+      const deltaY = dy * dampening
+
+      // Calculate bounds based on current scale and image dimensions
       const maxX = Math.abs((windowDimensions.width * scale) - windowDimensions.width) / 2
       const maxY = Math.abs((windowDimensions.height * scale) - windowDimensions.height) / 2
 
-      const newX = Math.min(Math.max(position.x + mx, -maxX), maxX)
-      const newY = Math.min(Math.max(position.y + my, -maxY), maxY)
+      // Apply new position with dampening and bounds
+      const newX = Math.min(Math.max(position.x + deltaX, -maxX), maxX)
+      const newY = Math.min(Math.max(position.y + deltaY, -maxY), maxY)
 
       setPosition({ x: newX, y: newY })
-      api.start({ x: newX, y: newY, immediate: true })
+      api.start({ 
+        x: newX, 
+        y: newY, 
+        immediate: true,
+        config: {
+          tension: 300,
+          friction: 30,
+          mass: 1
+        }
+      })
 
       return memo
     }
@@ -122,7 +138,14 @@ export function ProductPageLayout({
         top: -windowDimensions.height || 0,
         bottom: windowDimensions.height || 0
       },
-      delay: 100
+      delay: 0,
+      threshold: 5,
+      axis: 'both'
+    },
+    swipe: {
+      velocity: 0.1,
+      distance: 50,
+      duration: 200
     },
     pinch: {
       distanceBounds: { min: 0 },
@@ -515,7 +538,8 @@ export function ProductPageLayout({
                   willChange: 'transform',
                   userSelect: 'none',
                   pointerEvents: 'none',
-                  touchAction: 'none'
+                  touchAction: 'none',
+                  transition: 'transform 0.05s linear' // Add slight smoothing
                 }}
                 onDoubleClick={resetZoom}
               />
