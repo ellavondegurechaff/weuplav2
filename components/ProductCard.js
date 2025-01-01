@@ -113,7 +113,7 @@ export default function ProductCard({ product, onImageClick }) {
           color="orange" 
           fullWidth 
           onClick={handleAddToCart}
-          className="bg-transparent text-orange-700 hover:bg-orange-500/10 
+          className="bg-transparent text-orange-500 hover:bg-orange-500/10 
             transition-colors outline outline-2 outline-orange-500 font-semibold"
           styles={{
             root: {

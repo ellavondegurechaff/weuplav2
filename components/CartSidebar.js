@@ -57,15 +57,13 @@ export function CartSidebar({ isCartOpen, setIsCartOpen }) {
       alert('Please select both payment method and receipt type')
       return
     }
-
+  
     const totals = getTotalWithFees()
     const orderText = `🛒 ORDER REQUEST
 ITEMS:
-${cart.map(item => 
-  `1x ${item.name} #${item.id} $${Math.round(
+${cart.map(item => `1x ${item.name} $${Math.round(
     receiptType === 'shipping' ? item.shipped_price : item.intown_price
-  )}`
-).join('\n')}
+  )}`).join('\n')}
 
 ${receiptType.toUpperCase()} ORDER SELECTED ✓
 
@@ -205,21 +203,19 @@ Total due = ${Math.round(totals.total)}`
             {/* Payment Method Selection */}
             <div className="mb-4">
               <h3 className="font-medium mb-2 text-black">Select Payment Method:</h3>
-              <div className="space-y-2">
+              <select
+                value={selectedPayment || ''}
+                onChange={(e) => setPaymentMethod(e.target.value)}
+                className="w-full px-3 py-2 rounded bg-white text-black border border-gray-200 
+                  focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+              >
+                <option value="" disabled>Choose payment method</option>
                 {PAYMENT_METHODS.map(method => (
-                  <button
-                    key={method.id}
-                    onClick={() => setPaymentMethod(method.id)}
-                    className={`w-full text-left px-3 py-2 rounded ${
-                      selectedPayment === method.id 
-                        ? 'bg-orange-500 text-white' 
-                        : 'bg-white text-black hover:bg-orange-100'
-                    }`}
-                  >
-                    {method.label} {method.fee}%
-                  </button>
+                  <option key={method.id} value={method.id}>
+                    {method.label} ({method.fee}% fee)
+                  </option>
                 ))}
-              </div>
+              </select>
             </div>
 
             {/* Receipt Type Selection */}
