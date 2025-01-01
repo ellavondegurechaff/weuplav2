@@ -3,6 +3,7 @@
 import { X, ShoppingCart, Plus, Minus, ArrowRight } from 'lucide-react'
 import useCartStore from '@/store/cartStore'
 import { useEffect, useState } from 'react'
+import { toast, Toaster } from 'sonner'
 
 function CartItemImage({ src, name }) {
   return (
@@ -29,19 +30,62 @@ const PAYMENT_METHODS = [
   { id: 'cash', label: 'Cash', fee: 0 }
 ]
 
-export function CartSidebar({ isCartOpen, setIsCartOpen }) {
+export function CartSidebar({ isCartOpen: propIsCartOpen, setIsCartOpen: propSetIsCartOpen }) {
   const [isMounted, setIsMounted] = useState(false)
-  const { cart, removeFromCart, updateQuantity, getTotalPrice, clearCart, 
+  const { 
+    cart, 
+    removeFromCart, 
+    updateQuantity, 
+    getTotalPrice, 
+    clearCart,
     selectedPayment,
     setPaymentMethod,
     receiptType,
     setReceiptType,
-    getTotalWithFees
+    getTotalWithFees,
+    isCartOpen: storeIsCartOpen,
+    setCartOpen,
+    lastAddedItem,
+    getCartCount
   } = useCartStore()
+
+  const isCartOpen = propIsCartOpen ?? storeIsCartOpen
+  const setIsCartOpen = propSetIsCartOpen ?? setCartOpen
 
   useEffect(() => {
     setIsMounted(true)
   }, [])
+
+  // Enhanced notification for added items
+  useEffect(() => {
+    if (lastAddedItem && isMounted && lastAddedItem.timestamp > Date.now() - 1000) {
+      toast.success(
+        <div className="flex flex-col">
+          <span className="font-medium text-black">{`Added ${lastAddedItem.quantity}x ${lastAddedItem.name}`}</span>
+          <span className="text-sm text-gray-600">{`Cart total: ${lastAddedItem.totalItems} item${lastAddedItem.totalItems !== 1 ? 's' : ''}`}</span>
+        </div>,
+        {
+          duration: 2000,
+          style: {
+            background: 'white',
+            border: '2px solid #f97316',
+            color: 'black',
+            fontSize: '14px',
+            maxWidth: '400px',
+            padding: '16px',
+          },
+          className: 'font-medium shadow-lg',
+        }
+      )
+    }
+  }, [lastAddedItem, isMounted])
+
+  // Remove the automatic cart opening effect
+  // useEffect(() => {
+  //   if (cart.length > 0 && !isCartOpen) {
+  //     setIsCartOpen(true)
+  //   }
+  // }, [cart.length, isCartOpen, setIsCartOpen])
 
   if (!isMounted) {
     return null

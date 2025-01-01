@@ -7,21 +7,35 @@ const useCartStore = create(
       cart: [],
       selectedPayment: null, // 'cashapp', 'zelle', 'crypto', 'cash'
       receiptType: null, // 'intown', 'shipping'
+      isCartOpen: false,
+      lastAddedItem: null,
+      
+      setCartOpen: (isOpen) => set({ isCartOpen: isOpen }),
       
       addToCart: (product) => set((state) => {
         const existingItem = state.cart.find(item => item.id === product.id)
+        let addedQuantity = 1
         
-        if (existingItem) {
-          return {
-            cart: state.cart.map(item =>
+        const newCart = existingItem
+          ? state.cart.map(item =>
               item.id === product.id
                 ? { ...item, quantity: item.quantity + 1 }
                 : item
             )
+          : [...state.cart, { ...product, quantity: 1 }]
+
+        // Calculate total items in cart for notification
+        const totalItems = newCart.reduce((sum, item) => sum + item.quantity, 0)
+
+        return { 
+          cart: newCart,
+          lastAddedItem: {
+            name: product.name,
+            quantity: addedQuantity,
+            totalItems,
+            timestamp: Date.now()
           }
         }
-        
-        return { cart: [...state.cart, { ...product, quantity: 1 }] }
       }),
 
       removeFromCart: (productId) => set((state) => ({
@@ -44,7 +58,13 @@ const useCartStore = create(
         }
       }),
 
-      clearCart: () => set({ cart: [] }),
+      clearCart: () => set({ 
+        cart: [],
+        isCartOpen: false,
+        selectedPayment: null,
+        receiptType: null,
+        lastAddedItem: null
+      }),
 
       getTotalPrice: () => {
         const cart = get().cart
@@ -92,7 +112,12 @@ const useCartStore = create(
           total: baseTotal + feeAmount,
           totalItems: cart.reduce((sum, item) => sum + item.quantity, 0)
         }
-      }
+      },
+
+      getCartCount: () => {
+        const cart = get().cart
+        return cart.reduce((sum, item) => sum + item.quantity, 0)
+      },
     }),
     {
       name: 'cart-storage'

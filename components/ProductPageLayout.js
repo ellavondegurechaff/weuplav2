@@ -9,6 +9,7 @@ import CartSidebar from '@/components/CartSidebar'
 import ProductCard from '@/components/ProductCard'
 import { useGesture } from '@use-gesture/react'
 import { IconX } from '@tabler/icons-react'
+import { NavHeader } from '@/components/NavHeader'
 
 export function ProductPageLayout({ 
   pageTitle, 
@@ -104,13 +105,12 @@ export function ProductPageLayout({
         style={{ backgroundColor: 'transparent' }}
       >
         <AppShell.Header>
-          <Group h="100%" px="md" style={{ justifyContent: 'space-between' }}>
-            <Burger opened={opened} onClick={toggleNav} size="sm" color="#f97316" />
-            <Text size="xl" fw={700} c="black">{pageTitle}</Text>
-            <button onClick={() => setIsCartOpen(true)}>
-              <ShoppingCart size={24} color="#f97316" />
-            </button>
-          </Group>
+          <NavHeader 
+            opened={opened} 
+            toggleNav={toggleNav} 
+            title={pageTitle}
+            setIsCartOpen={setIsCartOpen}
+          />
         </AppShell.Header>
 
         <SidePanel opened={opened} onClose={closeNav} />

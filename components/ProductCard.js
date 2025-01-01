@@ -28,7 +28,8 @@ export default function ProductCard({ product, onImageClick }) {
         backgroundColor: 'white',
         height: '100%',
         display: 'flex',
-        flexDirection: 'column'
+        flexDirection: 'column',
+        borderWidth: '7px'
       }}
     >
       <Card.Section 

@@ -19,6 +19,7 @@ import SidePanel from '@/components/SidePanel'
 import CartSidebar from '@/components/CartSidebar'
 import { MediaCarousel } from '@/components/MediaCarousel'
 import { LetterPlaceholder } from '@/components/LetterPlaceholder'
+import { NavHeader } from '@/components/NavHeader'
 
 export default function TouchdownsPage() {
   const [opened, { toggle: toggleNav, close: closeNav }] = useDisclosure()
@@ -87,13 +88,12 @@ export default function TouchdownsPage() {
         style={{ backgroundColor: 'transparent' }}
       >
         <AppShell.Header>
-          <Group h="100%" px="md" style={{ justifyContent: 'space-between' }}>
-            <Burger opened={opened} onClick={toggleNav} size="sm" color="#f97316" />
-            <Text size="xl" fw={700} c="black">Touchdown</Text>
-            <button onClick={() => setIsCartOpen(true)}>
-              <ShoppingCart size={24} color="#f97316" />
-            </button>
-          </Group>
+          <NavHeader 
+            opened={opened} 
+            toggleNav={toggleNav} 
+            title="Touchdown"
+            setIsCartOpen={setIsCartOpen}
+          />
         </AppShell.Header>
 
         <SidePanel opened={opened} onClose={closeNav} />

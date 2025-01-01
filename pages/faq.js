@@ -12,6 +12,7 @@ import {
   SiBitcoin, 
   SiZelle 
 } from '@icons-pack/react-simple-icons'
+import { NavHeader } from '@/components/NavHeader'
 
 // Custom markdown components for styling
 const MarkdownComponents = {
@@ -162,13 +163,12 @@ export default function FAQPage() {
       style={{ backgroundColor: 'transparent' }}
     >
       <AppShell.Header>
-        <Group h="100%" px="md" style={{ justifyContent: 'space-between' }}>
-          <Burger opened={opened} onClick={toggleNav} size="sm" color="#f97316" />
-          <Text size="xl" fw={700} c="black">FAQ</Text>
-          <button onClick={() => setIsCartOpen(true)}>
-            <ShoppingCart size={24} color="#f97316" />
-          </button>
-        </Group>
+        <NavHeader 
+          opened={opened} 
+          toggleNav={toggleNav} 
+          title="FAQ"
+          setIsCartOpen={setIsCartOpen}
+        />
       </AppShell.Header>
 
       <SidePanel opened={opened} onClose={closeNav} />

@@ -1,7 +1,6 @@
-import React from 'react'
-import { AppShell, Burger, Group, Text } from '@mantine/core'
+import { AppShell } from '@mantine/core'
 import { useDisclosure } from '@mantine/hooks'
-import { ShoppingCart } from 'lucide-react'
+import { NavHeader } from '@/components/NavHeader'
 import SidePanel from '@/components/SidePanel'
 import MainContent from '@/components/MainContent'
 import CartSidebar from '@/components/CartSidebar'
@@ -18,13 +17,11 @@ export default function WelcomePage() {
       style={{ backgroundColor: 'transparent' }}
     >
       <AppShell.Header style={{ backgroundColor: '#f2f0d6' }}>
-        <Group h="100%" px="md" style={{ justifyContent: 'space-between' }}>
-          <Burger opened={opened} onClick={toggleNav} size="sm" color="#f97316" />
-          <Text size="xl" fw={700} c="black">Home</Text>
-          <button onClick={() => setIsCartOpen(true)}>
-            <ShoppingCart size={24} color="#f97316" />
-          </button>
-        </Group>
+        <NavHeader 
+          opened={opened} 
+          toggleNav={toggleNav}
+          title="Home" 
+        />
       </AppShell.Header>
 
       <SidePanel opened={opened} onClose={closeNav} />
