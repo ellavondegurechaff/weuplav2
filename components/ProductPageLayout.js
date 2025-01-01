@@ -48,24 +48,32 @@ export function ProductPageLayout({
   }))
 
   const bind = useGesture({
-    onPinch: ({ event, origin: [ox, oy], first, movement: [ms], offset: [s] }) => {
+    onPinch: ({ event, origin: [ox, oy], first, movement: [ms], offset: [s], memo }) => {
       event.preventDefault()
 
       if (first) {
-        initialPinchDistance.current = s
+        const rect = event.target.getBoundingClientRect()
+        const x = ox - rect.left
+        const y = oy - rect.top
+        return { x, y, initialScale: scale }
       }
 
-      const newScale = Math.min(Math.max(0.8, s), 4)
-      lastScale.current = newScale
+      const newScale = Math.min(Math.max(1, s), 3)
+      const { x, y, initialScale } = memo
 
-      const rect = event.target.getBoundingClientRect()
-      const centerX = (ox - rect.left) / rect.width
-      const centerY = (oy - rect.top) / rect.height
+      const focalX = x
+      const focalY = y
 
       const newPosition = {
-        x: position.x + (centerX - 0.5) * (newScale - scale) * rect.width,
-        y: position.y + (centerY - 0.5) * (newScale - scale) * rect.height
+        x: (focalX - (focalX * (newScale / initialScale))),
+        y: (focalY - (focalY * (newScale / initialScale)))
       }
+
+      const maxX = Math.abs((window.innerWidth * newScale) - window.innerWidth) / 2
+      const maxY = Math.abs((window.innerHeight * newScale) - window.innerHeight) / 2
+
+      newPosition.x = Math.min(Math.max(newPosition.x, -maxX), maxX)
+      newPosition.y = Math.min(Math.max(newPosition.y, -maxY), maxY)
 
       setScale(newScale)
       setPosition(newPosition)
@@ -76,31 +84,40 @@ export function ProductPageLayout({
         y: newPosition.y,
         immediate: true
       })
+
+      return memo
     },
     onPinchEnd: () => {
-      if (lastScale.current < 1) {
-        setScale(1)
-        setPosition({ x: 0, y: 0 })
-        api.start({ scale: 1, x: 0, y: 0 })
+      if (scale < 1) {
+        resetZoom()
       }
     },
-    onDrag: ({ movement: [mx, my], first, active }) => {
-      if (lastScale.current > 1) {
-        const maxX = (lastScale.current - 1) * 200
-        const maxY = (lastScale.current - 1) * 200
+    onDrag: ({ movement: [mx, my], first, active, memo }) => {
+      if (scale <= 1) return
+      if (first) return { x: position.x, y: position.y }
 
-        const newX = Math.min(Math.max(position.x + mx, -maxX), maxX)
-        const newY = Math.min(Math.max(position.y + my, -maxY), maxY)
+      const maxX = Math.abs((window.innerWidth * scale) - window.innerWidth) / 2
+      const maxY = Math.abs((window.innerHeight * scale) - window.innerHeight) / 2
 
-        setPosition({ x: newX, y: newY })
-        api.start({ x: newX, y: newY, immediate: true })
-      }
+      const newX = Math.min(Math.max(position.x + mx, -maxX), maxX)
+      const newY = Math.min(Math.max(position.y + my, -maxY), maxY)
+
+      setPosition({ x: newX, y: newY })
+      api.start({ x: newX, y: newY, immediate: true })
+
+      return memo
     }
   }, {
     drag: {
       from: () => [position.x, position.y],
       filterTaps: true,
-      rubberband: true
+      rubberband: true,
+      bounds: {
+        left: -window.innerWidth,
+        right: window.innerWidth,
+        top: -window.innerHeight,
+        bottom: window.innerHeight
+      }
     },
     pinch: {
       distanceBounds: { min: 0 },
@@ -162,6 +179,16 @@ export function ProductPageLayout({
   const resetZoom = () => {
     setScale(1)
     setPosition({ x: 0, y: 0 })
+    api.start({
+      scale: 1,
+      x: 0,
+      y: 0,
+      immediate: false,
+      config: {
+        tension: 300,
+        friction: 30
+      }
+    })
   }
 
   useEffect(() => {
@@ -376,16 +403,18 @@ export function ProductPageLayout({
                 src={selectedMedia.url}
                 alt="Full size preview"
                 style={{
-                  maxWidth: '90vw',
-                  maxHeight: '90vh',
+                  maxWidth: '100vw',
+                  maxHeight: '100vh',
+                  width: 'auto',
+                  height: 'auto',
+                  objectFit: 'contain',
                   transform: springProps.scale.to(
                     s => `scale(${s}) translate3d(${position.x}px, ${position.y}px, 0)`
                   ),
-                  transformOrigin: 'center center',
+                  transformOrigin: '0 0',
                   willChange: 'transform',
                   userSelect: 'none',
                   pointerEvents: 'none',
-                  margin: 'auto',
                   touchAction: 'none'
                 }}
                 onDoubleClick={resetZoom}
