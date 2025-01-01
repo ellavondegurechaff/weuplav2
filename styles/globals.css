@@ -28,6 +28,8 @@ body {
   background-position: center;
   background-repeat: no-repeat;
   min-height: 100vh;
+  overscroll-behavior: none;
+  touch-action: none;
 }
 
 @keyframes pulse {
@@ -71,4 +73,10 @@ body {
 
 .hover-scale:hover {
   transform: scale(1.05);
+}
+
+/* Optional: Prevent text selection during gestures */
+.prevent-select {
+  -webkit-user-select: none;
+  user-select: none;
 }

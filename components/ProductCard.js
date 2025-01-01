@@ -2,9 +2,91 @@ import { Card, Text, Badge, Group, Button } from '@mantine/core'
 import { LetterPlaceholder } from '@/components/LetterPlaceholder'
 import { MediaCarousel } from '@/components/MediaCarousel'
 import useCartStore from '@/store/cartStore'
+import { useState, useRef } from 'react'
+import { useGesture } from '@use-gesture/react'
+import { animated, useSpring } from '@react-spring/web'
 
 export default function ProductCard({ product, onImageClick }) {
   const addToCart = useCartStore(state => state.addToCart)
+  const videoRef = useRef(null)
+  const touchStartX = useRef(0)
+  const touchStartY = useRef(0)
+  const isHorizontalSwipe = useRef(false)
+
+  const [style, api] = useSpring(() => ({
+    scale: 1,
+    x: 0,
+    y: 0,
+    config: { tension: 300, friction: 20 }
+  }))
+
+  const containerRef = useRef(null)
+  const initialDistance = useRef(0)
+
+  const bind = useGesture({
+    onPinch: ({ offset: [scale], event }) => {
+      if (event.touches.length === 2) {
+        event.preventDefault()
+        api.start({
+          scale: Math.min(Math.max(0.5, scale), 3),
+        })
+      }
+    },
+    onPinchEnd: () => {
+      // Reset to original size smoothly
+      api.start({ scale: 1, x: 0, y: 0 })
+    },
+    onDrag: ({ offset: [x, y], pinching }) => {
+      // Only allow dragging when zoomed in
+      if (style.scale.get() > 1) {
+        api.start({ x, y })
+      }
+    }
+  }, {
+    drag: {
+      from: () => [style.x.get(), style.y.get()],
+      filterTaps: true,
+      threshold: 5,
+    },
+    pinch: {
+      distanceBounds: { min: 0 },
+      rubberband: true
+    }
+  })
+
+  const handleTouchStart = (e) => {
+    // Store initial touch coordinates
+    touchStartX.current = e.touches[0].clientX
+    touchStartY.current = e.touches[0].clientY
+    isHorizontalSwipe.current = false
+  }
+
+  const handleTouchMove = (e) => {
+    if (!videoRef.current) return
+
+    const deltaX = e.touches[0].clientX - touchStartX.current
+    const deltaY = e.touches[0].clientY - touchStartY.current
+
+    // Determine if the swipe is more horizontal than vertical
+    if (Math.abs(deltaX) > Math.abs(deltaY)) {
+      isHorizontalSwipe.current = true
+      // Play video only during horizontal swipes
+      if (!videoRef.current.playing) {
+        videoRef.current.play()
+      }
+    } else {
+      isHorizontalSwipe.current = false
+      if (videoRef.current.playing) {
+        videoRef.current.pause()
+      }
+    }
+  }
+
+  const handleTouchEnd = () => {
+    if (videoRef.current && videoRef.current.playing) {
+      videoRef.current.pause()
+    }
+  }
 
   const handleAddToCart = () => {
     addToCart({
@@ -31,6 +113,9 @@ export default function ProductCard({ product, onImageClick }) {
         flexDirection: 'column',
         borderWidth: '7px'
       }}
+      onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handleTouchEnd}
     >
       <Card.Section 
         style={{ 
@@ -41,10 +126,22 @@ export default function ProductCard({ product, onImageClick }) {
         }}
       >
         {product.media?.length > 0 ? (
-          <MediaCarousel 
-            media={product.media} 
-            onImageClick={(url, isVideo) => onImageClick(url, isVideo, product.id)}
-          />
+          <div ref={containerRef} className="overflow-hidden">
+            <animated.div
+              {...bind()}
+              style={{
+                ...style,
+                touchAction: 'pan-x pan-y',
+                transform: style.scale.to(s => `scale(${s})`),
+              }}
+              className="w-full h-full origin-center"
+            >
+              <MediaCarousel 
+                media={product.media} 
+                onImageClick={(url, isVideo) => onImageClick(url, isVideo, product.id)}
+              />
+            </animated.div>
+          </div>
         ) : (
           <div style={{ height: '100%' }}>
             <LetterPlaceholder name={product.name} />
