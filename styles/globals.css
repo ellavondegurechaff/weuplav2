@@ -80,12 +80,3 @@ body {
   -webkit-user-select: none;
   user-select: none;
 }
-
-input, textarea, select {
-  font-size: 16px !important; /* Prevents zoom on iOS */
-  touch-action: manipulation;
-}
-
-* {
-  touch-action: manipulation;
-}

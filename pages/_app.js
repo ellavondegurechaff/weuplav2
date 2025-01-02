@@ -4,7 +4,6 @@ import { MantineProvider, createTheme } from '@mantine/core'
 import { ModalsProvider } from '@mantine/modals'
 import { Notifications } from '@mantine/notifications'
 import { Toaster } from 'sonner'
-import { Head } from 'next/head'
 
 const theme = createTheme({
   primaryColor: 'gray',
@@ -59,12 +58,6 @@ export default function App({ Component, pageProps }) {
   return (
     <MantineProvider theme={theme}>
       <ModalsProvider>
-        <Head>
-          <meta 
-            name="viewport" 
-            content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover"
-          />
-        </Head>
         <Notifications />
         <Toaster 
           richColors 
