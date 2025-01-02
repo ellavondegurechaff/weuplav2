@@ -1,4 +1,5 @@
 import { transaction } from '@/lib/db'
+import { invalidateProductCache } from '@/lib/cache'
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -32,6 +33,7 @@ export default async function handler(req, res) {
       return productResult
     })
 
+    await invalidateProductCache()
     return res.status(200).json({ id: result.insertId })
   } catch (error) {
     console.error('Database error:', error)

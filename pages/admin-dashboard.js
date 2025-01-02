@@ -112,6 +112,14 @@ export default function AdminDashboard() {
     }
   }, [isAuthenticated])
 
+  useEffect(() => {
+    if (!isEditing) {
+      form.reset()
+      setImageFile(null)
+      setImagePreview(null)
+    }
+  }, [isEditing])
+
   const fetchProducts = async () => {
     try {
       const response = await fetch('/api/products/all')
@@ -351,6 +359,7 @@ export default function AdminDashboard() {
   }
 
   const handleEditClick = (product) => {
+    form.reset()
     setEditingProduct(product)
     setIsEditing(true)
     editForm.setValues({
@@ -362,51 +371,23 @@ export default function AdminDashboard() {
       shipped_price: product.shipped_price,
       media: product.media || []
     })
-    setImagePreview(product.image_url)
   }
 
   const handleMediaUpload = async (files) => {
     try {
-      const uploadPromises = files.map(async (file) => {
-        // Get presigned URL
-        const response = await fetch('/api/generate-upload-url', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            fileType: file.type,
-            fileName: file.name
-          })
-        })
-
-        if (!response.ok) {
-          throw new Error('Failed to get upload URL')
-        }
-
-        const { presignedUrl, fileUrl } = await response.json()
-
-        // Upload file directly to S3
-        await fetch(presignedUrl, {
-          method: 'PUT',
-          body: file,
-          headers: {
-            'Content-Type': file.type
-          }
-        })
-
-        return {
-          url: fileUrl,
-          type: file.type.startsWith('video/') ? 'video' : 'image',
-          preview: URL.createObjectURL(file)
-        }
-      })
-
-      const newMedia = await Promise.all(uploadPromises)
-      editForm.setFieldValue('media', [...editForm.values.media, ...newMedia])
+      const newMedia = files.map(file => ({
+        file,
+        url: URL.createObjectURL(file),
+        type: file.type.startsWith('video/') ? 'video' : 'image',
+        isNew: true
+      }))
+      
+      editForm.setFieldValue('media', [...(editForm.values.media || []), ...newMedia])
     } catch (error) {
       console.error('Error handling media upload:', error)
       notifications.show({
         title: 'Error',
-        message: 'Failed to upload media files',
+        message: 'Failed to process media files',
         color: 'red'
       })
     }
@@ -415,10 +396,47 @@ export default function AdminDashboard() {
   const handleUpdateProduct = async () => {
     if (!editForm.validate().hasErrors) {
       try {
+        const mediaUrls = [...editForm.values.media]
+        
+        for (let i = 0; i < mediaUrls.length; i++) {
+          if (mediaUrls[i].isNew) {
+            const response = await fetch('/api/generate-upload-url', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                fileType: mediaUrls[i].file.type,
+                fileName: mediaUrls[i].file.name
+              })
+            })
+
+            if (!response.ok) throw new Error('Failed to get upload URL')
+
+            const { presignedUrl, fileUrl } = await response.json()
+
+            await fetch(presignedUrl, {
+              method: 'PUT',
+              body: mediaUrls[i].file,
+              headers: {
+                'Content-Type': mediaUrls[i].file.type,
+                'x-amz-acl': 'public-read',
+                'x-amz-content-sha256': 'UNSIGNED-PAYLOAD'
+              }
+            })
+
+            mediaUrls[i] = {
+              url: fileUrl,
+              type: mediaUrls[i].type
+            }
+          }
+        }
+
         const response = await fetch('/api/products/update', {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(editForm.values)
+          body: JSON.stringify({
+            ...editForm.values,
+            media: mediaUrls
+          })
         })
 
         if (!response.ok) throw new Error('Update failed')
@@ -606,7 +624,7 @@ export default function AdminDashboard() {
               />
             )}
 
-            {form.values.media?.length > 0 && (
+            {form.values.media?.length > 0 && !isEditing && (
               <Stack spacing="md">
                 <Text weight={500}>Media Preview</Text>
                 <Group spacing="md">
@@ -770,6 +788,7 @@ export default function AdminDashboard() {
             setEditingProduct(null)
             setImageFile(null)
             setImagePreview(null)
+            editForm.reset()
           }}
           title="Edit Product"
           size="lg"
@@ -896,6 +915,10 @@ export default function AdminDashboard() {
                           fit="cover" 
                           radius="xs"
                           onClick={() => handleImageClick(media.url, false)}
+                          onError={(e) => {
+                            console.error('Image failed to load:', media.url)
+                            e.target.src = '/placeholder-image.jpg'
+                          }}
                         />
                       )}
                       <Button 

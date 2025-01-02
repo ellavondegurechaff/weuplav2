@@ -1,6 +1,7 @@
 import { transaction } from '@/lib/db'
 import { DeleteObjectCommand } from '@aws-sdk/client-s3'
 import { s3Client, BUCKET_NAME } from '@/lib/s3'
+import { invalidateProductCache } from '@/lib/cache'
 
 export default async function handler(req, res) {
   if (req.method !== 'DELETE') {
@@ -34,11 +35,13 @@ export default async function handler(req, res) {
         }
       }
 
-      // Delete from database
+      // Delete from database in correct order (foreign key constraints)
       await connection.execute('DELETE FROM product_media WHERE product_id = ?', [id])
+      await connection.execute('DELETE FROM product_views WHERE product_id = ?', [id])
       await connection.execute('DELETE FROM products WHERE id = ?', [id])
     })
 
+    await invalidateProductCache()
     return res.status(200).json({ message: 'Product deleted successfully' })
   } catch (error) {
     console.error('Database error:', error)

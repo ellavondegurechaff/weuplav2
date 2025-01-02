@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { Image, Card, ActionIcon, Box } from '@mantine/core'
 import { IconChevronLeft, IconChevronRight } from '@tabler/icons-react'
 
@@ -9,10 +9,22 @@ export function MediaCarousel({ media, onImageClick }) {
   const currentXRef = useRef(0)
   const imageRef = useRef(null)
 
+  // Reset currentIndex if media array changes
+  useEffect(() => {
+    if (currentIndex >= media?.length) {
+      setCurrentIndex(0)
+    }
+  }, [media, currentIndex])
+
   if (!media?.length) return null
 
-  const currentMedia = media[currentIndex]
+  // Ensure currentIndex is within bounds
+  const safeIndex = Math.min(currentIndex, media.length - 1)
+  const currentMedia = media[safeIndex]
   
+  // Safety check for currentMedia
+  if (!currentMedia) return null
+
   const navigate = (direction) => {
     if (direction === 'prev') {
       setCurrentIndex((prev) => (prev === 0 ? media.length - 1 : prev - 1))
@@ -57,9 +69,12 @@ export function MediaCarousel({ media, onImageClick }) {
   }
 
   const isVideo = (url) => {
+    if (!url) return false
     const videoExtensions = ['.mp4', '.mov', '.MP4', '.MOV']
     return videoExtensions.some(ext => url.toLowerCase().endsWith(ext.toLowerCase()))
   }
+
+  const isCurrentMediaVideo = currentMedia?.type === 'video' || isVideo(currentMedia?.url)
 
   return (
     <Box style={{ 
@@ -96,7 +111,7 @@ export function MediaCarousel({ media, onImageClick }) {
         onTouchMove={handleDragMove}
         onTouchEnd={handleDragEnd}
       >
-        {(currentMedia.type === 'video' || isVideo(currentMedia.url)) ? (
+        {isCurrentMediaVideo ? (
           <video
             src={currentMedia.url}
             controls

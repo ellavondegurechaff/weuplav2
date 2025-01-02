@@ -1,4 +1,5 @@
 import { query } from '@/lib/db'
+import { CACHE_KEYS, getFromCache, setCache } from '@/lib/cache'
 
 export default async function handler(req, res) {
   if (req.method !== 'GET') {
@@ -6,6 +7,12 @@ export default async function handler(req, res) {
   }
 
   try {
+    // Try cache first
+    const cachedProducts = await getFromCache(CACHE_KEYS.EXOTIC_PRODUCTS)
+    if (cachedProducts) {
+      return res.status(200).json(cachedProducts)
+    }
+
     const products = await query(`
       SELECT 
         p.*,
@@ -36,11 +43,13 @@ export default async function handler(req, res) {
       ORDER BY p.created_at DESC, p.name
     `, ['exotics'])
 
-    // Filter out null values from media array
     const productsWithMedia = products.map(product => ({
       ...product,
       media: product.media.filter(Boolean)
     }))
+
+    // Set cache
+    await setCache(CACHE_KEYS.EXOTIC_PRODUCTS, productsWithMedia)
 
     return res.status(200).json(productsWithMedia)
   } catch (error) {

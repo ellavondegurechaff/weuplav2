@@ -1,4 +1,5 @@
 import { transaction } from '@/lib/db'
+import { invalidateProductCache } from '@/lib/cache'
 
 export default async function handler(req, res) {
   if (req.method !== 'PUT') {
@@ -31,16 +32,19 @@ export default async function handler(req, res) {
 
       // Insert new media if provided
       if (media.length > 0) {
-        for (let i = 0; i < media.length; i++) {
+        const mediaValues = media.map((item, index) => [id, item.url, item.type || 'image', index])
+        
+        for (const values of mediaValues) {
           await connection.execute(
             `INSERT INTO product_media (product_id, media_url, media_type, display_order) 
              VALUES (?, ?, ?, ?)`,
-            [id, media[i].url, media[i].type || 'image', i]
+            values
           )
         }
       }
     })
 
+    await invalidateProductCache()
     return res.status(200).json({ message: 'Product updated successfully' })
   } catch (error) {
     console.error('Database error:', error)
