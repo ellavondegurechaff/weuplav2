@@ -80,3 +80,24 @@ body {
   -webkit-user-select: none;
   user-select: none;
 }
+
+input[type="text"],
+input[type="search"],
+input[type="email"],
+input[type="tel"],
+select,
+textarea {
+  font-size: 16px !important;
+  touch-action: manipulation;
+  -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Prevent zoom on focus for iOS */
+@supports (-webkit-touch-callout: none) {
+  input,
+  select,
+  textarea {
+    font-size: 16px !important;
+  }
+}
