@@ -98,7 +98,7 @@ export default function ProductCard({ product, onImageClick }) {
 
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
         <Group justify="space-between" mt="md" mb="xs" style={{ alignItems: 'flex-start' }}>
-          <Text fw={700} c="black" style={{ flex: 1, marginRight: '8px' }}>
+          <Text className="product-title-text" fw={700} c="black" style={{ flex: 1, marginRight: '8px' }}>
             {product.name}
           </Text>
           <Badge 
@@ -128,14 +128,14 @@ export default function ProductCard({ product, onImageClick }) {
 
         <Group gap="lg" mb="md">
           <div>
-            <Text size="sm" fw={700} c="dark">In-town</Text>
-            <Text size="xl" fw={700} c="green.6">
+            <Text size="sm" fw={700} c="dark">INTOWN</Text>
+            <Text className="product-price-text" size="xl" fw={700} c="green.6">
               ${product.intown_price}
             </Text>
           </div>
           <div>
-            <Text size="sm" fw={700} c="dark">Shipped</Text>
-            <Text size="xl" fw={700} c="orange.6">
+            <Text size="sm" fw={700} c="dark">SHIPPED</Text>
+            <Text className="product-price-text" size="xl" fw={700} c="orange.6">
               ${product.shipped_price}
             </Text>
           </div>
@@ -159,8 +159,8 @@ export default function ProductCard({ product, onImageClick }) {
           color="orange" 
           fullWidth 
           onClick={handleAddToCart}
-          className="bg-transparent text-orange-500 hover:bg-orange-500/10 
-            transition-colors outline outline-2 outline-orange-500 font-semibold"
+          className="cart-button-text bg-transparent text-orange-500 hover:bg-orange-500/10 
+            transition-colors outline outline-2 outline-orange-500"
           styles={{
             root: {
               padding: '0.75rem 1rem',

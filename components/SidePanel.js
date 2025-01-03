@@ -238,15 +238,17 @@ export default function SidePanel({ opened, onClose }) {
                   return
                 }
                 
-                // Show installation instructions for iOS
+                // Show installation instructions based on device/browser
                 if (/iPhone|iPad|iPod/.test(navigator.userAgent)) {
-                  alert('To install this app on your iPhone:\n\n1. Tap the Share button\n2. Scroll down and tap "Add to Home Screen"\n3. Tap "Add" in the top right')
+                  alert('To add this website to your home screen:\n\n1. Tap the Share button\n2. Scroll down and tap "Add to Home Screen"\n3. Note: This will open in Safari as it\'s a web app')
+                } else if (/Chrome/.test(navigator.userAgent)) {
+                  alert('To add this website to your home screen:\n\n1. Tap the three dots menu (⋮)\n2. Tap "Add to Home screen"\n3. Note: This will open in Chrome as it\'s a web app')
                 } else {
-                  alert('To install, use the browser\'s "Add to Home Screen" or "Install" feature.')
+                  alert('To add this website to your home screen, use your browser\'s "Add to Home Screen" or "Install" feature.\n\nNote: This will open in your default browser as it\'s a web app.')
                 }
               }}
             >
-              Add to Homescreen
+              ADD TO HOMESCREEN
             </button>
             
             <a

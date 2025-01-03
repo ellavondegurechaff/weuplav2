@@ -21,6 +21,7 @@ import { LetterPlaceholder } from '@/components/LetterPlaceholder'
 import { IconX } from '@tabler/icons-react'
 import { useGesture } from '@use-gesture/react'
 import { SITE_TITLE } from '@/utils/constants'
+import { NavHeader } from '@/components/NavHeader'
 
 export default function AnnouncementsPage() {
   const [opened, { toggle: toggleNav, close: closeNav }] = useDisclosure()
@@ -121,10 +122,13 @@ export default function AnnouncementsPage() {
         style={{ backgroundColor: 'transparent' }}
       >
         <AppShell.Header>
-          <Group h="100%" px="md" style={{ justifyContent: 'space-between' }}>
-            <Burger opened={opened} onClick={toggleNav} size="sm" color="#f97316" />
-            <div style={{ width: 24 }} /> {/* Keep the placeholder for symmetry */}
-          </Group>
+          <NavHeader 
+            opened={opened} 
+            toggleNav={toggleNav}
+            showImage={true}
+            imagePath="/announcements.png"
+            showCart={false}
+          />
         </AppShell.Header>
 
         <SidePanel opened={opened} onClose={closeNav} />
@@ -132,17 +136,6 @@ export default function AnnouncementsPage() {
         <AppShell.Main>
           <Container size="xl" py="xl">
             <Container size="md" mb="xl">
-              <div className="flex justify-center -mt-4 mb-0">
-                <Image
-                  src="/announcements.png"
-                  alt="Announcements"
-                  width={380}
-                  height={77}
-                  priority
-                  className="w-[320px] h-[65px] sm:w-[380px] sm:h-[77px] md:w-[420px] md:h-[86px] lg:w-[480px] lg:h-[98px] object-contain"
-                />
-              </div>
-
               <TextInput
                 placeholder="Search announcements..."
                 value={searchQuery}

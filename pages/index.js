@@ -18,16 +18,17 @@ export default function WelcomePage() {
         <title>{SITE_TITLE} - Home</title>
       </Head>
       <AppShell
-        header={{ height: 60 }}
+        header={{ height: 80 }}
         padding="0"
         style={{ backgroundColor: 'transparent' }}
       >
-        <AppShell.Header style={{ backgroundColor: 'white' }}>
+        <AppShell.Header>
           <NavHeader 
             opened={opened} 
             toggleNav={toggleNav}
-            title="Home" 
             setIsCartOpen={setIsCartOpen}
+            showImage={true}
+            imagePath="/home.png"
           />
         </AppShell.Header>
 

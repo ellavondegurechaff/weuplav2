@@ -393,8 +393,9 @@ export function ProductPageLayout({
           <NavHeader 
             opened={opened} 
             toggleNav={toggleNav} 
-            title={pageTitle}
             setIsCartOpen={setIsCartOpen}
+            showImage={true}
+            imagePath={`/${activePage}.png`}
           />
         </AppShell.Header>
 
@@ -413,13 +414,17 @@ export function ProductPageLayout({
                   placeholder="Search products..."
                   value={searchQuery}
                   onChange={(event) => setSearchQuery(event.currentTarget.value)}
-                  size="sm"
                   radius="md"
                   styles={{
                     input: {
-                      backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                      backgroundColor: 'white',
+                      color: 'white',
+                      border: '1px solid rgba(255, 255, 255, 0.2)',
                       '&:focus': {
                         borderColor: 'var(--mantine-color-orange-6)',
+                      },
+                      '&::placeholder': {
+                        color: 'rgba(255, 255, 255, 0.5)',
                       },
                     },
                   }}
@@ -439,8 +444,17 @@ export function ProductPageLayout({
                   <option value="z-a">Name: Z-A</option>
                 </select>
               </Group>
+
+              <div className="flex justify-center mt-4">
+                <a 
+                  href="/allproducts" 
+                  className="inline-block bg-transparent text-white px-8 py-3 rounded-md hover:bg-white/10 transition-colors outline outline-3 outline-white font-semibold"
+                >
+                  VIEW MENU
+                </a>
+              </div>
             </Container>
-            
+
             <Grid>
               {getSortedProducts(filteredProducts).map((product) => (
                 <Grid.Col key={product.id} span={{ base: 12, sm: 6, md: 4, lg: 3 }}>

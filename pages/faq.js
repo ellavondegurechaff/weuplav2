@@ -19,19 +19,19 @@ import Head from 'next/head'
 // Custom markdown components for styling
 const MarkdownComponents = {
   strong: ({ children }) => (
-    <span className="font-bold text-white">{children}</span>
+    <span className="font-bold text-white faq-answer-text">{children}</span>
   ),
   em: ({ children }) => (
-    <span className="italic text-white">{children}</span>
+    <span className="italic text-white faq-answer-text">{children}</span>
   ),
   p: ({ children }) => (
-    <p className="text-white text-base whitespace-pre-line">{children}</p>
+    <p className="text-white text-base whitespace-pre-line faq-answer-text">{children}</p>
   )
 }
 
 // Create a custom component for overnight shipping answer
 const OvernightShippingAnswer = () => (
-  <div className="text-white text-base italic">
+  <div className="text-white text-base italic faq-answer-text">
     <p>You can always add 2 day shipping or Overnight shipping services to any small order for the following rates:</p>
     
     <div className="mt-4">
@@ -54,7 +54,7 @@ const OvernightShippingAnswer = () => (
 
 // Create a custom component for shipping prices answer
 const ShippingPricesAnswer = () => (
-  <div className="text-white text-base italic">
+  <div className="text-white text-base italic faq-answer-text">
     <p>Yes, all prices on the menu are shipped prices. Depending on your location, regular transit times can take around 2 - 3 days.</p>
     
     <p className="mt-4 font-bold underline text-black">
@@ -65,7 +65,7 @@ const ShippingPricesAnswer = () => (
 
 // Create a custom component for getting started answer
 const GettingStartedAnswer = () => (
-  <div className="text-white text-base italic">
+  <div className="text-white text-base italic faq-answer-text">
     <p>
       First step, make sure you are <span className="underline">Verified</span>. Only clients who are <span className="underline">Verified</span> will get an immediate response. Once you are <span className="underline">Verified</span>, contact our sales rep on <span className="underline">Signal</span>. If you have an order in your <strong>CART</strong>, simply press copy list and send it over on <span className="underline">SIGNAL MESSENGER</span>. We will take payment and get your order out immediately! It's that <strong>SIMPLE</strong>.
     </p>
@@ -74,7 +74,7 @@ const GettingStartedAnswer = () => (
 
 // Create a custom component for verification answer
 const VerificationAnswer = () => (
-  <div className="text-white text-base italic">
+  <div className="text-white text-base italic faq-answer-text">
     <p>
       Send us a video to our <span className="underline">SIGNAL</span> showing Weed & Proof of Funds. Say "<strong>WeUpLA Verification</strong>" in the video or write it on a piece of paper. Show time & date. Our Verification team will review it and get back to you shortly. The better your verification, the faster we will approve!
     </p>
@@ -159,143 +159,136 @@ export default function FAQPage() {
   ]
 
   return (
-    <AppShell
-      header={{ height: 60 }}
-      padding="0"
-      style={{ backgroundColor: 'transparent' }}
-    >
+    <>
       <Head>
         <title>{SITE_TITLE} - FAQ</title>
       </Head>
-      <AppShell.Header>
-        <NavHeader 
-          opened={opened} 
-          toggleNav={toggleNav}
-          setIsCartOpen={setIsCartOpen}
-        />
-      </AppShell.Header>
+      <AppShell
+        header={{ height: 60 }}
+        padding="0"
+        style={{ backgroundColor: 'transparent' }}
+      >
+        <AppShell.Header>
+          <NavHeader 
+            opened={opened} 
+            toggleNav={toggleNav}
+            setIsCartOpen={setIsCartOpen}
+            showImage={true}
+            imagePath="/faq.png"
+            showCart={true}
+            title="FAQ"
+          />
+        </AppShell.Header>
 
-      <SidePanel opened={opened} onClose={closeNav} />
-      <CartSidebar 
-        isCartOpen={isCartOpen} 
-        setIsCartOpen={setIsCartOpen} 
-        activePage="faq" 
-      />
-      
-      <AppShell.Main>
-        <Container size="xl" py="xl">
-          <Container size="md" mb="xl">
-            <div className="flex justify-center -mt-4 mb-0">
-              <Image
-                src="/faq.png"
-                alt="FAQ"
-                width={380}
-                height={77}
-                priority
-                className="w-[380px] h-[77px] sm:w-[380px] sm:h-[77px] md:w-[420px] md:h-[86px] lg:w-[480px] lg:h-[98px] object-contain"
-              />
+        <SidePanel opened={opened} onClose={closeNav} />
+        <CartSidebar 
+          isCartOpen={isCartOpen} 
+          setIsCartOpen={setIsCartOpen} 
+          activePage="faq" 
+        />
+
+        <AppShell.Main>
+          <Container size="xl" py="xl">
+            <div className="flex flex-col items-center gap-2 mb-[1rem]">
+              <div className="flex justify-center gap-4 mb-2">
+                <a 
+                  href="https://signal.me/#eu/EnEaHC7NjCVwnGkTEFNmNrnoxzrJx4KlTjPUK3kAmgVGBNmrO7VL1qXppTsEAyn0"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="bg-transparent text-white px-6 py-3 rounded-md hover:bg-white/10 transition-colors flex items-center gap-2 outline outline-3 outline-white font-semibold"
+                  style={{ width: '160px', justifyContent: 'center' }}
+                >
+                  <SiSignal size={24} />
+                  <span>Signal</span>
+                </a>
+                <a 
+                  href="https://t.me/WeUpLA_DM"
+                  className="bg-transparent text-white px-6 py-3 rounded-md hover:bg-white/10 transition-colors flex items-center gap-2 outline outline-3 outline-white font-semibold"
+                  style={{ width: '160px', justifyContent: 'center' }}
+                >
+                  <SiTelegram size={24} />
+                  <span>Telegram</span>
+                </a>
+              </div>
+              
+              <a 
+                href="/allproducts" 
+                className="inline-block bg-transparent text-white px-8 py-3 rounded-md hover:bg-white/10 transition-colors outline outline-3 outline-white font-semibold"
+              >
+                VIEW MENU
+              </a>
+            </div>
+
+            <div
+              style={{
+                backgroundColor: 'rgba(255, 255, 255, 0)',
+                backdropFilter: 'blur(10px)',
+                border: '1px solid rgba(255, 255, 255, 0)',
+                borderRadius: '0.375rem',
+                padding: '2rem'
+              }}
+            >
+              {faqItems.map((item, index) => (
+                <div
+                  key={index}
+                  style={{
+                    marginBottom: index === faqItems.length - 1 ? 0 : '2.5rem'
+                  }}
+                >
+                  <Text 
+                    fw={700} 
+                    mb="0.75rem" 
+                    c="black"
+                    size="md"
+                    className="flex gap-2 items-start faq-text"
+                  >
+                    <span>{item.question}</span>
+                  </Text>
+                  <div className="flex gap-2 items-start">
+                    {typeof item.answer === 'string' ? (
+                      <ReactMarkdown components={MarkdownComponents}>
+                        {item.answer}
+                      </ReactMarkdown>
+                    ) : (
+                      item.answer
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="flex flex-col items-center gap-2 mt-[1rem]">
+              <div className="flex justify-center gap-4 mb-2">
+                <a 
+                  href="https://signal.me/#eu/EnEaHC7NjCVwnGkTEFNmNrnoxzrJx4KlTjPUK3kAmgVGBNmrO7VL1qXppTsEAyn0"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="bg-transparent text-white px-6 py-3 rounded-md hover:bg-white/10 transition-colors flex items-center gap-2 outline outline-3 outline-white font-semibold"
+                  style={{ width: '160px', justifyContent: 'center' }}
+                >
+                  <SiSignal size={24} />
+                  <span>Signal</span>
+                </a>
+                <a 
+                  href="https://t.me/WeUpLA_DM"
+                  className="bg-transparent text-white px-6 py-3 rounded-md hover:bg-white/10 transition-colors flex items-center gap-2 outline outline-3 outline-white font-semibold"
+                  style={{ width: '160px', justifyContent: 'center' }}
+                >
+                  <SiTelegram size={24} />
+                  <span>Telegram</span>
+                </a>
+              </div>
+              
+              <a 
+                href="/allproducts" 
+                className="inline-block bg-transparent text-white px-8 py-3 rounded-md hover:bg-white/10 transition-colors outline outline-3 outline-white font-semibold"
+              >
+                VIEW MENU
+              </a>
             </div>
           </Container>
-
-          <div className="flex flex-col items-center gap-2 mb-[1rem]">
-            <div className="flex justify-center gap-4 mb-2">
-              <a 
-                href="https://signal.me/#eu/EnEaHC7NjCVwnGkTEFNmNrnoxzrJx4KlTjPUK3kAmgVGBNmrO7VL1qXppTsEAyn0"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="bg-transparent text-white px-6 py-3 rounded-md hover:bg-white/10 transition-colors flex items-center gap-2 outline outline-3 outline-white font-semibold"
-                style={{ width: '160px', justifyContent: 'center' }}
-              >
-                <SiSignal size={24} />
-                <span>Signal</span>
-              </a>
-              <a 
-                href="https://t.me/WeUpLA_DM"
-                className="bg-transparent text-white px-6 py-3 rounded-md hover:bg-white/10 transition-colors flex items-center gap-2 outline outline-3 outline-white font-semibold"
-                style={{ width: '160px', justifyContent: 'center' }}
-              >
-                <SiTelegram size={24} />
-                <span>Telegram</span>
-              </a>
-            </div>
-            
-            <a 
-              href="/allproducts" 
-              className="inline-block bg-transparent text-white px-8 py-3 rounded-md hover:bg-white/10 transition-colors outline outline-3 outline-white font-semibold"
-            >
-              VIEW MENU
-            </a>
-          </div>
-
-          <div
-            style={{
-              backgroundColor: 'rgba(255, 255, 255, 0)',
-              backdropFilter: 'blur(10px)',
-              border: '1px solid rgba(255, 255, 255, 0)',
-              borderRadius: '0.375rem',
-              padding: '2rem'
-            }}
-          >
-            {faqItems.map((item, index) => (
-              <div
-                key={index}
-                style={{
-                  marginBottom: index === faqItems.length - 1 ? 0 : '2.5rem'
-                }}
-              >
-                <Text 
-                  fw={700} 
-                  mb="0.75rem" 
-                  c="black"
-                  size="md"
-                  className="flex gap-2 items-start"
-                >
-                  <span>{item.question}</span>
-                </Text>
-                <div className="flex gap-2 items-start">
-                  {typeof item.answer === 'string' ? (
-                    <ReactMarkdown components={MarkdownComponents}>
-                      {item.answer}
-                    </ReactMarkdown>
-                  ) : (
-                    item.answer
-                  )}
-                </div>
-              </div>
-            ))}
-          </div>
-
-          <div className="flex flex-col items-center gap-2 mt-[1rem]">
-            <div className="flex justify-center gap-4 mb-2">
-              <a 
-                href="https://signal.me/#eu/EnEaHC7NjCVwnGkTEFNmNrnoxzrJx4KlTjPUK3kAmgVGBNmrO7VL1qXppTsEAyn0"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="bg-transparent text-white px-6 py-3 rounded-md hover:bg-white/10 transition-colors flex items-center gap-2 outline outline-3 outline-white font-semibold"
-                style={{ width: '160px', justifyContent: 'center' }}
-              >
-                <SiSignal size={24} />
-                <span>Signal</span>
-              </a>
-              <a 
-                href="https://t.me/WeUpLA_DM"
-                className="bg-transparent text-white px-6 py-3 rounded-md hover:bg-white/10 transition-colors flex items-center gap-2 outline outline-3 outline-white font-semibold"
-                style={{ width: '160px', justifyContent: 'center' }}
-              >
-                <SiTelegram size={24} />
-                <span>Telegram</span>
-              </a>
-            </div>
-            
-            <a 
-              href="/allproducts" 
-              className="inline-block bg-transparent text-white px-8 py-3 rounded-md hover:bg-white/10 transition-colors outline outline-3 outline-white font-semibold"
-            >
-              VIEW MENU
-            </a>
-          </div>
-        </Container>
-      </AppShell.Main>
-    </AppShell>
+        </AppShell.Main>
+      </AppShell>
+    </>
   )
 } 

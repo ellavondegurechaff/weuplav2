@@ -119,8 +119,12 @@ export default function TouchdownsPage() {
         <AppShell.Header>
           <NavHeader 
             opened={opened} 
-            toggleNav={toggleNav} 
+            toggleNav={toggleNav}
             setIsCartOpen={setIsCartOpen}
+            showImage={true}
+            imagePath="/touchdown.png"
+            showCart={true}
+            title="Touchdown"
           />
         </AppShell.Header>
 
@@ -134,17 +138,6 @@ export default function TouchdownsPage() {
         <AppShell.Main>
           <Container size="xl" py="xl">
             <Container size="md" mb="xl">
-            <div className="flex justify-center -mt-4 mb-0">
-                <Image
-                  src="/touchdown.png"
-                  alt="Touchdown"
-                  width={380}
-                  height={77}
-                  priority
-                  className="w-[320px] h-[65px] sm:w-[380px] sm:h-[77px] md:w-[420px] md:h-[86px] lg:w-[480px] lg:h-[98px] object-contain"
-                />
-              </div>
-
               <TextInput
                 placeholder="Search touchdowns..."
                 value={searchQuery}
