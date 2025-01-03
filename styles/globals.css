@@ -155,3 +155,9 @@ textarea {
   color: #f97316 !important;
 }
 
+.product-description-text {
+  font-family: 'Poppins-Light', sans-serif !important;
+  font-weight: normal !important;
+  letter-spacing: 0.02em !important;
+}
+

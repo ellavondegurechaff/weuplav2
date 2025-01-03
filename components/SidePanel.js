@@ -162,12 +162,19 @@ export default function SidePanel({ opened, onClose }) {
                 color="dark"
                 fullWidth
                 leftSection={<img src="/products.svg" alt="Products" width="24" height="24" />}
-                rightSection={<ChevronDown size={16} />}
                 onClick={() => setIsProductsOpen(!isProductsOpen)}
                 className="sidepanel-nav-text"
-                styles={commonButtonStyles}
+                styles={{
+                  ...commonButtonStyles,
+                  label: {
+                    ...commonButtonStyles.label,
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '4px'
+                  }
+                }}
               >
-                PRODUCTS
+                PRODUCTS<ChevronDown size={16} />
               </Button>
               
               <Collapse in={isProductsOpen}>

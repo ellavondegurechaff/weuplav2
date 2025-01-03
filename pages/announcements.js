@@ -20,6 +20,7 @@ import { MediaCarousel } from '@/components/MediaCarousel'
 import { LetterPlaceholder } from '@/components/LetterPlaceholder'
 import { IconX } from '@tabler/icons-react'
 import { useGesture } from '@use-gesture/react'
+import { SITE_TITLE } from '@/utils/constants'
 
 export default function AnnouncementsPage() {
   const [opened, { toggle: toggleNav, close: closeNav }] = useDisclosure()
@@ -112,7 +113,7 @@ export default function AnnouncementsPage() {
   return (
     <>
       <Head>
-        <title>WeUpLA - Announcements</title>
+        <title>{SITE_TITLE} - Announcements</title>
       </Head>
       <AppShell
         header={{ height: 60 }}
@@ -122,8 +123,7 @@ export default function AnnouncementsPage() {
         <AppShell.Header>
           <Group h="100%" px="md" style={{ justifyContent: 'space-between' }}>
             <Burger opened={opened} onClick={toggleNav} size="sm" color="#f97316" />
-            <Text size="xl" fw={700} c="black">Announcements</Text>
-            <div style={{ width: 24 }} /> {/* Placeholder for symmetry */}
+            <div style={{ width: 24 }} /> {/* Keep the placeholder for symmetry */}
           </Group>
         </AppShell.Header>
 
@@ -132,6 +132,17 @@ export default function AnnouncementsPage() {
         <AppShell.Main>
           <Container size="xl" py="xl">
             <Container size="md" mb="xl">
+              <div className="flex justify-center -mt-4 mb-0">
+                <Image
+                  src="/announcements.png"
+                  alt="Announcements"
+                  width={380}
+                  height={77}
+                  priority
+                  className="w-[320px] h-[65px] sm:w-[380px] sm:h-[77px] md:w-[420px] md:h-[86px] lg:w-[480px] lg:h-[98px] object-contain"
+                />
+              </div>
+
               <TextInput
                 placeholder="Search announcements..."
                 value={searchQuery}
@@ -140,8 +151,13 @@ export default function AnnouncementsPage() {
                 styles={{
                   input: {
                     backgroundColor: 'white',
+                    color: 'white',
+                    border: '1px solid rgba(255, 255, 255, 0.2)',
                     '&:focus': {
                       borderColor: 'var(--mantine-color-orange-6)',
+                    },
+                    '&::placeholder': {
+                      color: 'rgba(255, 255, 255, 0.5)',
                     },
                   },
                 }}

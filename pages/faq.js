@@ -1,4 +1,4 @@
-import { AppShell, Container, Group, Burger, Text } from '@mantine/core'
+import { AppShell, Container, Group, Burger, Text, Image } from '@mantine/core'
 import { useDisclosure } from '@mantine/hooks'
 import { ShoppingCart } from 'lucide-react'
 import ReactMarkdown from 'react-markdown'
@@ -13,6 +13,8 @@ import {
   SiZelle 
 } from '@icons-pack/react-simple-icons'
 import { NavHeader } from '@/components/NavHeader'
+import { SITE_TITLE } from '@/utils/constants'
+import Head from 'next/head'
 
 // Custom markdown components for styling
 const MarkdownComponents = {
@@ -162,11 +164,13 @@ export default function FAQPage() {
       padding="0"
       style={{ backgroundColor: 'transparent' }}
     >
+      <Head>
+        <title>{SITE_TITLE} - FAQ</title>
+      </Head>
       <AppShell.Header>
         <NavHeader 
           opened={opened} 
-          toggleNav={toggleNav} 
-          title="FAQ"
+          toggleNav={toggleNav}
           setIsCartOpen={setIsCartOpen}
         />
       </AppShell.Header>
@@ -180,18 +184,18 @@ export default function FAQPage() {
       
       <AppShell.Main>
         <Container size="xl" py="xl">
-          <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
-            <Text 
-              size="2.5rem"
-              fw={700}
-              c="white"
-              style={{
-                letterSpacing: '0.5px'
-              }}
-            >
-              Frequently Asked Questions
-            </Text>
-          </div>
+          <Container size="md" mb="xl">
+            <div className="flex justify-center -mt-4 mb-0">
+              <Image
+                src="/faq.png"
+                alt="FAQ"
+                width={380}
+                height={77}
+                priority
+                className="w-[380px] h-[77px] sm:w-[380px] sm:h-[77px] md:w-[420px] md:h-[86px] lg:w-[480px] lg:h-[98px] object-contain"
+              />
+            </div>
+          </Container>
 
           <div className="flex flex-col items-center gap-2 mb-[1rem]">
             <div className="flex justify-center gap-4 mb-2">
@@ -200,7 +204,7 @@ export default function FAQPage() {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="bg-transparent text-white px-6 py-3 rounded-md hover:bg-white/10 transition-colors flex items-center gap-2 outline outline-3 outline-white font-semibold"
-                style={{ minWidth: '140px' }}
+                style={{ width: '160px', justifyContent: 'center' }}
               >
                 <SiSignal size={24} />
                 <span>Signal</span>
@@ -208,7 +212,7 @@ export default function FAQPage() {
               <a 
                 href="https://t.me/WeUpLA_DM"
                 className="bg-transparent text-white px-6 py-3 rounded-md hover:bg-white/10 transition-colors flex items-center gap-2 outline outline-3 outline-white font-semibold"
-                style={{ minWidth: '140px' }}
+                style={{ width: '160px', justifyContent: 'center' }}
               >
                 <SiTelegram size={24} />
                 <span>Telegram</span>
@@ -268,7 +272,7 @@ export default function FAQPage() {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="bg-transparent text-white px-6 py-3 rounded-md hover:bg-white/10 transition-colors flex items-center gap-2 outline outline-3 outline-white font-semibold"
-                style={{ minWidth: '140px' }}
+                style={{ width: '160px', justifyContent: 'center' }}
               >
                 <SiSignal size={24} />
                 <span>Signal</span>
@@ -276,7 +280,7 @@ export default function FAQPage() {
               <a 
                 href="https://t.me/WeUpLA_DM"
                 className="bg-transparent text-white px-6 py-3 rounded-md hover:bg-white/10 transition-colors flex items-center gap-2 outline outline-3 outline-white font-semibold"
-                style={{ minWidth: '140px' }}
+                style={{ width: '160px', justifyContent: 'center' }}
               >
                 <SiTelegram size={24} />
                 <span>Telegram</span>

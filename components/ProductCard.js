@@ -145,6 +145,7 @@ export default function ProductCard({ product, onImageClick }) {
           size="sm" 
           c="dimmed" 
           mb="md" 
+          className="product-description-text"
           style={{ 
             flex: 1,
             whiteSpace: 'pre-wrap'

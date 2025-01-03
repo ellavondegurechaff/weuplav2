@@ -1,11 +1,18 @@
+import { SITE_TITLE } from '@/utils/constants'
+import Head from 'next/head'
 import { ProductPageLayout } from '@/components/ProductPageLayout'
 
 export default function HighsPage() {
   return (
-    <ProductPageLayout
-      pageTitle="Highs"
-      activePage="highs"
-      fetchUrl="/api/products/highs"
-    />
+    <>
+      <Head>
+        <title>{SITE_TITLE} - Highs</title>
+      </Head>
+      <ProductPageLayout
+        pageTitle="Highs"
+        activePage="highs"
+        fetchUrl="/api/products/highs"
+      />
+    </>
   )
 } 

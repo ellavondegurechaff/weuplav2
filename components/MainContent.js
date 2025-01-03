@@ -27,7 +27,7 @@ export default function MainContent() {
               target="_blank"
               rel="noopener noreferrer"
               className="bg-transparent text-white px-6 py-3 rounded-md hover:bg-white/10 transition-colors flex items-center gap-2 outline outline-3 outline-white font-semibold"
-              style={{ minWidth: '140px' }}
+              style={{ width: '160px', justifyContent: 'center' }}
             >
               <SiSignal size={24} />
               <span>Signal</span>
@@ -35,7 +35,7 @@ export default function MainContent() {
             <a 
               href="https://t.me/WeUpLA_DM"
               className="bg-transparent text-white px-6 py-3 rounded-md hover:bg-white/10 transition-colors flex items-center gap-2 outline outline-3 outline-white font-semibold"
-              style={{ minWidth: '140px' }}
+              style={{ width: '160px', justifyContent: 'center' }}
             >
               <SiTelegram size={24} />
               <span>Telegram</span>
@@ -122,7 +122,7 @@ export default function MainContent() {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="bg-transparent text-white px-6 py-3 rounded-md hover:bg-white/10 transition-colors flex items-center gap-2 outline outline-3 outline-white font-semibold"
-                style={{ minWidth: '140px' }}
+                style={{ width: '160px', justifyContent: 'center' }}
               >
                 <SiSignal size={24} />
                 <span>Signal</span>
@@ -130,7 +130,7 @@ export default function MainContent() {
               <a 
                 href="https://t.me/WeUpLA_DM"
                 className="bg-transparent text-white px-6 py-3 rounded-md hover:bg-white/10 transition-colors flex items-center gap-2 outline outline-3 outline-white font-semibold"
-                style={{ minWidth: '140px' }}
+                style={{ width: '160px', justifyContent: 'center' }}
               >
                 <SiTelegram size={24} />
                 <span>Telegram</span>

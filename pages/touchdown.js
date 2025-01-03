@@ -23,6 +23,7 @@ import { LetterPlaceholder } from '@/components/LetterPlaceholder'
 import { NavHeader } from '@/components/NavHeader'
 import { useGesture } from '@use-gesture/react'
 import { IconX } from '@tabler/icons-react'
+import { SITE_TITLE } from '@/utils/constants'
 
 export default function TouchdownsPage() {
   const [opened, { toggle: toggleNav, close: closeNav }] = useDisclosure()
@@ -108,7 +109,7 @@ export default function TouchdownsPage() {
   return (
     <>
       <Head>
-        <title>GOODSHOP - Touchdowns</title>
+        <title>{SITE_TITLE} - Touchdown</title>
       </Head>
       <AppShell
         header={{ height: 60 }}
@@ -119,7 +120,6 @@ export default function TouchdownsPage() {
           <NavHeader 
             opened={opened} 
             toggleNav={toggleNav} 
-            title="Touchdown"
             setIsCartOpen={setIsCartOpen}
           />
         </AppShell.Header>
@@ -134,6 +134,17 @@ export default function TouchdownsPage() {
         <AppShell.Main>
           <Container size="xl" py="xl">
             <Container size="md" mb="xl">
+            <div className="flex justify-center -mt-4 mb-0">
+                <Image
+                  src="/touchdown.png"
+                  alt="Touchdown"
+                  width={380}
+                  height={77}
+                  priority
+                  className="w-[320px] h-[65px] sm:w-[380px] sm:h-[77px] md:w-[420px] md:h-[86px] lg:w-[480px] lg:h-[98px] object-contain"
+                />
+              </div>
+
               <TextInput
                 placeholder="Search touchdowns..."
                 value={searchQuery}
@@ -142,8 +153,13 @@ export default function TouchdownsPage() {
                 styles={{
                   input: {
                     backgroundColor: 'white',
+                    color: 'white',
+                    border: '1px solid rgba(255, 255, 255, 0.2)',
                     '&:focus': {
                       borderColor: 'var(--mantine-color-orange-6)',
+                    },
+                    '&::placeholder': {
+                      color: 'rgba(255, 255, 255, 0.5)',
                     },
                   },
                 }}
