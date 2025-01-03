@@ -8,20 +8,40 @@ export default function SidePanel({ opened, onClose }) {
   const [isProductsOpen, setIsProductsOpen] = useState(false)
 
   const productItems = [
-    { label: 'All Products', href: '/allproducts' },
-    { label: 'Exotics ($1200+)', href: '/exotics' },
-    { label: 'Highs ($900 - $1150)', href: '/highs' },
-    { label: 'Mids ($600 - $850)', href: '/mids' },
-    { label: 'Lows (Under $600)', href: '/lows' },
-    { label: 'Dispos/Carts/Edibles', href: '/dce' }
+    { label: 'ALL PRODUCTS', href: '/allproducts' },
+    { label: 'EXOTICS ($1200+)', href: '/exotics' },
+    { label: 'HIGHS ($900 - $1150)', href: '/highs' },
+    { label: 'MIDS ($600 - $850)', href: '/mids' },
+    { label: 'LOWS (UNDER $600)', href: '/lows' },
+    { label: 'DISPOS/CARTS/EDIBLES', href: '/dce' }
   ]
 
   const menuItems = [
-    { icon: <Home size={20} />, label: 'Home', href: '/' },
-    { icon: <Bell size={20} />, label: 'Announcements', href: '/announcements' },
-    { icon: <Send size={20} />, label: 'Contact Us', href: '/' },
-    { icon: <Box size={20} />, label: 'Touchdown', href: '/touchdown' },
-    { icon: <HelpCircle size={20} />, label: 'FAQ', href: '/faq' }
+    { 
+      icon: <img src="/home.svg" alt="Home" width="24" height="24" />, 
+      label: 'HOME', 
+      href: '/' 
+    },
+    { 
+      icon: <img src="/announcements.svg" alt="Announcements" width="24" height="24" />, 
+      label: 'ANNOUNCEMENTS', 
+      href: '/announcements' 
+    },
+    { 
+      icon: <img src="/contact us.svg" alt="Contact" width="24" height="24" />, 
+      label: 'CONTACT US', 
+      href: '/' 
+    },
+    { 
+      icon: <img src="/touchdown.svg" alt="Touchdown" width="24" height="24" />, 
+      label: 'TOUCHDOWN', 
+      href: '/touchdown' 
+    },
+    { 
+      icon: <img src="/faq.svg" alt="FAQ" width="24" height="24" />, 
+      label: 'FAQ', 
+      href: '/faq' 
+    }
   ]
 
   const ContactButton = () => (
@@ -53,6 +73,29 @@ export default function SidePanel({ opened, onClose }) {
     </Link>
   )
 
+  const commonButtonStyles = {
+    root: {
+      color: 'black',
+      '&:hover': {
+        backgroundColor: 'rgba(0, 0, 0, 0.05)'
+      },
+      padding: '8px 12px',
+      width: '100%',
+      display: 'flex',
+      alignItems: 'center',
+      gap: '12px',
+      height: 'auto'
+    },
+    inner: {
+      justifyContent: 'flex-start',
+      width: '100%'
+    },
+    label: {
+      width: '100%',
+      textAlign: 'left'
+    }
+  }
+
   return (
     <>
       {/* Overlay */}
@@ -64,213 +107,124 @@ export default function SidePanel({ opened, onClose }) {
       )}
       
       <div 
-        className={`fixed top-0 left-0 w-64 h-full bg-white transform 
+        className={`fixed top-0 left-0 w-80 h-full bg-white transform 
           ${opened ? 'translate-x-0' : '-translate-x-full'}
           transition-transform duration-300 ease-in-out z-[140] overflow-hidden flex flex-col`}
       >
         <div className="h-full flex flex-col overflow-hidden justify-between">
-          <div className="flex flex-col h-full">
-            <div className="px-6 h-[60px] flex items-center justify-between bg-[#FF4500]">
-              <div className="flex items-center space-x-3">
-                <img 
-                  src="/logo.png" 
-                  alt="WeUpLA Logo" 
-                  className="h-8 w-8 object-contain"
-                />
-                <span className="text-lg font-semibold text-white font-['Helvetica']">WeUpLA</span>
-              </div>
-              <button
-                onClick={onClose}
-                className="text-white text-2xl hover:text-gray-300 transition-colors"
-                aria-label="Close sidebar"
-              >
-                ×
-              </button>
+          <div className="px-6 h-[60px] flex items-center justify-between bg-[#FF4500]">
+            <div className="flex items-center space-x-3">
+              <img 
+                src="/logo.png" 
+                alt="WeUpLA Logo" 
+                className="h-16 w-16 object-contain"
+              />
+              <img 
+                src="/nav_menu.png" 
+                alt="WeUpLA" 
+                className="h-6 object-contain"
+              />
             </div>
-
-            <nav className="flex-1">
-              <Stack gap="xs">
-                <Link
-                  href="/"
-                  style={{ textDecoration: 'none', width: '100%' }}
-                  onClick={onClose}
-                >
-                  <Button
-                    variant="subtle"
-                    color="dark"
-                    fullWidth
-                    leftSection={<Home size={20} />}
-                    justify="start"
-                    styles={{
-                      root: {
-                        color: 'black',
-                        '&:hover': {
-                          backgroundColor: 'rgba(0, 0, 0, 0.05)'
-                        }
-                      },
-                      inner: {
-                        justifyContent: 'flex-start'
-                      }
-                    }}
-                  >
-                    Home
-                  </Button>
-                </Link>
-
-                <Link
-                  href="/announcements"
-                  style={{ textDecoration: 'none', width: '100%' }}
-                  onClick={onClose}
-                >
-                  <Button
-                    variant="subtle"
-                    color="dark"
-                    fullWidth
-                    leftSection={<Bell size={20} />}
-                    justify="start"
-                    styles={{
-                      root: {
-                        color: 'black',
-                        '&:hover': {
-                          backgroundColor: 'rgba(0, 0, 0, 0.05)'
-                        }
-                      },
-                      inner: {
-                        justifyContent: 'flex-start'
-                      }
-                    }}
-                  >
-                    Announcements
-                  </Button>
-                </Link>
-
-                <Button
-                  variant="subtle"
-                  color="dark"
-                  fullWidth
-                  leftSection={<Cannabis size={20} />}
-                  rightSection={<ChevronDown size={16} />}
-                  onClick={() => setIsProductsOpen(!isProductsOpen)}
-                  styles={{
-                    root: {
-                      color: 'black',
-                      '&:hover': {
-                        backgroundColor: 'rgba(0, 0, 0, 0.05)'
-                      }
-                    },
-                    inner: {
-                      justifyContent: 'flex-start'
-                    },
-                    label: {
-                      flex: 1
-                    },
-                    rightSection: {
-                      marginLeft: 'auto',
-                      color: 'black'
-                    }
-                  }}
-                >
-                  Products
-                </Button>
-                
-                <Collapse in={isProductsOpen}>
-                  <Stack gap="xs" pl="md">
-                    {productItems.map((item, index) => (
-                      <Link
-                        key={index}
-                        href={item.href}
-                        style={{ textDecoration: 'none', width: '100%' }}
-                        onClick={onClose}
-                      >
-                        <Button
-                          variant="subtle"
-                          color="dark"
-                          fullWidth
-                          leftSection={item.icon}
-                          justify="start"
-                          styles={{
-                            root: {
-                              color: 'black',
-                              '&:hover': {
-                                backgroundColor: 'rgba(0, 0, 0, 0.05)'
-                              },
-                              fontSize: '0.9rem',
-                              padding: '8px 12px'
-                            },
-                            inner: {
-                              justifyContent: 'flex-start'
-                            }
-                          }}
-                        >
-                          {item.label}
-                        </Button>
-                      </Link>
-                    ))}
-                  </Stack>
-                </Collapse>
-
-                <ContactButton />
-
-                <Link
-                  href="/touchdown"
-                  style={{ textDecoration: 'none', width: '100%' }}
-                  onClick={onClose}
-                >
-                  <Button
-                    variant="subtle"
-                    color="dark"
-                    fullWidth
-                    leftSection={<Box size={20} />}
-                    justify="start"
-                    styles={{
-                      root: {
-                        color: 'black',
-                        '&:hover': {
-                          backgroundColor: 'rgba(0, 0, 0, 0.05)'
-                        }
-                      },
-                      inner: {
-                        justifyContent: 'flex-start'
-                      }
-                    }}
-                  >
-                    Touchdown
-                  </Button>
-                </Link>
-
-                <Link
-                  href="/faq"
-                  style={{ textDecoration: 'none', width: '100%' }}
-                  onClick={onClose}
-                >
-                  <Button
-                    variant="subtle"
-                    color="dark"
-                    fullWidth
-                    leftSection={<HelpCircle size={20} />}
-                    justify="start"
-                    styles={{
-                      root: {
-                        color: 'black',
-                        '&:hover': {
-                          backgroundColor: 'rgba(0, 0, 0, 0.05)'
-                        }
-                      },
-                      inner: {
-                        justifyContent: 'flex-start'
-                      }
-                    }}
-                  >
-                    FAQ
-                  </Button>
-                </Link>
-              </Stack>
-            </nav>
+            <button
+              onClick={onClose}
+              className="text-white text-2xl hover:text-gray-300 transition-colors"
+              aria-label="Close sidebar"
+            >
+              ×
+            </button>
           </div>
+
+          <nav className="flex-1 pl-1 pr-2 py-2">
+            <Stack gap="xs">
+              {menuItems.slice(0, 2).map((item, index) => (
+                <Link
+                  key={index}
+                  href={item.href}
+                  style={{ textDecoration: 'none', width: '100%' }}
+                  onClick={onClose}
+                >
+                  <Button
+                    variant="subtle"
+                    color="dark"
+                    fullWidth
+                    leftSection={item.icon}
+                    justify="start"
+                    className="sidepanel-nav-text"
+                    styles={commonButtonStyles}
+                  >
+                    {item.label}
+                  </Button>
+                </Link>
+              ))}
+
+              <Button
+                variant="subtle"
+                color="dark"
+                fullWidth
+                leftSection={<img src="/products.svg" alt="Products" width="24" height="24" />}
+                rightSection={<ChevronDown size={16} />}
+                onClick={() => setIsProductsOpen(!isProductsOpen)}
+                className="sidepanel-nav-text"
+                styles={commonButtonStyles}
+              >
+                PRODUCTS
+              </Button>
+              
+              <Collapse in={isProductsOpen}>
+                <Stack gap="xs" pl={2}>
+                  {productItems.map((item, index) => (
+                    <Link
+                      key={index}
+                      href={item.href}
+                      style={{ textDecoration: 'none', width: '100%' }}
+                      onClick={onClose}
+                    >
+                      <Button
+                        variant="subtle"
+                        color="dark"
+                        fullWidth
+                        justify="start"
+                        styles={{
+                          ...commonButtonStyles,
+                          root: {
+                            ...commonButtonStyles.root,
+                            padding: '6px 20px'
+                          }
+                        }}
+                      >
+                        {item.label}
+                      </Button>
+                    </Link>
+                  ))}
+                </Stack>
+              </Collapse>
+
+              {menuItems.slice(2).map((item, index) => (
+                <Link
+                  key={index + 2}
+                  href={item.href}
+                  style={{ textDecoration: 'none', width: '100%' }}
+                  onClick={onClose}
+                >
+                  <Button
+                    variant="subtle"
+                    color="dark"
+                    fullWidth
+                    leftSection={item.icon}
+                    justify="start"
+                    className="sidepanel-nav-text"
+                    styles={commonButtonStyles}
+                  >
+                    {item.label}
+                  </Button>
+                </Link>
+              ))}
+            </Stack>
+          </nav>
 
           <div className="p-4 space-y-3">
             <button
-              className="w-full py-3 px-4 bg-transparent text-[#FF4500] font-semibold rounded-md hover:bg-white/10 transition-colors flex items-center justify-center gap-2 outline outline-3 outline-[#FF4500]"
+              className="w-full py-3 px-4 bg-transparent text-[#FF4500] font-semibold rounded-md hover:bg-white/10 transition-colors flex items-center justify-center gap-2 outline outline-3 outline-[#FF4500] sidepanel-button-text"
               onClick={() => {
                 if (navigator.standalone) {
                   alert('App is already installed on your homescreen!')
@@ -292,20 +246,20 @@ export default function SidePanel({ opened, onClose }) {
               href="https://signal.me/#eu/EnEaHC7NjCVwnGkTEFNmNrnoxzrJx4KlTjPUK3kAmgVGBNmrO7VL1qXppTsEAyn0"
               target="_blank"
               rel="noopener noreferrer"
-              className="w-full py-3 px-4 bg-transparent text-[#3A76F0] font-semibold rounded-md hover:bg-white/10 transition-colors flex items-center justify-center gap-2 outline outline-3 outline-[#3A76F0]"
+              className="w-full py-3 px-4 bg-transparent text-[#3A76F0] font-semibold rounded-md hover:bg-white/10 transition-colors flex items-center justify-center gap-2 outline outline-3 outline-[#3A76F0] sidepanel-button-text"
             >
               <SiSignal size={24} />
-              <span className="font-bold">Signal</span>
+              <span>Signal</span>
             </a>
             
             <button
-              className="w-full py-3 px-4 bg-transparent hover:bg-white/10 text-[#3A76F0] font-semibold rounded-md transition-colors flex items-center justify-center gap-2 outline outline-3 outline-[#3A76F0]"
+              className="w-full py-3 px-4 bg-transparent hover:bg-white/10 text-[#3A76F0] font-semibold rounded-md transition-colors flex items-center justify-center gap-2 outline outline-3 outline-[#3A76F0] sidepanel-button-text"
               onClick={() => {
                 window.location.href = 'https://t.me/WeUpLA_DM'
               }}
             >
               <SiTelegram size={24} />
-              <span className="font-bold">Telegram</span>
+              <span>Telegram</span>
             </button>
           </div>
         </div>

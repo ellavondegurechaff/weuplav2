@@ -101,3 +101,57 @@ textarea {
     font-size: 16px !important;
   }
 }
+
+@font-face {
+  font-family: 'Poppins-Bold';
+  src: url('/fonts/Poppins-Bold.woff2') format('woff2'),
+      url('/fonts/Poppins-Bold.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Poppins-SemiBold';
+  src: url('/fonts/Poppins-SemiBold.woff2') format('woff2'),
+      url('/fonts/Poppins-SemiBold.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Poppins-Light';
+  src: url('/fonts/Poppins-Light.woff2') format('woff2'),
+      url('/fonts/Poppins-Light.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+.sidepanel-nav-text {
+  font-family: 'Poppins-SemiBold', sans-serif !important;
+  font-weight: normal !important;
+  letter-spacing: 0.02em !important;
+  font-size: 1rem !important;
+  text-transform: uppercase !important;
+  white-space: nowrap !important;
+}
+
+.sidepanel-button-text {
+  font-family: 'Poppins-Bold', sans-serif !important;
+  font-weight: normal !important;
+  letter-spacing: 0.02em !important;
+  font-size: 1rem !important;
+  white-space: nowrap !important;
+}
+
+.header-title-text {
+  font-family: 'Poppins-Bold', sans-serif !important;
+  font-weight: normal !important;
+  letter-spacing: 0.02em !important;
+  font-size: 1.25rem !important;  /* Changed from 1.5rem to 1.25rem */
+  white-space: nowrap !important;
+  color: #f97316 !important;
+}
+

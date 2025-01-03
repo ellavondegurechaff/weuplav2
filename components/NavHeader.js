@@ -15,7 +15,7 @@ export function NavHeader({ opened, toggleNav, title, setIsCartOpen }) {
   return (
     <Group h="100%" px="md" style={{ justifyContent: 'space-between' }}>
       <Burger opened={opened} onClick={toggleNav} size="sm" color="#f97316" />
-      <Text size="xl" fw={700} c="black">{title}</Text>
+      <Text className="header-title-text">{title}</Text>
       <button 
         onClick={() => setIsCartOpen(true)}
         className="relative p-2"
