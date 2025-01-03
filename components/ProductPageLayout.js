@@ -1,4 +1,4 @@
-import { AppShell, Container, Grid, Text, Group, Burger, Button, TextInput, Modal, Image, ActionIcon } from '@mantine/core'
+import { AppShell, Container, Grid, Text, Group, Burger, Button, TextInput, Modal, Image, ActionIcon, Select } from '@mantine/core'
 import { useDisclosure } from '@mantine/hooks'
 import { ShoppingCart } from 'lucide-react'
 import Head from 'next/head'
@@ -40,6 +40,7 @@ export function ProductPageLayout({
   const [tapPosition, setTapPosition] = useState({ x: 0, y: 0 })
   const doubleTapScale = 2.5 // The zoom level for double tap
   const [windowDimensions, setWindowDimensions] = useState({ width: 0, height: 0 })
+  const [sortOption, setSortOption] = useState('default')
 
   const [springProps, api] = useSpring(() => ({
     scale: 1,
@@ -363,6 +364,21 @@ export function ProductPageLayout({
     }
   }, [])
 
+  const getSortedProducts = (products) => {
+    switch (sortOption) {
+      case 'price-high-low':
+        return [...products].sort((a, b) => b.intown_price - a.intown_price)
+      case 'price-low-high':
+        return [...products].sort((a, b) => a.intown_price - b.intown_price)
+      case 'a-z':
+        return [...products].sort((a, b) => a.name.localeCompare(b.name))
+      case 'z-a':
+        return [...products].sort((a, b) => b.name.localeCompare(a.name))
+      default:
+        return products
+    }
+  }
+
   return (
     <>
       <Head>
@@ -392,25 +408,41 @@ export function ProductPageLayout({
         <AppShell.Main>
           <Container size="xl" py="xl">
             <Container size="sm" mb="xl">
-              <TextInput
-                placeholder="Search products..."
-                value={searchQuery}
-                onChange={(event) => setSearchQuery(event.currentTarget.value)}
-                size="sm"
-                radius="md"
-                styles={{
-                  input: {
-                    backgroundColor: 'rgba(255, 255, 255, 0.95)',
-                    '&:focus': {
-                      borderColor: 'var(--mantine-color-orange-6)',
+              <Group position="apart" mb="xl" className="flex flex-col sm:flex-row gap-4">
+                <TextInput
+                  placeholder="Search products..."
+                  value={searchQuery}
+                  onChange={(event) => setSearchQuery(event.currentTarget.value)}
+                  size="sm"
+                  radius="md"
+                  styles={{
+                    input: {
+                      backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                      '&:focus': {
+                        borderColor: 'var(--mantine-color-orange-6)',
+                      },
                     },
-                  },
-                }}
-              />
+                  }}
+                  className="w-full sm:flex-1"
+                />
+                <select
+                  value={sortOption}
+                  onChange={(e) => setSortOption(e.target.value)}
+                  className="w-full sm:w-40 px-3 py-2 text-black bg-white/95 border border-gray-200 
+                    rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 
+                    focus:border-transparent cursor-pointer mobile-select"
+                >
+                  <option value="default">Sort By</option>
+                  <option value="price-high-low">Price: High to Low</option>
+                  <option value="price-low-high">Price: Low to High</option>
+                  <option value="a-z">Name: A-Z</option>
+                  <option value="z-a">Name: Z-A</option>
+                </select>
+              </Group>
             </Container>
             
             <Grid>
-              {filteredProducts.map((product) => (
+              {getSortedProducts(filteredProducts).map((product) => (
                 <Grid.Col key={product.id} span={{ base: 12, sm: 6, md: 4, lg: 3 }}>
                   <ProductCard 
                     product={product}

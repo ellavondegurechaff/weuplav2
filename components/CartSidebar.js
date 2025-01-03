@@ -1,6 +1,6 @@
 'use client'
 
-import { X, ShoppingCart, Plus, Minus, ArrowRight } from 'lucide-react'
+import { X, ShoppingCart, Plus, Minus, ArrowRight, ChevronDown } from 'lucide-react'
 import useCartStore from '@/store/cartStore'
 import { useEffect, useState } from 'react'
 import { toast, Toaster } from 'sonner'
@@ -46,11 +46,15 @@ export function CartSidebar({ isCartOpen: propIsCartOpen, setIsCartOpen: propSet
     isCartOpen: storeIsCartOpen,
     setCartOpen,
     lastAddedItem,
-    getCartCount
+    getCartCount,
+    setDiscount,
+    addCustomProduct
   } = useCartStore()
 
   const isCartOpen = propIsCartOpen ?? storeIsCartOpen
   const setIsCartOpen = propSetIsCartOpen ?? setCartOpen
+
+  const [showAdvanced, setShowAdvanced] = useState(false)
 
   useEffect(() => {
     setIsMounted(true)
@@ -105,63 +109,56 @@ export function CartSidebar({ isCartOpen: propIsCartOpen, setIsCartOpen: propSet
     }
   }, [isCartOpen])
 
+  // Initialize defaults if not set
+  useEffect(() => {
+    if (isMounted) {
+      if (!selectedPayment) setPaymentMethod('cashapp')
+      if (!receiptType) setReceiptType('shipping')
+    }
+  }, [isMounted, selectedPayment, receiptType, setPaymentMethod, setReceiptType])
+
   if (!isMounted) {
     return null
   }
 
   const formatPrice = (price) => {
-    const numPrice = typeof price === 'string' ? parseFloat(price) : price
-    return typeof numPrice === 'number' ? numPrice.toFixed(2) : '0.00'
+    if (price === null || price === undefined) return '0.00'
+    const numPrice = Number(price)
+    return isNaN(numPrice) ? '0.00' : numPrice.toFixed(2)
   }
 
   const copyCartToClipboard = () => {
     if (!selectedPayment || !receiptType) {
-      alert('Please select both payment method and receipt type')
+      toast.error('Please select both payment method and receipt type')
       return
     }
   
     const totals = getTotalWithFees()
     const orderText = `🛒 ORDER REQUEST
 ITEMS:
-${cart.map(item => `1x ${item.name} $${Math.round(
-    receiptType === 'shipping' ? item.shipped_price : item.intown_price
-  )}`).join('\n')}
+${cart.map(item => {
+  const price = receiptType === 'shipping' 
+    ? Number(item.shipped_price || 0) 
+    : Number(item.intown_price || 0)
+  return `${item.quantity}x ${item.name} $${formatPrice(price * item.quantity)}`
+}).join('\n')}
 
 ${receiptType.toUpperCase()} ORDER SELECTED ✓
 
 ORDER SUMMARY
 -------------
 Total Items: ${totals.totalItems}
-${receiptType === 'shipping' ? 'Shipped' : 'Intown'} Total: ${Math.round(totals.subtotal)}
-${selectedPayment.toUpperCase()} Fee ${totals.feePercentage}% = ${Math.round(totals.feeAmount)}
-Total due = ${Math.round(totals.total)}`
+${receiptType === 'shipping' ? 'Shipped' : 'Intown'} Subtotal: $${formatPrice(totals.subtotal)}
+${totals.discount > 0 ? `Discount Applied: -$${formatPrice(totals.discount)}\nSubtotal after Discount: $${formatPrice(totals.subtotalAfterDiscount)}\n` : ''}${selectedPayment.toUpperCase()} Fee ${totals.feePercentage}% = $${formatPrice(totals.feeAmount)}
+Total due = $${formatPrice(totals.total)}`
 
     navigator.clipboard.writeText(orderText)
       .then(() => {
-        const notification = document.createElement('div')
-        notification.className = 
-          'fixed bottom-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg transform transition-all duration-300 z-[170] cursor-pointer'
-        notification.textContent = 'Order details copied to clipboard!'
-        
-        notification.addEventListener('click', () => {
-          notification.style.opacity = '0'
-          setTimeout(() => {
-            document.body.removeChild(notification)
-          }, 300)
-        })
-
-        document.body.appendChild(notification)
-        
-        setTimeout(() => {
-          notification.style.opacity = '0'
-          setTimeout(() => {
-            document.body.removeChild(notification)
-          }, 300)
-        }, 3000)
+        toast.success('Order details copied to clipboard!')
       })
       .catch(err => {
         console.error('Failed to copy text: ', err)
-        alert('Failed to copy order details. Please try again.')
+        toast.error('Failed to copy order details. Please try again.')
       })
   }
 
@@ -173,6 +170,98 @@ Total due = ${Math.round(totals.total)}`
       const limitedValue = Math.min(numValue, 999)
       updateQuantity(itemId, limitedValue)
     }
+  }
+
+  const AdvancedOptions = ({ isOpen, onToggle }) => {
+    const [customProduct, setCustomProduct] = useState({ name: '', price: '', quantity: '1' })
+    const [discountAmount, setDiscountAmount] = useState('')
+
+    const handleAddCustomProduct = (e) => {
+      e.preventDefault()
+      if (!customProduct.name || !customProduct.price) return
+      
+      addCustomProduct(customProduct.name, customProduct.price, customProduct.quantity)
+      setCustomProduct({ name: '', price: '', quantity: '1' }) // Reset form
+    }
+
+    return (
+      <div className="mb-4">
+        <button
+          onClick={onToggle}
+          className="w-full bg-transparent text-orange-700 py-3 px-4 rounded-md 
+            hover:bg-orange-500/20 transition-colors flex items-center justify-between 
+            outline outline-2 outline-orange-500 font-semibold"
+        >
+          <span>Advanced Options</span>
+          <ChevronDown 
+            className={`transform transition-transform ${isOpen ? 'rotate-180' : ''}`} 
+            size={16} 
+          />
+        </button>
+        
+        {isOpen && (
+          <div className="mt-3 space-y-4 p-4 border border-gray-200 rounded-md">
+            {/* Discount Input */}
+            <div>
+              <label className="block text-sm font-medium text-black mb-1">Apply Discount ($)</label>
+              <div className="flex gap-2">
+                <input
+                  type="number"
+                  min="0"
+                  step="0.01"
+                  value={discountAmount}
+                  onChange={(e) => setDiscountAmount(e.target.value)}
+                  className="flex-1 px-3 py-1.5 border border-gray-300 rounded-md text-sm text-black bg-white"
+                  placeholder="0.00"
+                />
+                <button
+                  onClick={() => setDiscount(discountAmount)}
+                  className="px-3 py-1.5 bg-orange-500 text-white rounded-md text-sm hover:bg-orange-600"
+                >
+                  Apply
+                </button>
+              </div>
+            </div>
+
+            {/* Custom Product Form */}
+            <form onSubmit={handleAddCustomProduct}>
+              <h4 className="font-medium text-sm text-black mb-2">Add Custom Product</h4>
+              <div className="grid grid-cols-3 gap-2">
+                <input
+                  type="number"
+                  min="1"
+                  value={customProduct.quantity}
+                  onChange={(e) => setCustomProduct(prev => ({ ...prev, quantity: e.target.value }))}
+                  className="px-3 py-1.5 border border-gray-300 rounded-md text-sm text-black bg-white"
+                  placeholder="Qty"
+                />
+                <input
+                  value={customProduct.name}
+                  onChange={(e) => setCustomProduct(prev => ({ ...prev, name: e.target.value }))}
+                  className="px-3 py-1.5 border border-gray-300 rounded-md text-sm text-black bg-white"
+                  placeholder="Product name"
+                />
+                <input
+                  type="number"
+                  min="0"
+                  step="0.01"
+                  value={customProduct.price}
+                  onChange={(e) => setCustomProduct(prev => ({ ...prev, price: e.target.value }))}
+                  className="px-3 py-1.5 border border-gray-300 rounded-md text-sm text-black bg-white"
+                  placeholder="Price"
+                />
+              </div>
+              <button
+                type="submit"
+                className="w-full mt-2 px-3 py-1.5 bg-gray-100 text-black rounded-md text-sm hover:bg-gray-200"
+              >
+                Add Custom Product
+              </button>
+            </form>
+          </div>
+        )}
+      </div>
+    )
   }
 
   return (
@@ -230,12 +319,12 @@ Total due = ${Math.round(totals.total)}`
                     <div key={item.id} className="flex items-center space-x-3 bg-white p-3 rounded-lg border border-gray-100 shadow-sm">
                       <CartItemImage src={item.image} name={item.name} />
                       <div className="flex-1 min-w-0">
-                        <h3 className="font-medium text-sm text-gray-900 truncate">{item.name}</h3>
+                        <h3 className="text-sm font-semibold text-black truncate">{item.name}</h3>
                         <div className="flex flex-col gap-0.5 mt-1">
-                          <p className="text-sm text-gray-700">
+                          <p className="text-sm text-gray-600">
                             Intown: <span className="text-orange-600 font-semibold">${formatPrice(item.intown_price)}</span>
                           </p>
-                          <p className="text-sm text-gray-700">
+                          <p className="text-sm text-gray-600">
                             Shipped: <span className="text-orange-600 font-semibold">${formatPrice(item.shipped_price)}</span>
                           </p>
                         </div>
@@ -253,8 +342,8 @@ Total due = ${Math.round(totals.total)}`
                             maxLength={3}
                             value={item.quantity}
                             onChange={(e) => handleQuantityChange(item.id, e.target.value)}
-                            className="w-12 px-2 py-0.5 bg-white border border-gray-200 rounded text-center text-sm 
-                              focus:outline-none focus:ring-1 focus:ring-orange-500 text-gray-900"
+                            className="w-12 px-2 py-0.5 bg-white border border-gray-200 rounded text-center text-sm text-black
+                              focus:outline-none focus:ring-1 focus:ring-orange-500"
                           />
                           <button
                             onClick={() => updateQuantity(item.id, item.quantity + 1)}
@@ -331,6 +420,12 @@ Total due = ${Math.round(totals.total)}`
                       <span>Subtotal:</span>
                       <span>${formatPrice(getTotalWithFees().subtotal)}</span>
                     </div>
+                    {getTotalWithFees().discount > 0 && (
+                      <div className="flex justify-between text-red-600">
+                        <span>Discount:</span>
+                        <span>-${formatPrice(getTotalWithFees().discount)}</span>
+                      </div>
+                    )}
                     <div className="flex justify-between">
                       <span>{PAYMENT_METHODS.find(m => m.id === selectedPayment)?.label} Fee ({getTotalWithFees().feePercentage}%):</span>
                       <span>${formatPrice(getTotalWithFees().feeAmount)}</span>
@@ -350,11 +445,17 @@ Total due = ${Math.round(totals.total)}`
                 className="w-full bg-transparent text-orange-700 py-3 px-4 rounded-md 
                   hover:bg-orange-500/20 transition-colors flex items-center justify-center 
                   space-x-2 outline outline-2 outline-orange-500 font-semibold
-                  disabled:opacity-50 disabled:cursor-not-allowed"
+                  disabled:opacity-50 disabled:cursor-not-allowed mb-6"
               >
                 <span>Copy Order Details</span>
                 <ArrowRight size={16} className="ml-1" />
               </button>
+
+              {/* Advanced Options */}
+              <AdvancedOptions 
+                isOpen={showAdvanced}
+                onToggle={() => setShowAdvanced(prev => !prev)}
+              />
             </div>
           </div>
         </div>
