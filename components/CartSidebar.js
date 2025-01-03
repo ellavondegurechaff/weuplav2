@@ -141,8 +141,9 @@ ${cart.map(item => {
   const price = receiptType === 'shipping' 
     ? Number(item.shipped_price || 0) 
     : Number(item.intown_price || 0)
-  const formattedPrice = price === 0 ? 'Free' : `$${formatPrice(price * item.quantity)}`
-  return `${item.quantity}x ${item.name} ${formattedPrice}`
+  const unitPrice = formatPrice(price)
+  const totalPrice = formatPrice(price * item.quantity)
+  return `${item.quantity}x ${item.name} [$${unitPrice}]=$${totalPrice}`
 }).join('\n')}
 
 ${receiptType.toUpperCase()} ORDER SELECTED ✓
