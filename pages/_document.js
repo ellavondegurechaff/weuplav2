@@ -3,9 +3,52 @@ import { ColorSchemeScript, mantineHtmlProps } from '@mantine/core'
 
 export default function Document() {
   return (
-    <Html lang="en" {...mantineHtmlProps}>
+    <Html lang="en" {...mantineHtmlProps} className="loading">
       <Head>
         <ColorSchemeScript defaultColorScheme="auto" />
+        <style>{`
+          /* Prevent FOUC */
+          html {
+            visibility: visible;
+            opacity: 1;
+          }
+          html.loading {
+            visibility: hidden;
+            opacity: 0;
+          }
+          /* Your background color */
+          html, body {
+            background-color: #FF4500;
+          }
+        `}</style>
+        <link
+          rel="preload"
+          href="/fonts/Poppins-Bold.woff2"
+          as="font"
+          type="font/woff2"
+          crossOrigin="anonymous"
+        />
+        <link
+          rel="preload"
+          href="/fonts/Poppins-SemiBold.woff2"
+          as="font"
+          type="font/woff2"
+          crossOrigin="anonymous"
+        />
+        <link
+          rel="preload"
+          href="/fonts/Poppins-Light.woff2"
+          as="font"
+          type="font/woff2"
+          crossOrigin="anonymous"
+        />
+        <link
+          rel="preload"
+          href="/fonts/Poppins-Regular.woff2"
+          as="font"
+          type="font/woff2"
+          crossOrigin="anonymous"
+        />
         <link rel="icon" href="/logo.png" sizes="32x32" />
         <link rel="apple-touch-icon" href="/logo.png" />
         <link rel="manifest" href="/manifest.json" />
