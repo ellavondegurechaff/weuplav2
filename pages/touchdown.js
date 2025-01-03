@@ -101,10 +101,12 @@ export default function TouchdownsPage() {
     }
   }
 
-  const filteredTouchdowns = touchdowns.filter(touchdown => 
-    touchdown.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    touchdown.description.toLowerCase().includes(searchQuery.toLowerCase())
-  )
+  const filteredTouchdowns = Array.isArray(touchdowns) 
+    ? touchdowns.filter(touchdown => 
+        touchdown.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        touchdown.description.toLowerCase().includes(searchQuery.toLowerCase())
+      )
+    : []
 
   return (
     <>
