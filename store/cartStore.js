@@ -244,9 +244,9 @@ const useCartStore = create(
             throw new Error('Product name is required')
           }
 
-          const validPrice = validateNumber(price)
-          if (validPrice <= 0) {
-            throw new Error('Price must be greater than 0')
+          const validPrice = validateNumber(price, 0)
+          if (validPrice < 0) {
+            throw new Error('Price cannot be negative')
           }
 
           const validQuantity = validateNumber(quantity, 1)

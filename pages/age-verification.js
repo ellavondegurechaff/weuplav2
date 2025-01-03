@@ -17,7 +17,8 @@ export default function AgeVerification() {
       setVerified(true)
       setCookie('age-verified', 'true', {
         maxAge: 60 * 60 * 24 * 7, // 7 days
-        path: '/'
+        path: '/',
+        sameSite: 'strict'
       })
       router.push('/')
     } else {

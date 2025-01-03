@@ -161,7 +161,7 @@ export default function TouchdownsPage() {
               <div className="flex justify-center mt-4">
                 <a 
                   href="/allproducts" 
-                  className="inline-block bg-transparent text-white px-8 py-3 rounded-md hover:bg-white/10 transition-colors outline outline-3 outline-white font-semibold"
+                  className="inline-block bg-transparent text-white px-8 py-3 rounded-md hover:bg-white/10 transition-colors outline outline-3 outline-white font-semibold button-text"
                 >
                   VIEW MENU
                 </a>

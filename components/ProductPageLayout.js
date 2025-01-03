@@ -415,10 +415,12 @@ export function ProductPageLayout({
                   value={searchQuery}
                   onChange={(event) => setSearchQuery(event.currentTarget.value)}
                   radius="md"
+                  classNames={{
+                    input: 'text-black'
+                  }}
                   styles={{
                     input: {
                       backgroundColor: 'white',
-                      color: 'white',
                       border: '1px solid rgba(255, 255, 255, 0.2)',
                       '&:focus': {
                         borderColor: 'var(--mantine-color-orange-6)',
@@ -448,7 +450,7 @@ export function ProductPageLayout({
               <div className="flex justify-center mt-4">
                 <a 
                   href="/allproducts" 
-                  className="inline-block bg-transparent text-white px-8 py-3 rounded-md hover:bg-white/10 transition-colors outline outline-3 outline-white font-semibold"
+                  className="inline-block bg-transparent text-white px-8 py-3 rounded-md hover:bg-white/10 transition-colors outline outline-3 outline-white font-semibold button-text"
                 >
                   VIEW MENU
                 </a>

@@ -78,13 +78,15 @@ export function MediaCarousel({ media, onImageClick }) {
 
   return (
     <Box style={{ 
-      height: 'auto',
+      height: '100%',
       position: 'relative',
       margin: 0,
       padding: 0,
       overflow: 'hidden',
       background: 'none',
-      aspectRatio: '1 / 1'
+      aspectRatio: '1 / 1',
+      maxHeight: 'calc(100vh - 60px)',
+      width: '100%'
     }}>
       <Card.Section 
         style={{ 
@@ -96,7 +98,10 @@ export function MediaCarousel({ media, onImageClick }) {
           cursor: isDragging ? 'grabbing' : 'grab',
           touchAction: 'pan-x pan-y',
           background: 'none',
-          position: 'relative'
+          position: 'relative',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center'
         }}
         onClick={(e) => {
           if (!isDragging) {

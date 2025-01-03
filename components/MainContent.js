@@ -52,7 +52,7 @@ export default function MainContent() {
                 href="https://signal.me/#eu/EnEaHC7NjCVwnGkTEFNmNrnoxzrJx4KlTjPUK3kAmgVGBNmrO7VL1qXppTsEAyn0"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="bg-transparent text-white px-6 py-3 rounded-md hover:bg-white/10 transition-colors flex items-center gap-2 outline outline-3 outline-white font-semibold"
+                className="bg-transparent text-white px-6 py-3 rounded-md hover:bg-white/10 transition-colors flex items-center gap-2 outline outline-3 outline-white font-semibold button-text"
                 style={{ width: '160px', justifyContent: 'center' }}
               >
                 <SiSignal size={24} />
@@ -62,7 +62,7 @@ export default function MainContent() {
                 href="https://t.me/WeUpLA_DM"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="bg-transparent text-white px-6 py-3 rounded-md hover:bg-white/10 transition-colors flex items-center gap-2 outline outline-3 outline-white font-semibold"
+                className="bg-transparent text-white px-6 py-3 rounded-md hover:bg-white/10 transition-colors flex items-center gap-2 outline outline-3 outline-white font-semibold button-text"
                 style={{ width: '160px', justifyContent: 'center' }}
               >
                 <SiTelegram size={24} />
@@ -72,7 +72,7 @@ export default function MainContent() {
             
             <a 
               href="/allproducts" 
-              className="inline-block bg-transparent text-white px-8 py-2 rounded-md hover:bg-white/10 transition-colors outline outline-3 outline-white font-semibold mt-2"
+              className="inline-block bg-transparent text-white px-8 py-3 rounded-md hover:bg-white/10 transition-colors outline outline-3 outline-white font-semibold button-text"
             >
               VIEW MENU
             </a>
@@ -135,7 +135,7 @@ export default function MainContent() {
             <div className="flex flex-col items-center gap-2">
               <a 
                 href="/allproducts" 
-                className="inline-block bg-transparent text-white px-8 py-3 rounded-md hover:bg-white/10 transition-colors outline outline-3 outline-white font-semibold"
+                className="inline-block bg-transparent text-white px-8 py-3 rounded-md hover:bg-white/10 transition-colors outline outline-3 outline-white font-semibold button-text"
               >
                 VIEW MENU
               </a>
@@ -145,7 +145,7 @@ export default function MainContent() {
                   href="https://signal.me/#eu/EnEaHC7NjCVwnGkTEFNmNrnoxzrJx4KlTjPUK3kAmgVGBNmrO7VL1qXppTsEAyn0"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="bg-transparent text-white px-6 py-3 rounded-md hover:bg-white/10 transition-colors flex items-center gap-2 outline outline-3 outline-white font-semibold"
+                  className="bg-transparent text-white px-6 py-3 rounded-md hover:bg-white/10 transition-colors flex items-center gap-2 outline outline-3 outline-white font-semibold button-text"
                   style={{ width: '160px', justifyContent: 'center' }}
                 >
                   <SiSignal size={24} />
@@ -153,7 +153,7 @@ export default function MainContent() {
                 </a>
                 <a 
                   href="https://t.me/WeUpLA_DM"
-                  className="bg-transparent text-white px-6 py-3 rounded-md hover:bg-white/10 transition-colors flex items-center gap-2 outline outline-3 outline-white font-semibold"
+                  className="bg-transparent text-white px-6 py-3 rounded-md hover:bg-white/10 transition-colors flex items-center gap-2 outline outline-3 outline-white font-semibold button-text"
                   style={{ width: '160px', justifyContent: 'center' }}
                 >
                   <SiTelegram size={24} />

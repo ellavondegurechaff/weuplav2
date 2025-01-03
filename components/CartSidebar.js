@@ -124,7 +124,8 @@ export function CartSidebar({ isCartOpen: propIsCartOpen, setIsCartOpen: propSet
   const formatPrice = (price) => {
     if (price === null || price === undefined) return '0.00'
     const numPrice = Number(price)
-    return isNaN(numPrice) ? '0.00' : numPrice.toFixed(2)
+    if (isNaN(numPrice)) return '0.00'
+    return numPrice === 0 ? 'Free' : numPrice.toFixed(2)
   }
 
   const copyCartToClipboard = () => {
@@ -140,7 +141,8 @@ ${cart.map(item => {
   const price = receiptType === 'shipping' 
     ? Number(item.shipped_price || 0) 
     : Number(item.intown_price || 0)
-  return `${item.quantity}x ${item.name} $${formatPrice(price * item.quantity)}`
+  const formattedPrice = price === 0 ? 'Free' : `$${formatPrice(price * item.quantity)}`
+  return `${item.quantity}x ${item.name} ${formattedPrice}`
 }).join('\n')}
 
 ${receiptType.toUpperCase()} ORDER SELECTED ✓
@@ -148,9 +150,9 @@ ${receiptType.toUpperCase()} ORDER SELECTED ✓
 ORDER SUMMARY
 -------------
 Total Items: ${totals.totalItems}
-${receiptType === 'shipping' ? 'Shipped' : 'Intown'} Subtotal: $${formatPrice(totals.subtotal)}
-${totals.discount > 0 ? `Discount Applied: -$${formatPrice(totals.discount)}\nSubtotal after Discount: $${formatPrice(totals.subtotalAfterDiscount)}\n` : ''}${selectedPayment.toUpperCase()} Fee ${totals.feePercentage}% = $${formatPrice(totals.feeAmount)}
-Total due = $${formatPrice(totals.total)}`
+${receiptType === 'shipping' ? 'Shipped' : 'Intown'} Subtotal: ${totals.subtotal === 0 ? 'Free' : `$${formatPrice(totals.subtotal)}`}
+${totals.discount > 0 ? `Discount Applied: -$${formatPrice(totals.discount)}\nSubtotal after Discount: ${totals.subtotalAfterDiscount === 0 ? 'Free' : `$${formatPrice(totals.subtotalAfterDiscount)}`}\n` : ''}${selectedPayment.toUpperCase()} Fee ${totals.feePercentage}% = $${formatPrice(totals.feeAmount)}
+Total due = ${totals.total === 0 ? 'Free' : `$${formatPrice(totals.total)}`}`
 
     navigator.clipboard.writeText(orderText)
       .then(() => {
@@ -322,10 +324,14 @@ Total due = $${formatPrice(totals.total)}`
                         <h3 className="text-sm font-semibold text-black truncate">{item.name}</h3>
                         <div className="flex flex-col gap-0.5 mt-1">
                           <p className="text-sm text-gray-600">
-                            Intown: <span className="text-orange-600 font-semibold">${formatPrice(item.intown_price)}</span>
+                            Intown: <span className="text-orange-600 font-semibold">
+                              {formatPrice(item.intown_price) === 'Free' ? 'Free' : `$${formatPrice(item.intown_price)}`}
+                            </span>
                           </p>
                           <p className="text-sm text-gray-600">
-                            Shipped: <span className="text-orange-600 font-semibold">${formatPrice(item.shipped_price)}</span>
+                            Shipped: <span className="text-orange-600 font-semibold">
+                              {formatPrice(item.shipped_price) === 'Free' ? 'Free' : `$${formatPrice(item.shipped_price)}`}
+                            </span>
                           </p>
                         </div>
                         <div className="flex items-center mt-2 space-x-2">
@@ -418,7 +424,7 @@ Total due = $${formatPrice(totals.total)}`
                   <div className="space-y-2 text-black">
                     <div className="flex justify-between">
                       <span>Subtotal:</span>
-                      <span>${formatPrice(getTotalWithFees().subtotal)}</span>
+                      <span>{getTotalWithFees().subtotal === 0 ? 'Free' : `$${formatPrice(getTotalWithFees().subtotal)}`}</span>
                     </div>
                     {getTotalWithFees().discount > 0 && (
                       <div className="flex justify-between text-red-600">
@@ -432,7 +438,7 @@ Total due = $${formatPrice(totals.total)}`
                     </div>
                     <div className="flex justify-between font-bold">
                       <span>Total:</span>
-                      <span>${formatPrice(getTotalWithFees().total)}</span>
+                      <span>{getTotalWithFees().total === 0 ? 'Free' : `$${formatPrice(getTotalWithFees().total)}`}</span>
                     </div>
                   </div>
                 </div>
