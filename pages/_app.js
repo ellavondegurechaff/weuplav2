@@ -5,7 +5,6 @@ import { MantineProvider, createTheme } from '@mantine/core'
 import { ModalsProvider } from '@mantine/modals'
 import { Notifications } from '@mantine/notifications'
 import { Toaster } from 'sonner'
-import { useEffect } from 'react'
 
 const theme = createTheme({
   primaryColor: 'gray',
@@ -57,10 +56,6 @@ const theme = createTheme({
 })
 
 export default function App({ Component, pageProps }) {
-  useEffect(() => {
-    document.documentElement.classList.remove('loading')
-  }, [])
-
   return (
     <>
       <Head>

@@ -3,24 +3,9 @@ import { ColorSchemeScript, mantineHtmlProps } from '@mantine/core'
 
 export default function Document() {
   return (
-    <Html lang="en" {...mantineHtmlProps} className="loading">
+    <Html lang="en" {...mantineHtmlProps}>
       <Head>
         <ColorSchemeScript defaultColorScheme="auto" />
-        <style>{`
-          /* Prevent FOUC */
-          html {
-            visibility: visible;
-            opacity: 1;
-          }
-          html.loading {
-            visibility: hidden;
-            opacity: 0;
-          }
-          /* Your background color */
-          html, body {
-            background-color: #FF4500;
-          }
-        `}</style>
         <link
           rel="preload"
           href="/fonts/Poppins-Bold.woff2"
