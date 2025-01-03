@@ -435,7 +435,7 @@ export function ProductPageLayout({
                 <select
                   value={sortOption}
                   onChange={(e) => setSortOption(e.target.value)}
-                  className="w-full sm:w-40 px-3 py-2 text-black bg-white/95 border border-gray-200 
+                  className="w-full sm:w-52 px-3 py-2 text-black bg-white/95 border border-gray-200 
                     rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 
                     focus:border-transparent cursor-pointer mobile-select"
                 >
