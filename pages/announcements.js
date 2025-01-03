@@ -141,18 +141,8 @@ export default function AnnouncementsPage() {
                 value={searchQuery}
                 onChange={(event) => setSearchQuery(event.currentTarget.value)}
                 radius="md"
-                styles={{
-                  input: {
-                    backgroundColor: 'white',
-                    color: 'white',
-                    border: '1px solid rgba(255, 255, 255, 0.2)',
-                    '&:focus': {
-                      borderColor: 'var(--mantine-color-orange-6)',
-                    },
-                    '&::placeholder': {
-                      color: 'rgba(255, 255, 255, 0.5)',
-                    },
-                  },
+                classNames={{
+                  input: 'search-input'
                 }}
               />
               
