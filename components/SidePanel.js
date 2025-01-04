@@ -103,16 +103,44 @@ export default function SidePanel({ opened, onClose }) {
         <div 
           className="fixed inset-0 bg-black/50 z-[130] md:hidden"
           onClick={onClose}
+          style={{
+            paddingTop: 'env(safe-area-inset-top)',
+            paddingLeft: 'env(safe-area-inset-left)',
+            paddingRight: 'env(safe-area-inset-right)',
+            paddingBottom: 'env(safe-area-inset-bottom)'
+          }}
         />
       )}
       
       <div 
-        className={`fixed top-0 left-0 w-80 h-full bg-white transform 
+        className={`fixed h-full bg-white transform 
           ${opened ? 'translate-x-0' : '-translate-x-full'}
           transition-transform duration-300 ease-in-out z-[140] overflow-hidden flex flex-col`}
+        style={{
+          top: 0,
+          left: 0,
+          width: '320px',
+          height: '100%',
+          background: '#FF4500',
+          paddingTop: 0
+        }}
       >
-        <div className="h-full flex flex-col overflow-hidden justify-between">
-          <div className="px-6 h-[60px] flex items-center justify-between bg-[#FF4500]">
+        <div 
+          className="h-full flex flex-col overflow-hidden justify-between bg-white"
+          style={{
+            marginTop: 'env(safe-area-inset-top)',
+            height: 'calc(100% - env(safe-area-inset-top))'
+          }}
+        >
+          <div 
+            className="px-6 flex items-center justify-between bg-[#FF4500]"
+            style={{
+              height: '60px',
+              position: 'sticky',
+              top: 0,
+              zIndex: 1
+            }}
+          >
             <div className="flex items-center space-x-3">
               <img 
                 src="/logo.png" 
@@ -134,7 +162,7 @@ export default function SidePanel({ opened, onClose }) {
             </button>
           </div>
 
-          <nav className="flex-1 pl-1 pr-2 py-2">
+          <nav className="flex-1 pl-1 pr-2 py-2 overflow-y-auto">
             <Stack gap="xs">
               {menuItems.slice(0, 2).map((item, index) => (
                 <Link
@@ -229,7 +257,15 @@ export default function SidePanel({ opened, onClose }) {
             </Stack>
           </nav>
 
-          <div className="p-4 space-y-3">
+          <div 
+            className="p-4 space-y-3 bg-white"
+            style={{
+              position: 'sticky',
+              bottom: 0,
+              borderTop: '1px solid rgba(0,0,0,0.1)',
+              paddingBottom: 'calc(1rem + env(safe-area-inset-bottom))'
+            }}
+          >
             <button
               className="w-full py-3 px-4 bg-transparent text-[#FF4500] font-semibold rounded-md hover:bg-white/10 transition-colors flex items-center justify-center gap-2 outline outline-3 outline-[#FF4500] sidepanel-button-text"
               onClick={() => {

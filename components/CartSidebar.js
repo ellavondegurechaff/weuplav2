@@ -4,6 +4,7 @@ import { X, ShoppingCart, Plus, Minus, ArrowRight, ChevronDown } from 'lucide-re
 import useCartStore from '@/store/cartStore'
 import { useEffect, useState } from 'react'
 import { toast, Toaster } from 'sonner'
+import { SiSignal } from '@icons-pack/react-simple-icons'
 
 function CartItemImage({ src, name }) {
   return (
@@ -29,6 +30,8 @@ const PAYMENT_METHODS = [
   { id: 'crypto', label: 'Crypto', fee: 4 },
   { id: 'cash', label: 'Cash', fee: 0 }
 ]
+
+const SIGNAL_LINK = "https://signal.me/#eu/EnEaHC7NjCVwnGkTEFNmNrnoxzrJx4KlTjPUK3kAmgVGBNmrO7VL1qXppTsEAyn0"
 
 export function CartSidebar({ isCartOpen: propIsCartOpen, setIsCartOpen: propSetIsCartOpen }) {
   const [isMounted, setIsMounted] = useState(false)
@@ -445,24 +448,54 @@ Total due = ${totals.total === 0 ? 'Free' : `$${formatPrice(totals.total)}`}`
                 </div>
               )}
 
-              {/* Copy Order Button - Disabled when cart is empty */}
-              <button
-                onClick={copyCartToClipboard}
-                disabled={!selectedPayment || !receiptType || cart.length === 0}
-                className="w-full bg-transparent text-orange-700 py-3 px-4 rounded-md 
-                  hover:bg-orange-500/20 transition-colors flex items-center justify-center 
-                  space-x-2 outline outline-2 outline-orange-500 font-semibold
-                  disabled:opacity-50 disabled:cursor-not-allowed mb-6"
-              >
-                <span>Copy Order Details</span>
-                <ArrowRight size={16} className="ml-1" />
-              </button>
+              {/* Copy Order Button */}
+              <div className="flex flex-col gap-3">
+                <button
+                  onClick={copyCartToClipboard}
+                  disabled={!selectedPayment || !receiptType || cart.length === 0}
+                  className="w-full bg-transparent text-orange-700 py-3 px-4 rounded-md 
+                    hover:bg-orange-500/20 transition-colors flex items-center justify-center 
+                    space-x-2 outline outline-2 outline-orange-500 font-semibold
+                    disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    <span>Copy Order Details</span>
+                    <ArrowRight size={16} className="ml-1" />
+                  </button>
 
-              {/* Advanced Options */}
-              <AdvancedOptions 
-                isOpen={showAdvanced}
-                onToggle={() => setShowAdvanced(prev => !prev)}
-              />
+                {/* Action Buttons Row */}
+                <div className="flex gap-2 mb-6">
+                  {/* Advanced Options Button */}
+                  <button
+                    onClick={() => setShowAdvanced(prev => !prev)}
+                    className="flex-1 bg-transparent text-orange-700 py-3 px-4 rounded-md 
+                      hover:bg-orange-500/20 transition-colors flex items-center justify-center 
+                      outline outline-2 outline-orange-500 font-semibold"
+                  >
+                    Advanced
+                  </button>
+
+                  {/* Signal Button */}
+                  <a
+                    href={SIGNAL_LINK}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex-1 bg-transparent text-orange-700 py-3 px-4 rounded-md 
+                      hover:bg-orange-500/20 transition-colors flex items-center justify-center 
+                      gap-2 outline outline-2 outline-orange-500 font-semibold"
+                  >
+                    <SiSignal size={16} />
+                    <span>Signal</span>
+                  </a>
+                </div>
+              </div>
+
+              {/* Advanced Options Panel */}
+              {showAdvanced && (
+                <AdvancedOptions 
+                  isOpen={true}
+                  onToggle={() => setShowAdvanced(false)}
+                />
+              )}
             </div>
           </div>
         </div>

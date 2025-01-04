@@ -9,6 +9,10 @@
   --mantine-color-black: #000000;
   --mantine-primary-color-filled: var(--mantine-color-white);
   --mantine-primary-color-filled-hover: var(--mantine-color-gray-0);
+  --sat: env(safe-area-inset-top);
+  --sar: env(safe-area-inset-right);
+  --sab: env(safe-area-inset-bottom);
+  --sal: env(safe-area-inset-left);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -30,6 +34,9 @@ body {
   min-height: 100vh;
   overscroll-behavior: none;
   touch-action: pan-y pinch-zoom;
+  padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+  overscroll-behavior-y: none;
+  -webkit-overflow-scrolling: touch;
 }
 
 @keyframes pulse {
@@ -251,5 +258,36 @@ textarea {
 
 .search-input:focus {
   border-color: var(--mantine-color-orange-6) !important;
+}
+
+@media all and (display-mode: standalone) {
+  body {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    padding-top: 0 !important;
+  }
+
+  .pwa-header-spacing {
+    padding-top: env(safe-area-inset-top);
+  }
+}
+
+.fixed-header {
+  padding-top: max(env(safe-area-inset-top), 16px);
+  padding-left: max(env(safe-area-inset-left), 16px);
+  padding-right: max(env(safe-area-inset-right), 16px);
+}
+
+main {
+  min-height: 100vh;
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.scroll-container {
+  height: 100%;
+  overflow-y: auto;
+  overscroll-behavior-y: none;
+  -webkit-overflow-scrolling: touch;
 }
 

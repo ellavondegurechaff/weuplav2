@@ -439,7 +439,7 @@ export function ProductPageLayout({
                     rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 
                     focus:border-transparent cursor-pointer mobile-select"
                 >
-                  <option value="default">Sort By</option>
+                  <option value="default">Most Recent</option>
                   <option value="price-high-low">Price: High to Low</option>
                   <option value="price-low-high">Price: Low to High</option>
                   <option value="a-z">Name: A-Z</option>

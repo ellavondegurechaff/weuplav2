@@ -32,23 +32,23 @@ const theme = createTheme({
     AppShell: {
       styles: {
         main: {
-          background: 'transparent'
+          background: 'transparent',
+          paddingTop: 'calc(60px + env(safe-area-inset-top))',
+          minHeight: '100vh',
+          height: '100%',
+          width: '100%'
         },
         header: {
           backgroundColor: 'white',
           borderBottom: 'none',
           boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-          'button': {
-            color: '#f97316'
-          },
-          '.mantine-Text-root': {
-            color: '#f97316',
-            position: 'absolute',
-            left: '50%',
-            transform: 'translateX(-50%)',
-            fontSize: '24px',
-            fontWeight: 700
-          }
+          paddingTop: 'env(safe-area-inset-top)',
+          height: 'calc(60px + env(safe-area-inset-top))',
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          zIndex: 100
         }
       }
     }
@@ -61,8 +61,12 @@ export default function App({ Component, pageProps }) {
       <Head>
         <meta 
           name="viewport" 
-          content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"
+          content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover, user-scalable=no"
         />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+        <link rel="apple-touch-icon" href="/home.png" />
+        <link rel="manifest" href="/manifest.json" />
       </Head>
       <MantineProvider theme={theme}>
         <ModalsProvider>
